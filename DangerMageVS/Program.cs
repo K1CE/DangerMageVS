@@ -532,6 +532,21 @@ namespace SFDScript
             {
                 switch (args.Command)
                 {
+                    case "SETSTARTWANDS": 
+                        {
+                            string[] argsPieces = args.CommandArguments.ToLower().Split(' ');
+
+                            //messageRoss("len " + argsPieces.Length);
+                            bool startWands;
+
+                            if (argsPieces[0] == "") startWands = true;
+                            else startWands = argsPieces[0].ToLower() != "false" && Convert.ToInt32(argsPieces[0]) != 0;
+
+                            Game.ShowChatMessage("Start wands " + (startWands? "enabled" : "disabled"), new Color(33, 133, 33), args.User.UserIdentifier);
+                            
+                            break;
+                        }
+
                     case "GIVEWAND":
                         {
                             string[] argsPieces = args.CommandArguments.ToLower().Split(' ');
