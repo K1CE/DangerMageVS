@@ -83,14 +83,16 @@ namespace SFDScript
 
 
 					IObject iceBit = Game.CreateObject("BgDirt00B", target.GetWorldPosition() + new Vector2(rnd.Next(-10, 10), rnd.Next(-10, 10)));
-					iceBit.SetBodyType(BodyType.Dynamic);
-					frozen.AddTargetObject(iceBit);
 					if (rnd.Next(2) == 1)
 						iceBit.SetColor1("BgCyan");
 					else
 						iceBit.SetColor1("BgLightCyan");
-					iceBit.CustomID = "iceBit";
-				}
+
+                    iceBit.SetBodyType(BodyType.Dynamic);
+                    iceBit.SetMass(0.00005f);
+                    iceBit.CustomID = "iceBit";
+                    frozen.AddTargetObject(iceBit);
+                }
 				//make it freeze objects
 			}
 
