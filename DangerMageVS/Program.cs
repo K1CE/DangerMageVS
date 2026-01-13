@@ -26,6 +26,7 @@ namespace SFDScript
         static Random rnd = new Random();
         Events.PlayerKeyInputCallback m_playerKeyInputEvent = null;
         public static IObjectTimerTrigger unfreezer;
+        public const string STARTWANDS_KEY = "START WANDS";
 
         public static string[] elementNames = new String[] { "", "earth", "shock", "air", "dark", "fire", "blood", "ice", "toxic", "metal", "space", "blast", "plant", "chaos" };
         public static char[] elementLetters = new char[] { ' ', 'p', 'k', 'f', 'z', 'r', 'g', 's', 'l', 't', 'w', 'c', 'm', '&' };
@@ -189,6 +190,9 @@ namespace SFDScript
             if (wands <= 0) wands = 1;
 
             Game.RunCommand("/msg " + wands + " wands");
+
+            //doesn't give wands unless the setting is enabled
+            giveStartWands();
 
             while (wands > 0)
             {
@@ -525,6 +529,25 @@ namespace SFDScript
             return null;
         }
 
+        public void setStartWands(bool startWands) {
+            Game.SessionStorage.SetItem(STARTWANDS_KEY, startWands);
+        }
+
+        public void giveStartWands() {
+            bool startWands = false;
+            if (!(Game.SessionStorage.TryGetItemBool(STARTWANDS_KEY, out startWands) && startWands)) return;
+            
+            foreach (IPlayer ply in Game.GetPlayers()) {
+                if (ply.GetUser().IsBot) continue;
+
+                PlayerData data = dataFromPlayer(ply);
+                if (data == null) {
+                    data = new PlayerData(ply);
+                }
+                new Wand(data, (Element)rnd.Next(elementNames.Length - 1) + 1);
+            }
+        }
+
         public void OnUserMessage(UserMessageCallbackArgs args)
         {
             // user just said something in the chat.
@@ -543,7 +566,9 @@ namespace SFDScript
                             else startWands = argsPieces[0].ToLower() != "false" && Convert.ToInt32(argsPieces[0]) != 0;
 
                             Game.ShowChatMessage("Start wands " + (startWands? "enabled" : "disabled"), new Color(33, 133, 33), args.User.UserIdentifier);
-                            
+
+                            setStartWands(startWands);
+
                             break;
                         }
 
