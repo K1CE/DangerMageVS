@@ -19,7 +19,10 @@ namespace SFDScript
 			public delegate void ParticleHandler(Cast sender, Vector2 position, int count, float radius);
 			public event ParticleHandler onParticleEvent;
 
-			public Vector2 position = Vector2.Zero;
+            public delegate void ParticleExplosionHandler(Cast sender, Vector2 position, int density, float radius);
+            public event ParticleExplosionHandler onParticleExplosionEvent;
+
+            public Vector2 position = Vector2.Zero;
 			public Vector2 direction = Vector2.Zero;
 			public Spell spell;
 
@@ -28,13 +31,26 @@ namespace SFDScript
 				this.spell = spell;
 				casts.Add(this);
 			}
-			/*
-			public void splash() 
+			
+			public void splash(IObject alreadyHit) 
 			{
-				if (spell.splash <= 0) return;
+				int blacklistID = 0;
+				if (alreadyHit != null) blacklistID = alreadyHit.UniqueID;
+                if (spell.splash <= 0) return;
+				onParticleExplosionEvent(this, position, 14, spell.splash);
 
-			}
-			*/
+				Area area = new Area(position.Y + spell.splash, position.X - spell.splash, position.Y - spell.splash, position.X + spell.splash);
+				foreach (IObject obj in Game.GetObjectsByArea(area))
+				{
+					if (obj.GetBodyType() == BodyType.Dynamic && obj.UniqueID != blacklistID && Vector2.Distance(position, obj.GetWorldPosition()) <= spell.splash) 
+					{
+						onImpactEvent(this, obj, Vector2.Normalize(obj.GetWorldPosition() - position), 0.5f); //TODO: variable powerMod
+					}
+				}
+
+				//messageRoss("splashed at x " + position.X);
+            }
+			
 			public void impact(IObject affected)
 			{
 
@@ -47,6 +63,7 @@ namespace SFDScript
 				}
 				else vector = direction;
 				onImpactEvent(this, affected, vector, 1);
+				splash(affected);
 
 				destroy();
 

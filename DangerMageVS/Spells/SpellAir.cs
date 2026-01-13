@@ -95,11 +95,11 @@ namespace SFDScript
 
 			protected override void setUpStats()
 			{
-				spellPower = 12;
+				spellPower = 10;
 				cooldown = 3400;
 				speed = 7f;
 				range = 1.4f;
-				//splash = 10f;
+				splash = 28f;
 				particleEffect = "STM";
 			}
 

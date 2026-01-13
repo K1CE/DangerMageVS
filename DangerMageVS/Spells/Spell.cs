@@ -17,7 +17,7 @@ namespace SFDScript
 			public int cooldown = 0;
 			public float speed = 0f;
 			public float range = 0f;
-			//public float splash = 0f;
+			public float splash = 0f;
 
 			public IPlayer caster;
 
@@ -78,7 +78,8 @@ namespace SFDScript
 				cast.onImpactEvent += new Cast.EffectHandler(affect);
 				cast.onPassiveEvent += new Cast.PassiveHandler(passive);
 				cast.onParticleEvent += new Cast.ParticleHandler(particles);
-			}
+                cast.onParticleExplosionEvent += new Cast.ParticleExplosionHandler(particleExplosion);
+            }
 
 			protected abstract void setUpStats();
 
@@ -128,9 +129,16 @@ namespace SFDScript
 					float angle = (float)(Math.PI * 2 * (rnd.Next(30) / 30f));
 					Game.PlayEffect(effect, pos + new Vector2((float)(Math.Cos(angle) * dist), (float)(Math.Sin(angle) * dist)));
 				}
-			}
+            }
+            public void particleExplosion(Cast sender, Vector2 pos, int density, float radius) {
+                for (int i = 0; i < density; i++) {
+                    float dist = (rnd.Next(30) / 30f) * radius;
+                    float angle = (float)(Math.PI * 2 * (rnd.Next(30) / 30f));
+                    Game.PlayEffect(particleEffect, pos + new Vector2((float)(Math.Cos(angle) * dist), (float)(Math.Sin(angle) * dist)));
+                }
+            }
 
-		}
+        }
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */
 
