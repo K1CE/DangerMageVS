@@ -96,6 +96,8 @@ namespace SFDScript
 
 			protected override void projectile(Vector2 position, Vector2 direction)
 			{
+				frozen = (IObjectWeldJoint)Game.CreateObject("WeldJoint");
+
 				cast = new CastProjectile(position, direction + position, speed, this);
 				IObject iceBall = Game.CreateObject("BgLamp01A", position);
 				iceBall.SetColor2("LightBlue");
