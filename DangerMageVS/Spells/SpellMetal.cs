@@ -19,16 +19,17 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			public override void affect(Cast sender, IObject target, Vector2 vector)
+			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
+                float effectivePower = spellPower * powerMod;
 
-				if (target != null)
+                if (target != null)
 				{
 
 					Vector2 pos = sender.position;
 					IProjectile prj = Game.SpawnProjectile(ProjectileItem.PISTOL, target.GetWorldPosition() - vector, vector);
 					prj.CritChanceDealtModifier = 100f;
-					float damage = (spellPower / 8f);
+					float damage = (effectivePower / 8f);
 					prj.DamageDealtModifier = damage;
 
 					

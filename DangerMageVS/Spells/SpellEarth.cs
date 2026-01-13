@@ -19,8 +19,9 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-		public override void affect(Cast sender, IObject target, Vector2 vector)
+		public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 		{
+			float effectivePower = spellPower * powerMod;
 
 			Vector2 pos = sender.position;
 			IObject attacker = Game.CreateObject("StoneDebris00A", pos, rnd.Next(628) / 100f, Vector2.Normalize(vector) * 7, 0f);
@@ -32,7 +33,7 @@ namespace SFDScript
 					IPlayer ply = (IPlayer)target;
 					if (!(ply.IsBlocking || ply.IsMeleeAttacking))
 					{ //|| (ply.FacingDirection > 0) == (vector.X > 0)){
-						float damage = spellPower * ply.GetModifiers().MeleeDamageTakenModifier;
+						float damage = effectivePower * ply.GetModifiers().MeleeDamageTakenModifier;
 						if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						else ply.SetHealth(ply.GetHealth() - damage);
 					} /*else {
@@ -44,8 +45,8 @@ namespace SFDScript
 				else
 				{
 					if (!cantMeleeDamage(target))
-						if (target.GetHealth() <= spellPower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - spellPower);
+						if (target.GetHealth() <= effectivePower) target.Destroy();
+						else target.SetHealth(target.GetHealth() - effectivePower);
 				}
 
 			particleExplosion("DestroyDefault", pos, 3, 5f);

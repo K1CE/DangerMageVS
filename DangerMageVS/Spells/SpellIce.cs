@@ -18,17 +18,18 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			public override void affect(Cast sender, IObject target, Vector2 vector)
+			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
+                float effectivePower = spellPower * powerMod;
 
-				Game.PlaySound("DestroyStone", sender.position, 10f);
+                Game.PlaySound("DestroyStone", sender.position, 10f);
 				if (target != null)
 					if (target is IPlayer)
 					{
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 						bool dataNull = data == null;
-						float damage = spellPower;
+						float damage = effectivePower;
 
 						if (!dataNull) damage *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f)); //cold damage does more damage if target is cold
 						else damage *= ((data.cold) ? 1.5f : 1f);
@@ -47,7 +48,7 @@ namespace SFDScript
 						}
 						pmod.EnergyRechargeModifier = pmod.EnergyRechargeModifier - (damage * 0.04f);
 						pmod.RunSpeedModifier = pmod.RunSpeedModifier - (damage * 0.02f);
-						pmod.MeleeDamageDealtModifier = (float)(9f / spellPower);
+						pmod.MeleeDamageDealtModifier = (float)(9f / effectivePower);
 
 						ply.SetModifiers(pmod);
 
@@ -56,8 +57,8 @@ namespace SFDScript
 					}
 					else
 					{
-						if (target.GetHealth() <= spellPower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - spellPower);
+						if (target.GetHealth() <= effectivePower) target.Destroy();
+						else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
 

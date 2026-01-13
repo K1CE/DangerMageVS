@@ -21,8 +21,10 @@ namespace SFDScript
 
 			//Mechanic concept: damage done with darkwand can carry over into future rounds
 			//TODO: add impact particle effects
-			public override void affect(Cast sender, IObject target, Vector2 vector)
+			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
+				float effectivePower = spellPower * powerMod;
+				
 				Vector2 pos = sender.position;
 				Game.PlaySound("Heartbeat", pos, 10f);
 				if (target != null)
@@ -35,7 +37,7 @@ namespace SFDScript
 						PlayerModifiers pmod = caster.GetModifiers();
 
 
-						float spellPowerPlus = spellPower + spellPower * ((pmod.MaxHealth - pmod.CurrentHealth)/100f);
+						float spellPowerPlus = effectivePower + effectivePower * ((pmod.MaxHealth - pmod.CurrentHealth)/100f);
 
 						float tt = ply.GetHealth();
 
@@ -44,7 +46,7 @@ namespace SFDScript
 						if (data != null) damage *= data.darkDamageTaken;
 
 						double chance;
-						double maxChange = 0.4f * (spellPower / 12);
+						double maxChange = 0.4f * (effectivePower / 12);
 						if (!ply.IsDead)
 						{
 
@@ -68,7 +70,7 @@ namespace SFDScript
 							}
 							else chance = rnd.NextDouble();
 
-							double scale = (0.25 * (spellPower / 15)) * ((100 - tt)) / 100;
+							double scale = (0.25 * (effectivePower / 15)) * ((100 - tt)) / 100;
 							if (chance < scale)
 							{ // smash bros formulas, 
 								Game.ShowChatMessage("YOU HAD A SUDDEN HEART ATTACK", elementColors1[(int)element], ply.UserIdentifier);
@@ -94,8 +96,8 @@ namespace SFDScript
 					}
 					else
 					{
-						if (target.GetHealth() <= spellPower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - spellPower);
+						if (target.GetHealth() <= effectivePower) target.Destroy();
+						else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
 				particleExplosion("TR_S", pos, 10, 13f);

@@ -31,16 +31,16 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			public override void affect(Cast sender, IObject target, Vector2 vector)
+			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
-
+				float effectivePower = spellPower * powerMod;
 				Vector2 pos = sender.position;
 
 				Game.PlaySound("PlayerJump", pos, 10f);
 				Game.PlaySound("PlayerJump", pos, 10f);
 				Game.PlaySound("PlayerJump", pos, 10f);
 
-				particleExplosion("STM", pos, 14, 22f);
+				//particleExplosion("STM", pos, 14, 22f);
 
 				if (target != null)
 					if (target is IPlayer)
@@ -48,7 +48,7 @@ namespace SFDScript
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 
-						float damage = spellPower;
+						float damage = effectivePower;
 
 						if (data != null) damage *= data.player.GetModifiers().ImpactDamageTakenModifier;
 						if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
@@ -64,20 +64,20 @@ namespace SFDScript
 						vector.Normalize();
 						//vector += direction;
 						//vector /= 2f;
-						ply.SetLinearVelocity((vector * (spellPower / 1.7f)) + ply.GetLinearVelocity());// + new Vector2(0,8));
+						ply.SetLinearVelocity((vector * (effectivePower / 1.7f)) + ply.GetLinearVelocity());// + new Vector2(0,8));
 						ply.SetWorldPosition(ply.GetWorldPosition() + new Vector2(0, 2.5f));
 
 					}
 					else
 					{
 						if (cantMeleeDamage(target))
-							if (target.GetHealth() <= spellPower) target.Destroy();
-							else target.SetHealth(target.GetHealth() - spellPower);
+							if (target.GetHealth() <= effectivePower) target.Destroy();
+							else target.SetHealth(target.GetHealth() - effectivePower);
 
 						vector += new Vector2(0, 4);
 						vector.Normalize();
 
-						target.SetLinearVelocity((vector * (spellPower / 1.5f)) + target.GetLinearVelocity());// + new Vector2(0,8));
+						target.SetLinearVelocity((vector * (effectivePower / 1.5f)) + target.GetLinearVelocity());// + new Vector2(0,8));
 						target.SetWorldPosition(target.GetWorldPosition() + new Vector2(0, 2.5f));
 					}
 
@@ -99,6 +99,7 @@ namespace SFDScript
 				cooldown = 3400;
 				speed = 7f;
 				range = 1.4f;
+				//splash = 10f;
 				particleEffect = "STM";
 			}
 

@@ -10,7 +10,7 @@ namespace SFDScript
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public abstract class Cast
 		{
-			public delegate void EffectHandler(Cast sender, IObject affected, Vector2 vector);
+			public delegate void EffectHandler(Cast sender, IObject affected, Vector2 vector, float powerMod);
 			public event EffectHandler onImpactEvent;
 
 			public delegate void PassiveHandler(Cast sender, IObject affected, Vector2 vector);
@@ -28,7 +28,13 @@ namespace SFDScript
 				this.spell = spell;
 				casts.Add(this);
 			}
+			/*
+			public void splash() 
+			{
+				if (spell.splash <= 0) return;
 
+			}
+			*/
 			public void impact(IObject affected)
 			{
 
@@ -40,7 +46,8 @@ namespace SFDScript
 					messageRoss(affected.Name + " was blasted for " + spell.spellPower);
 				}
 				else vector = direction;
-				onImpactEvent(this, affected, vector);
+				onImpactEvent(this, affected, vector, 1);
+
 				destroy();
 
 			}

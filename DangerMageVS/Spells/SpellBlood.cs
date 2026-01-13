@@ -18,8 +18,10 @@ namespace SFDScript
 			{
 
 			}
-			public override void affect(Cast sender, IObject target, Vector2 vector)
+			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
+				float effectivePower = spellPower * powerMod;
+
 				Vector2 pos = sender.position;
 				Game.PlaySound("PlayerGib", pos, 10f);
 				if (target != null)
@@ -28,7 +30,7 @@ namespace SFDScript
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 
-						float damage = spellPower;
+						float damage = effectivePower;
 
 						if (data != null) damage *= data.darkDamageTaken;
 
@@ -40,8 +42,8 @@ namespace SFDScript
 					}
 					else
 					{
-						if (target.GetHealth() <= spellPower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - spellPower);
+						if (target.GetHealth() <= effectivePower) target.Destroy();
+						else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
 				particleExplosion("BLD", pos, 10, 13f);

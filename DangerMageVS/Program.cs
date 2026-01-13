@@ -474,7 +474,7 @@ namespace SFDScript
         {
             if (toxinQueue.Count() > 0)
             {
-                toxinQueue[0].delayedDamage();
+                toxinQueue[0].delayedDamage(((IObjectTimerTrigger)args.Caller).GetIntervalTime() / 232.6f);
                 toxinQueue.RemoveAt(0);
                 ((IObject)args.Caller).Remove();
             }

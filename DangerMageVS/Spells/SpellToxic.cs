@@ -27,9 +27,11 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			public override void affect(Cast sender, IObject target, Vector2 vector)
+			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
-				Vector2 pos = sender.position;
+                float effectivePower = spellPower * powerMod;
+
+                Vector2 pos = sender.position;
 				Game.PlaySound("BreakGlass", sender.position, 10f);
 
 				if (target != null)
@@ -41,24 +43,22 @@ namespace SFDScript
 					}
 					else
 					{
-						if (target.GetHealth() <= spellPower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - spellPower);
+						if (target.GetHealth() <= effectivePower) target.Destroy();
+						else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
 				toxinQueue.Add(this);
-				CreateTimer((int)(5000 * (spellPower / 21.5)), 1, "toxinTimer", "2").SetWorldPosition(new Vector2(0, -16));
+				CreateTimer((int)(5000 * (effectivePower / 21.5)), 1, "toxinTimer", "2").SetWorldPosition(new Vector2(0, -16));
 
 				particleExplosion("ACS", pos, 10, 9f);
 				
 			}
 
 			public List<IObject> acidQueue = new List<IObject>();
-			public void delayedDamage()
+			public void delayedDamage(float damage)
 			{
 				IPlayer ply = queuedPlayer;
 
-
-				float damage = spellPower;
 
 
 				if (ply != null)
@@ -79,8 +79,8 @@ namespace SFDScript
 				foreach (IObject obj in acidQueue)
 				{
 					if (!obj.DestructionInitiated && obj != null)
-						if (obj.GetHealth() <= spellPower * 1.5f) obj.Destroy();
-						else obj.SetHealth(obj.GetHealth() - (spellPower * 1.5f));
+						if (obj.GetHealth() <= damage * 1.5f) obj.Destroy();
+						else obj.SetHealth(obj.GetHealth() - (damage * 1.5f));
 					particleExplosion("ACS", obj.GetWorldPosition(), 3, 10f);
 					Game.PlaySound("BreakGlass", obj.GetWorldPosition(), 0.2f);
 				}

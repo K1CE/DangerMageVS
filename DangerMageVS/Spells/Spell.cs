@@ -17,6 +17,7 @@ namespace SFDScript
 			public int cooldown = 0;
 			public float speed = 0f;
 			public float range = 0f;
+			//public float splash = 0f;
 
 			public IPlayer caster;
 
@@ -81,7 +82,7 @@ namespace SFDScript
 
 			protected abstract void setUpStats();
 
-			public abstract void affect(Cast sender, IObject target, Vector2 vector);
+			public abstract void affect(Cast sender, IObject target, Vector2 vector, float powerMod);
 
 			public abstract void passive(Cast sender, IObject target, Vector2 vector);
 

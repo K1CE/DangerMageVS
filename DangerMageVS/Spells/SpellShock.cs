@@ -19,10 +19,11 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			public override void affect(Cast sender, IObject target, Vector2 vector)
+			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
+                float effectivePower = spellPower * powerMod;
 
-				Vector2 pos = sender.position;
+                Vector2 pos = sender.position;
 
 				Game.PlaySound("DestroyMetal", pos, 10f);
 				Game.PlaySound("DestroyMetal", pos, 10f);
@@ -33,14 +34,14 @@ namespace SFDScript
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 
-						float damage = spellPower;
+						float damage = effectivePower;
 
 						if (data != null) damage *= data.shockDamageTaken;
 
 						if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						else ply.SetHealth(ply.GetHealth() - damage); //add stun effect
 
-						data.electricute((int)(6.4f * spellPower * spellPower));
+						data.electricute((int)(6.4f * effectivePower * effectivePower));
 						ply.AddCommand(new PlayerCommand(PlayerCommandType.DeathKneelInfinite));
 						Game.PlayEffect("Electric", target.GetWorldPosition());
 						Game.PlayEffect("Electric", target.GetWorldPosition() + new Vector2(0, 8));
@@ -48,13 +49,13 @@ namespace SFDScript
 					}
 					else if (target.Name == "Streetsweeper")
 					{
-						if (target.GetHealth() <= spellPower + 9f) target.Destroy();
-						else target.SetHealth(target.GetHealth() - (spellPower + 14f));
+						if (target.GetHealth() <= effectivePower + 9f) target.Destroy();
+						else target.SetHealth(target.GetHealth() - (effectivePower + 14f));
 					}
 					else
 					{
-						if (target.GetHealth() <= spellPower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - spellPower);
+						if (target.GetHealth() <= effectivePower) target.Destroy();
+						else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
 				for (int i = 0; i < 6; i++)

@@ -18,10 +18,11 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			public override void affect(Cast sender, IObject target, Vector2 vector)
+			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
+                float effectivePower = spellPower * powerMod;
 
-				Game.PlaySound("PlayerRoll", sender.position, 10f);
+                Game.PlaySound("PlayerRoll", sender.position, 10f);
 				if (target != null)
 					if (target is IPlayer)
 					{
@@ -29,7 +30,7 @@ namespace SFDScript
 						PlayerData data = dataFromPlayer(ply);
 
 
-						float damage = spellPower;
+						float damage = effectivePower;
 
 						if (data != null) damage *= (data.player.GetModifiers().FireDamageTakenModifier) * ((ply.IsBurningInferno) ? 1.5f : 1f);
 
@@ -51,8 +52,8 @@ namespace SFDScript
 					}
 					else
 					{
-						if (target.GetHealth() <= spellPower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - spellPower);
+						if (target.GetHealth() <= effectivePower) target.Destroy();
+						else target.SetHealth(target.GetHealth() - effectivePower);
 						target.SetMaxFire();
 					}
 
