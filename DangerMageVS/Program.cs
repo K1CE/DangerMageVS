@@ -550,6 +550,7 @@ namespace SFDScript
                     case "GIVEWAND":
                         {
                             string[] argsPieces = args.CommandArguments.ToLower().Split(' ');
+                            if (argsPieces[0] == "") break;
 
                             IUser user = Match(argsPieces[0]);
                             if (user.GetPlayer() != null)
