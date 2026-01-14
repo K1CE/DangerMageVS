@@ -49,7 +49,7 @@ namespace SFDScript
 
 				toxinQueue.Add(this);
 				CreateTimer((int)(5000 * (effectivePower / 21.5)), 1, "toxinTimer", "2").SetWorldPosition(new Vector2(0, -16));
-
+				messageRoss("toxintimer for " + (int)(5000 * (effectivePower / 21.5)));
 				particleExplosion("ACS", pos, 10, 9f);
 				
 			}
@@ -59,7 +59,7 @@ namespace SFDScript
 			{
 				IPlayer ply = queuedPlayer;
 
-
+				messageRoss("toxindmg " + damage);
 
 				if (ply != null)
 				{
@@ -73,7 +73,7 @@ namespace SFDScript
 
 
 					Game.PlaySound("BreakGlass", ply.GetWorldPosition(), 10f);
-					particleExplosion("ACS", ply.GetWorldPosition(), 4, 8f);
+					//particleExplosion("ACS", ply.GetWorldPosition(), 4, 8f);
 				}
 
 				foreach (IObject obj in acidQueue)
@@ -93,6 +93,7 @@ namespace SFDScript
 				cooldown = 5000;
 				speed = 5f;
 				range = 0.6f;
+				splash = 40f;
 				particleEffect = "ACS";
 			}
 
