@@ -469,24 +469,6 @@ namespace SFDScript
             }
         }
 
-        public static List<SpellToxic> toxinQueue = new List<SpellToxic>();
-        public void toxinTimer(TriggerArgs args) {
-            if (toxinQueue.Count() > 0) {
-                //foreach(SpellToxic acid in toxinQueue)
-                    /*
-                    if (acid.delayedDamage()) {
-                        toxinQueue.Remove(acid);
-                        ((IObject)args.Caller).Remove();
-                        break;
-                    }
-                    else {
-
-                        messageRoss("returned false");
-                        continue;
-                    }
-                    */
-            }
-        }
 
         public static List<IObjectWeldJoint> unfreezeQueue = new List<IObjectWeldJoint>();
         public void unfreeze(TriggerArgs args)
