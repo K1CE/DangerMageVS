@@ -93,7 +93,7 @@ namespace SFDScript
 				cooldown = 4500;
 				speed = 10f;
 				particleEffect = "Electric";
-				splash = 9;
+				splash = 12;
 				range = 0.45f;
 			}
 
