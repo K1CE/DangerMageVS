@@ -185,7 +185,7 @@ namespace SFDScript
             int availableElements = 9;
             int cap = 0;
 
-            int wands = rnd.Next(3) + 1;//rnd.Next(2) + (int)(Game.GetPlayers().Count()/2) - 1;
+            int wands = rnd.Next(2) + (int)(Game.GetPlayers().Count()/2);
             wands = 0;
             if (wands <= 0) wands = 1;
 
@@ -534,7 +534,7 @@ namespace SFDScript
                 if (data == null) {
                     data = new PlayerData(ply);
                 }
-                new Wand(data, (Element)rnd.Next(elementNames.Length - 1) + 1);
+                new Wand(data, (Element)rnd.Next(elementNames.Length - 3) + 3);
             }
         }
 
