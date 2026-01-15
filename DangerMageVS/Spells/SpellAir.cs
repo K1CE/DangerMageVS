@@ -64,7 +64,7 @@ namespace SFDScript
 						vector.Normalize();
 						//vector += direction;
 						//vector /= 2f;
-						ply.SetLinearVelocity((vector * (effectivePower / 1.7f)) + ply.GetLinearVelocity());// + new Vector2(0,8));
+						ply.SetLinearVelocity((vector * (effectivePower / 1.3f)) + ply.GetLinearVelocity()/1.4f);// + new Vector2(0,8));
 						ply.SetWorldPosition(ply.GetWorldPosition() + new Vector2(0, 2.5f));
 
 					}
@@ -77,7 +77,7 @@ namespace SFDScript
 						vector += new Vector2(0, 4);
 						vector.Normalize();
 
-						target.SetLinearVelocity((vector * (effectivePower / 1.5f)) + target.GetLinearVelocity());// + new Vector2(0,8));
+						target.SetLinearVelocity((vector * (effectivePower / 1.2f)) + target.GetLinearVelocity());// + new Vector2(0,8));
 						target.SetWorldPosition(target.GetWorldPosition() + new Vector2(0, 2.5f));
 					}
 
