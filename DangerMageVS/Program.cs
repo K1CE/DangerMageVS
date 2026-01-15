@@ -53,11 +53,11 @@ namespace SFDScript
         };
         public static Color[] elementColors1 = new Color[]{
         new Color(132,132,255), new Color(255,220,135),new Color(0,255,255),new Color(89,255,177),new Color(100,100,100),new Color(255,0,0),new Color(255,0,127),
-        new Color(0,67,255),new Color(90,255,0),new Color(194,194,255),new Color(182,0,255),new Color(255,110,0),new Color(0,255,42),new Color(255,0,203)
+        new Color(86,131,255),new Color(90,255,0),new Color(194,194,255),new Color(182,0,255),new Color(255,110,0),new Color(0,255,42),new Color(255,0,203)
     };
         public static Color[] elementColors2 = new Color[]{
         new Color(75,75,150), new Color(84,66,45),new Color(45,84,84),new Color(45,84,66),new Color(64,64,64),new Color(84,45,45),new Color(84,45,55),
-        new Color(45,55,84),new Color(60,81,44),new Color(82,82,104),new Color(73,45,84),new Color(84,59,45),new Color(45,84,48),new Color(255,89,66)
+        new Color(52,61,81),new Color(60,81,44),new Color(82,82,104),new Color(73,45,84),new Color(84,59,45),new Color(45,84,48),new Color(255,89,66)
     };
 
 
