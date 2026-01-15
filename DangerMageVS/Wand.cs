@@ -213,7 +213,7 @@ namespace SFDScript
 			{
 				if (held)
 				{
-					if (!holder.ready && Game.TotalElapsedGameTime > holder.lastSpellCast + holder.cooldown)
+					if (!holder.ready && Game.TotalElapsedGameTime > holder.lastSpellCasts[holder.castingOrder] + holder.cooldowns[holder.castingOrder])
 					{
 						holder.ready = true;
 						Game.PlayEffect(

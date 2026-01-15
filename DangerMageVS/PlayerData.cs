@@ -14,8 +14,10 @@ namespace SFDScript
 			public IPlayer player;
 			public IUser user;
 			public Wand wand;
-			public float lastSpellCast = 0;
-			public float cooldown = 0;
+			public float[] cooldowns = {0, 0};
+            public float[] lastSpellCasts = {0, 0};
+			public float GCD = 0;
+            public int castingOrder = 0;
 			public float savedMeleeDamage = 1f;
 			public float savedRunSpeed = 1f;
 			public float savedEnergyRecharge = 1f;
@@ -70,21 +72,26 @@ namespace SFDScript
 
 			public void castSpell()
 			{
+				float cooldown = cooldowns[castingOrder];
 
-				if (Game.TotalElapsedGameTime > lastSpellCast + cooldown)
+				if (Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldown && Game.TotalElapsedGameTime > GCD)
 				{
+
 					Spell spell = wand.castSpell();
 					if (spell != null)
 					{
-						cooldown = spell.cooldown;
-						lastSpellCast = Game.TotalElapsedGameTime;
+
+						GCD = Game.TotalElapsedGameTime + 350;
+                        cooldowns[castingOrder] = spell.cooldown + spell.cooldown * (cooldowns.Length - 1)/1.2f;
+						lastSpellCasts[castingOrder] = Game.TotalElapsedGameTime;
 						ready = false;
 						//spellQueue.Add(this);
 
 						Game.PlaySound(elementSounds[(int)wand.element], player.GetWorldPosition(), 10f);
 						Game.PlaySound(elementSounds[(int)wand.element], player.GetWorldPosition(), 10f);
 					}
-
+					castingOrder++;
+					castingOrder %= cooldowns.Length;
 
 					//add spell list shuffle if it didnt work
 				}
@@ -93,7 +100,7 @@ namespace SFDScript
 					Game.PlayEffect(
 							"CFTXT",
 							player.GetWorldPosition() + new Vector2(0f, 30f),
-							(int)((lastSpellCast + cooldown - Game.TotalElapsedGameTime) / 1000) + "s"
+							(int)((lastSpellCasts[castingOrder] + cooldowns[castingOrder] - Game.TotalElapsedGameTime) / 1000) + "s"
 						);
 				}
 			}
