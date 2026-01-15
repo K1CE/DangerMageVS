@@ -47,8 +47,6 @@ namespace SFDScript
 						onImpactEvent(this, obj, Vector2.Normalize(obj.GetWorldPosition() - position), 0.5f); //TODO: variable powerMod
 					}
 				}
-
-				//messageRoss("splashed at x " + position.X);
             }
 			
 			public void impact(IObject affected)

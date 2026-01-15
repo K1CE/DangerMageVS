@@ -16,9 +16,9 @@ namespace SFDScript
 
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 
-		public class SpellToxic : Spell
+		public class SpellAcid : Spell
 		{
-			private static Element element = Element.TOXIC;
+			private static Element element = Element.ACID;
 			private bool triggerDebounce = false;
             Events.UpdateCallback acidDelay = null;
             private List<IObject> acidTagged = new List<IObject>();
@@ -26,12 +26,12 @@ namespace SFDScript
 
             private float triggerTime = 0;
 
-            public SpellToxic(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null)
+            public SpellAcid(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null)
 			{ 
 			
 			}
 
-			public SpellToxic(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
+			public SpellAcid(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
 
             }

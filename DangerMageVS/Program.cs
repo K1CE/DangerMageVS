@@ -28,7 +28,7 @@ namespace SFDScript
         public static IObjectTimerTrigger unfreezer;
         public const string STARTWANDS_KEY = "START WANDS";
 
-        public static string[] elementNames = new String[] { "", "earth", "shock", "air", "dark", "fire", "blood", "ice", "toxic", "metal", "space", "blast", "plant", "chaos" };
+        public static string[] elementNames = new String[] { "", "earth", "shock", "air", "dark", "fire", "blood", "ice", "acid", "metal", "space", "blast", "plant", "chaos" };
         public static char[] elementLetters = new char[] { ' ', 'p', 'k', 'f', 'z', 'r', 'g', 's', 'l', 't', 'w', 'c', 'm', '&' };
         public static string[] elementSounds = new string[]{
         "BowNoAmmo", "BulletHitStone", "ElectricSparks", "Throw", "Madness", "Flamethrower", "PlayerGib", "DestroyGlass", "ChainSwing", "BulletHitMetal", "StrengthBoostStart",
@@ -43,7 +43,7 @@ namespace SFDScript
         "FIRE",//fire
         "BLD",//blood
         "DestroyGlass",//ice
-        "ACS",//toxic
+        "ACS",//acid
         "HIT_S",//metal
         "Block",//space
         "S_P",//blast
@@ -74,7 +74,7 @@ namespace SFDScript
             FIRE,
             BLOOD,
             ICE,
-            TOXIC,
+            ACID,
             METAL,
             SPACE,
             BLAST,
@@ -701,8 +701,8 @@ namespace SFDScript
                                 if (element == Element.ICE)
                                     spell = new SpellIce(Vector2.Zero, Vector2.Zero, CastType.CHEAT, caster, spellArg);
                                 else
-                                if (element == Element.TOXIC)
-                                    spell = new SpellToxic(Vector2.Zero, Vector2.Zero, CastType.CHEAT, caster, spellArg);
+                                if (element == Element.ACID)
+                                    spell = new SpellAcid(Vector2.Zero, Vector2.Zero, CastType.CHEAT, caster, spellArg);
                                 else
                                 if (element == Element.METAL)
                                     spell = new SpellMetal(Vector2.Zero, Vector2.Zero, CastType.CHEAT, caster, spellArg);

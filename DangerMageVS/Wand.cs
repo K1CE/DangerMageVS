@@ -72,8 +72,8 @@ namespace SFDScript
 						return new SpellBlood(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
 					case Element.ICE:
 						return new SpellIce(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
-					case Element.TOXIC:
-						return new SpellToxic(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
+					case Element.ACID:
+						return new SpellAcid(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
 					case Element.METAL:
 						return new SpellMetal(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
 					case Element.SPACE:
