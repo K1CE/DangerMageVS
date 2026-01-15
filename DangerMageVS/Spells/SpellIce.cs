@@ -61,7 +61,7 @@ namespace SFDScript
 						else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
-
+				Spell.particleExplosion("GLM", sender.position, 1, (int)splash);
 
 
 			}
@@ -84,7 +84,7 @@ namespace SFDScript
 					unfreezer.Trigger();
 
 
-					IObject iceBit = Game.CreateObject("BgDirt00B", target.GetWorldPosition() + new Vector2(rnd.Next(-10, 10), rnd.Next(-10, 10)));
+					IObject iceBit = Game.CreateObject((rnd.Next(2) == 1)? "BgDirt00B" : "GlassSheet00A", target.GetWorldPosition() + new Vector2(rnd.Next(-10, 10), rnd.Next(-10, 10)));
 					if (rnd.Next(2) == 1)
 						iceBit.SetColor1("BgCyan");
 					else

@@ -93,7 +93,7 @@ namespace SFDScript
 				cooldown = 5000;
 				speed = 5f;
 				range = 0.6f;
-				splash = 20f;
+				splash = 19f;
 				particleEffect = "ACS";
 			}
 

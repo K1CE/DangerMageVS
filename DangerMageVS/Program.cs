@@ -18,6 +18,17 @@ namespace SFDScript
         public GameScript() : base(null) { }
 
         /* SCRIPT STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
+        //TODO:
+        /*
+         * particle effects framework for space wand
+         * directional casting
+         * double casting
+         * swap for dealdamage
+         * fix ice freeze?
+         * 
+         * 
+         * 
+         * */
 
         #region Startup Calls
 
@@ -534,7 +545,7 @@ namespace SFDScript
                 if (data == null) {
                     data = new PlayerData(ply);
                 }
-                new Wand(data, (Element)rnd.Next(elementNames.Length - 3));
+                new Wand(data, (Element)rnd.Next(elementNames.Length - 4));
             }
         }
 
