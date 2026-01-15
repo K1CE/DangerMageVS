@@ -65,7 +65,7 @@ namespace SFDScript
 		RayCastResult outPut = Game.RayCast(pos, pos + vector, input)[0];
 		if (outPut.Hit && Vector2.Distance(outPut.Position, pos) < 2f){*/
 		if (target.GetCollisionFilter().BlockMelee && Math.Abs(target.GetWorldPosition().Y - (sender.position.Y - 1f)) < 5f)
-			cast.impact(target);
+			cast.hit(target);
 		//}
 	}
 

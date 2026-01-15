@@ -99,7 +99,7 @@ namespace SFDScript
 				cooldown = 3400;
 				speed = 7f;
 				range = 1.4f;
-				splash = 28f;
+				splash = 40f;
 				particleEffect = "STM";
 			}
 

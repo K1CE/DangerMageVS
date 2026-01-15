@@ -26,7 +26,7 @@ namespace SFDScript
 			}
 			public void OnUpdate(float elapsed)
 			{
-				impact(target);
+				hit(target);
 				m_updateEvent.Stop();
 				m_updateEvent = null;
 			}

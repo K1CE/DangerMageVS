@@ -1,4 +1,5 @@
 ﻿using SFDGameScriptInterface;
+using System;
 
 
 namespace SFDScript
@@ -42,14 +43,19 @@ namespace SFDScript
 				Area area = new Area(position.Y + spell.splash, position.X - spell.splash, position.Y - spell.splash, position.X + spell.splash);
 				foreach (IObject obj in Game.GetObjectsByArea(area))
 				{
-					if (obj.GetBodyType() == BodyType.Dynamic && obj.UniqueID != blacklistID && Vector2.Distance(position, obj.GetWorldPosition()) <= spell.splash) 
+					float distance = Vector2.Distance(position, obj.GetWorldPosition());
+
+                    if (obj.GetBodyType() == BodyType.Dynamic && obj.UniqueID != blacklistID && distance <= spell.splash) 
 					{
-						onImpactEvent(this, obj, Vector2.Normalize(obj.GetWorldPosition() - position), 0.5f); //TODO: variable powerMod
+
+						float powerMod = (float)Math.Sin(distance * Math.PI / 2 + Math.PI / 2);
+
+						onImpactEvent(this, obj, Vector2.Normalize(obj.GetWorldPosition() - position), powerMod); //TODO: variable powerMod
 					}
 				}
             }
 			
-			public void impact(IObject affected)
+			public void hit(IObject affected)
 			{
 
 				updatePosition();

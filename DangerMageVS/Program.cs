@@ -122,7 +122,7 @@ namespace SFDScript
                     if (!sent.Equals(prj.spell.caster) && !((IPlayer)sent).IsDead)
                     {
                         prj.position = prj.hitBox.GetWorldPosition();
-                        prj.impact(sent);
+                        prj.hit(sent);
                     }
                 }
                 else if (sent.GetCollisionFilter().BlockFire)
@@ -136,8 +136,8 @@ namespace SFDScript
                     RayCastResult outPut = Game.RayCast(pos, prj.targetJoint.GetWorldPosition(), input)[0];
                     if (outPut.Hit && Vector2.Distance(outPut.Position, pos) < 2f)
                     {
-                        if (outPut.HitObject.GetMaxHealth() != 1) prj.impact(outPut.HitObject);
-                        else prj.impact(null);
+                        if (outPut.HitObject.GetMaxHealth() != 1) prj.hit(outPut.HitObject);
+                        else prj.hit(null);
 
 
                     }
@@ -164,7 +164,7 @@ namespace SFDScript
                         targ = obj;
                         break;
                     }
-                prj.impact(targ);
+                prj.hit(targ);
             }
         }
 
