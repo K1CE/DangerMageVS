@@ -534,7 +534,7 @@ namespace SFDScript
                 if (data == null) {
                     data = new PlayerData(ply);
                 }
-                new Wand(data, (Element)rnd.Next(elementNames.Length - 3) + 3);
+                new Wand(data, (Element)rnd.Next(elementNames.Length - 3));
             }
         }
 

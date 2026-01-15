@@ -54,6 +54,7 @@ namespace SFDScript
 				cooldown = 3850;
 				speed = 5.6f;
 				range = 1.0f;
+				splash = 6;
 				particleEffect = "BLD";
 			}
 

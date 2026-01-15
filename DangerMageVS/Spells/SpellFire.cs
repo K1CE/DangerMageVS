@@ -66,6 +66,7 @@ namespace SFDScript
 				cooldown = 3650;
 				speed = 5f;
 				range = 0.65f;
+				splash = 6;
 				particleEffect = "TR_F";
 			}
 
