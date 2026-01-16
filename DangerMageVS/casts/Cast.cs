@@ -50,7 +50,7 @@ namespace SFDScript
 
 						float powerMod = (float)Math.Sin(distance * Math.PI / 2 + Math.PI / 2);
 
-						onImpactEvent(this, obj, Vector2.Normalize(obj.GetWorldPosition() - position), powerMod); //TODO: variable powerMod
+						onImpactEvent(this, obj, Vector2.Normalize(obj.GetWorldPosition() - position), powerMod);
 					}
 				}
             }

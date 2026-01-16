@@ -71,7 +71,7 @@ namespace SFDScript
 					}
 					else
 					{
-						if (cantMeleeDamage(target))
+						if (!cantMeleeDamage(target))
 							target.DealDamage(effectivePower, caster.UniqueID);
 							//if (target.GetHealth() <= effectivePower) target.Destroy();
 							//else target.SetHealth(target.GetHealth() - effectivePower);

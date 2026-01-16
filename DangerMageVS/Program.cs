@@ -22,11 +22,9 @@ namespace SFDScript
         /*
          * particle effects framework for space wand
          * directional casting
-         * swap for dealdamage
          * fix ice freeze?
          * give ice speedup syringe for blue glow
          * make elements put out fire like ice and air
-         * fix damage to unbreakables
          * 
          * 
          * */
@@ -45,7 +43,7 @@ namespace SFDScript
         public static string[] elementSounds = new string[]{
         "BowNoAmmo", "BulletHitStone", "ElectricSparks", "Throw", "Madness", "Flamethrower", "PlayerGib", "DestroyGlass", "ChainSwing", "BulletHitMetal", "StrengthBoostStart",
         "Bazooka", "StrengthBoostStart", "Bazooka"
-    };
+        };
         public static string[] elementEffects = new string[]{
         "GLM",//simple
         "BulletHitDirt",//earth
