@@ -743,7 +743,8 @@ namespace SFDScript
         public static bool cantMeleeDamage(IObject target)
         {
             return target.Name == "BarrelExplosive" || target.Name == "BarrelWreck" || target.Name == "Gascan00" || target.Name == "PropaneTank" || target.Name == "Spotlight00A" ||
-                target.Name == "Spotlight00AWeak" || target.Name == "WpnMineThrown" || target.Name == "WpnGrenadesThrown" || target.Name == "WpnC4Thrown" || target.Name.Contains("Lamp");
+                target.Name == "Spotlight00AWeak" || target.Name == "WpnMineThrown" || target.Name == "WpnGrenadesThrown" || target.Name == "WpnC4Thrown" || target.Name.Contains("Lamp") || target.Name.Contains("pulley") ||
+                target.Name == "HangingCrateHolder";
         }
 
         static bool isTheFriendRossHere = false;
