@@ -41,7 +41,7 @@ namespace SFDScript
 						if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						else ply.SetHealth(ply.GetHealth() - damage); //add stun effect
 
-						data.electricute((int)(6.4f * effectivePower * effectivePower));
+						data.electrocute((int)(6.4f * effectivePower * effectivePower));
 						ply.AddCommand(new PlayerCommand(PlayerCommandType.DeathKneelInfinite));
 						Game.PlayEffect("Electric", target.GetWorldPosition());
 						Game.PlayEffect("Electric", target.GetWorldPosition() + new Vector2(0, 8));

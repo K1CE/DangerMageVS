@@ -104,6 +104,7 @@ namespace SFDScript
 			protected virtual void discharge() { }
 			protected virtual void projectile(Vector2 position, Vector2 direction)
 			{
+				//add directional casting here
 				cast = new CastProjectile(position, direction + position, speed, this);
 			}
 			protected virtual void self() { }

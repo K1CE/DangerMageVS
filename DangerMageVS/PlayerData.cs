@@ -82,7 +82,7 @@ namespace SFDScript
 					{
 
 						GCD = Game.TotalElapsedGameTime + 350;
-                        cooldowns[castingOrder] = spell.cooldown + spell.cooldown * (cooldowns.Length - 1)/1.2f;
+                        cooldowns[castingOrder] = spell.cooldown + spell.cooldown * (cooldowns.Length - 1)/1.1f;
 						lastSpellCasts[castingOrder] = Game.TotalElapsedGameTime;
 						ready = false;
 						//spellQueue.Add(this);
@@ -106,10 +106,10 @@ namespace SFDScript
 			}
 
 
-			public bool electricuted = false;
-			public void electricute(int interval)
+			public bool electrocuted = false;
+			public void electrocute(int interval)
 			{
-				electricuted = true;
+				electrocuted = true;
 				stun(interval);
 			}
 			public void stun(int interval)
@@ -128,7 +128,7 @@ namespace SFDScript
 				player.SetUser(user);
 				player.SetInputEnabled(true);
 				recovering = false;
-				electricuted = false;
+				electrocuted = false;
 			}
 
 			public void coldCheck()

@@ -22,10 +22,11 @@ namespace SFDScript
         /*
          * particle effects framework for space wand
          * directional casting
-         * double casting
          * swap for dealdamage
          * fix ice freeze?
-         * 
+         * give ice speedup syringe for blue glow
+         * make elements put out fire like ice and air
+         * fix damage to unbreakables
          * 
          * 
          * */
@@ -328,7 +329,7 @@ namespace SFDScript
                     if (data.cold) data.coldCheck();
                     if (data.recovering && data.lastHealth > data.player.GetHealth()) data.recover(); //for shock
 
-                    if(data.electricuted) data.effectsBody(Element.SHOCK);
+                    if(data.electrocuted) data.effectsBody(Element.SHOCK);
                       
                     
                 }
@@ -545,7 +546,7 @@ namespace SFDScript
                 if (data == null) {
                     data = new PlayerData(ply);
                 }
-                new Wand(data, (Element)rnd.Next(elementNames.Length - 4));
+                new Wand(data, (Element)rnd.Next(elementNames.Length - 5) + 1);
             }
         }
 
