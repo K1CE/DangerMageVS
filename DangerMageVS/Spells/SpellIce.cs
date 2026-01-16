@@ -33,8 +33,9 @@ namespace SFDScript
 
 						if (!dataNull) damage *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f)); //cold damage does more damage if target is cold
 						else damage *= ((data.cold) ? 1.5f : 1f);
-						if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
-						else ply.SetHealth(ply.GetHealth() - damage);
+						ply.DealDamage(damage, caster.UniqueID);
+						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
+						//else ply.SetHealth(ply.GetHealth() - damage);
 
 						PlayerModifiers pmod = ply.GetModifiers();
 						if (pmod.CurrentEnergy > damage * 4)
@@ -57,8 +58,9 @@ namespace SFDScript
 					}
 					else
 					{
-						if (target.GetHealth() <= effectivePower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - effectivePower);
+						target.DealDamage(effectivePower, caster.UniqueID);
+						//if (target.GetHealth() <= effectivePower) target.Destroy();
+						//else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
 				Spell.particleExplosion("GLM", sender.position, 1, (int)splash);

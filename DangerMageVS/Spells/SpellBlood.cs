@@ -34,16 +34,18 @@ namespace SFDScript
 
 						if (data != null) damage *= data.darkDamageTaken;
 
-						if (ply.GetHealth() <= damage) ply.Kill();
-						else ply.SetHealth(ply.GetHealth() - damage);
+						ply.DealDamage(damage, caster.UniqueID);
+						//if (ply.GetHealth() <= damage) ply.Kill();
+						//else ply.SetHealth(ply.GetHealth() - damage);
 
 						caster.SetHealth(caster.GetHealth() + damage);
 
 					}
 					else
 					{
-						if (target.GetHealth() <= effectivePower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - effectivePower);
+						target.DealDamage(effectivePower, caster.UniqueID);
+					//	if (target.GetHealth() <= effectivePower) target.Destroy();
+					//	else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
 				particleExplosion("BLD", pos, 10, 13f);

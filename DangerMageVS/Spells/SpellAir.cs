@@ -51,8 +51,9 @@ namespace SFDScript
 						float damage = effectivePower;
 
 						if (data != null) damage *= data.player.GetModifiers().ImpactDamageTakenModifier;
-						if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
-						else ply.SetHealth(ply.GetHealth() - damage);
+						ply.DealDamage(damage, caster.UniqueID);
+						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
+						//else ply.SetHealth(ply.GetHealth() - damage);
 
 						data.stun(100);
 						ply.AddCommand(new PlayerCommand(PlayerCommandType.Fall));
@@ -71,8 +72,9 @@ namespace SFDScript
 					else
 					{
 						if (cantMeleeDamage(target))
-							if (target.GetHealth() <= effectivePower) target.Destroy();
-							else target.SetHealth(target.GetHealth() - effectivePower);
+							target.DealDamage(effectivePower, caster.UniqueID);
+							//if (target.GetHealth() <= effectivePower) target.Destroy();
+							//else target.SetHealth(target.GetHealth() - effectivePower);
 
 						vector += new Vector2(0, 4);
 						vector.Normalize();

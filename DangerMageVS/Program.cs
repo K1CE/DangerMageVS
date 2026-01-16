@@ -148,8 +148,9 @@ namespace SFDScript
                     RayCastResult outPut = Game.RayCast(pos, prj.targetJoint.GetWorldPosition(), input)[0];
                     if (outPut.Hit && Vector2.Distance(outPut.Position, pos) < 2f)
                     {
-                        if (outPut.HitObject.GetMaxHealth() != 1) prj.hit(outPut.HitObject);
-                        else prj.hit(null);
+                        prj.hit(outPut.HitObject);
+                       // if (outPut.HitObject.GetMaxHealth() != 1) 
+                       // else prj.hit(null);
 
 
                     }

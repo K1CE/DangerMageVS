@@ -36,11 +36,12 @@ namespace SFDScript
 
 						float hdamage = damage / 3f;
 
-						if (ply.GetHealth() <= hdamage && !ply.IsStrengthBoostActive) ply.Kill();
-						else ply.SetHealth(ply.GetHealth() - hdamage);
+                        //if (ply.GetHealth() <= hdamage && !ply.IsStrengthBoostActive) ply.Kill();
+                        //else ply.SetHealth(ply.GetHealth() - hdamage);
+                        target.DealDamage(damage, caster.UniqueID);
 
-						//add fire extinguisher
-						if (data != null && !ply.IsBurningInferno)
+                        //add fire extinguisher
+                        if (data != null && !ply.IsBurningInferno)
 						{
 							data.fireRecovery.SetIntervalTime((int)(((hdamage * 2) / FIRE_PER_SECOND) * 1000));
 							data.fireRecovery.Trigger();
@@ -52,8 +53,9 @@ namespace SFDScript
 					}
 					else
 					{
-						if (target.GetHealth() <= effectivePower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - effectivePower);
+						//if (target.GetHealth() <= effectivePower) target.Destroy();
+						//else target.SetHealth(target.GetHealth() - effectivePower);
+						target.DealDamage(effectivePower, caster.UniqueID);
 						target.SetMaxFire();
 					}
 

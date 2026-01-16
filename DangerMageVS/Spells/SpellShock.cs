@@ -38,8 +38,9 @@ namespace SFDScript
 
 						if (data != null) damage *= data.shockDamageTaken;
 
-						if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
-						else ply.SetHealth(ply.GetHealth() - damage); //add stun effect
+						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
+						//else ply.SetHealth(ply.GetHealth() - damage); //add stun effect
+						ply.DealDamage(damage, caster.UniqueID);
 
 						data.electrocute((int)(6.4f * effectivePower * effectivePower));
 						ply.AddCommand(new PlayerCommand(PlayerCommandType.DeathKneelInfinite));
@@ -49,13 +50,15 @@ namespace SFDScript
 					}
 					else if (target.Name == "Streetsweeper")
 					{
-						if (target.GetHealth() <= effectivePower + 9f) target.Destroy();
-						else target.SetHealth(target.GetHealth() - (effectivePower + 14f));
+						//if (target.GetHealth() <= effectivePower + 9f) target.Destroy();
+						//else target.SetHealth(target.GetHealth() - (effectivePower + 14f));
+						target.DealDamage(effectivePower + 14, caster.UniqueID);
 					}
 					else
 					{
-						if (target.GetHealth() <= effectivePower) target.Destroy();
-						else target.SetHealth(target.GetHealth() - effectivePower);
+						//if (target.GetHealth() <= effectivePower) target.Destroy();
+						//else target.SetHealth(target.GetHealth() - effectivePower);
+						target.DealDamage(effectivePower, caster.UniqueID);
 					}
 
 				for (int i = 0; i < 6; i++)
@@ -64,7 +67,7 @@ namespace SFDScript
 					float angle = (float)(Math.PI * 2 * (rnd.Next(30) / 30f));
 					Game.PlayEffect("Electric", pos + new Vector2((float)(Math.Cos(angle) * dist), (float)(Math.Sin(angle) * dist)));
 				}
-				particleExplosion("Electric", pos, 6, 17f);
+				//particleExplosion("Electric", pos, 6, 17f);
 
 			}
 
