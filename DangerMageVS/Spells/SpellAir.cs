@@ -80,7 +80,7 @@ namespace SFDScript
 						vector.Normalize();
 
 						target.SetLinearVelocity((vector * (effectivePower / 1.2f)) + target.GetLinearVelocity());// + new Vector2(0,8));
-						target.SetWorldPosition(target.GetWorldPosition() + new Vector2(0, 2.5f));
+                        if (target.GetBodyType() == BodyType.Dynamic) target.SetWorldPosition(target.GetWorldPosition() + new Vector2(0, 2.5f));
 					}
 
 			}
