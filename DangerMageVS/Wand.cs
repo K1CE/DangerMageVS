@@ -51,33 +51,33 @@ namespace SFDScript
 			{
 				IPlayer ply = holder.player;
 
-				switch (element)
+				Vector2 position = ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0));
+				Vector2 targetVector = new Vector2(200 * ply.FacingDirection, 0);
+
+                switch (element)
 				{
 					case Element.ARCANE:
 						break;
 					case Element.EARTH:
-						return new SpellEarth(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
+						return new SpellEarth(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.SHOCK:
-						return new SpellShock(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
+						return new SpellShock(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.AIR:
-						return new SpellAir(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
-
+						return new SpellAir(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.DARK:
-						return new SpellDark(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
-
+						return new SpellDark(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.FIRE:
-						return new SpellFire(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
-
+						return new SpellFire(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.BLOOD:
-						return new SpellBlood(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
+						return new SpellBlood(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.ICE:
-						return new SpellIce(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
+						return new SpellIce(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.ACID:
-						return new SpellAcid(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
+						return new SpellAcid(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.METAL:
-						return new SpellMetal(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
+						return new SpellMetal(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.SPACE:
-						return new SpellSpace(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0)), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
+						return new SpellSpace(position, targetVector, CastType.PROJECTILE, ply);
 					case Element.BLAST:
 						//	return new BlastSpell(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir)? 4 : 0) ), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
 						return null;
