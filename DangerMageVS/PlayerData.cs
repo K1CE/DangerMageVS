@@ -83,7 +83,9 @@ namespace SFDScript
 
 						GCD = Game.TotalElapsedGameTime + 350;
                         cooldowns[castingOrder] = spell.cooldown + spell.cooldown * (cooldowns.Length - 1)/1.1f;
-						lastSpellCasts[castingOrder] = Game.TotalElapsedGameTime;
+						//cooldowns[castingOrder] /= 2.5f;
+
+                        lastSpellCasts[castingOrder] = Game.TotalElapsedGameTime;
 						ready = false;
 						//spellQueue.Add(this);
 

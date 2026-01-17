@@ -80,7 +80,7 @@ namespace SFDScript
 	{
 		spellPower = 17;
 		cooldown = 3700;
-		speed = 9f;
+		speed = 8.5f;
 		range = 1f;
 	}
 }

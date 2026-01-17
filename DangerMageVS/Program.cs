@@ -21,7 +21,6 @@ namespace SFDScript
         //TODO:
         /*
          * particle effects framework for space wand
-         * directional casting
          * fix ice freeze?
          * give ice speedup syringe for blue glow
          * make elements put out fire like ice and air

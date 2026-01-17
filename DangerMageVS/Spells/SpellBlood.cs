@@ -43,7 +43,7 @@ namespace SFDScript
 					}
 					else
 					{
-						target.DealDamage(effectivePower, caster.UniqueID);
+						target.DealDamage(effectivePower * 1.2f, caster.UniqueID);
 					//	if (target.GetHealth() <= effectivePower) target.Destroy();
 					//	else target.SetHealth(target.GetHealth() - effectivePower);
 					}
@@ -52,7 +52,7 @@ namespace SFDScript
 			}
 			protected override void setUpStats()
 			{
-				spellPower = 10;
+				spellPower = 12;
 				cooldown = 3850;
 				speed = 5.6f;
 				range = 1.0f;
