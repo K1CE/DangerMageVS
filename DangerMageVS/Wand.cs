@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SFDGameScriptInterface;
 
 
@@ -50,34 +51,43 @@ namespace SFDScript
 			public Spell castSpell()
 			{
 				IPlayer ply = holder.player;
+				float defaultVecX = 200 * ply.FacingDirection;
 
-				Vector2 position = ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0));
-				Vector2 targetVector = new Vector2(200 * ply.FacingDirection, 0);
+
+                Vector2 position = ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir) ? 4 : 0));
+				Vector2 vector = new Vector2(defaultVecX, 0);
+
+				float pVelocity = ply.GetLinearVelocity().Y;
+                float rotation = ((float)Math.Atan(pVelocity/7f)); //7 is just a scalar to make it fit SFD velocity better
+				if (pVelocity > 4.8f && pVelocity < 6f) rotation += 0.3f;
+				rotation *= ply.FacingDirection;
+                if (isTheFriendRossHere && ply.UserIdentifier == riss.UserIdentifier) messageRoss("jumped at " + ply.GetLinearVelocity().Y + " rotation :  " + rotation);
+				vector = new Vector2((float)Math.Cos(rotation) * defaultVecX, (float)Math.Sin(rotation) * defaultVecX);
 
                 switch (element)
 				{
 					case Element.ARCANE:
 						break;
 					case Element.EARTH:
-						return new SpellEarth(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellEarth(position, vector, CastType.PROJECTILE, ply);
 					case Element.SHOCK:
-						return new SpellShock(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellShock(position, vector, CastType.PROJECTILE, ply);
 					case Element.AIR:
-						return new SpellAir(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellAir(position, vector, CastType.PROJECTILE, ply);
 					case Element.DARK:
-						return new SpellDark(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellDark(position, vector, CastType.PROJECTILE, ply);
 					case Element.FIRE:
-						return new SpellFire(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellFire(position, vector, CastType.PROJECTILE, ply);
 					case Element.BLOOD:
-						return new SpellBlood(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellBlood(position, vector, CastType.PROJECTILE, ply);
 					case Element.ICE:
-						return new SpellIce(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellIce(position, vector, CastType.PROJECTILE, ply);
 					case Element.ACID:
-						return new SpellAcid(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellAcid(position, vector, CastType.PROJECTILE, ply);
 					case Element.METAL:
-						return new SpellMetal(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellMetal(position, vector, CastType.PROJECTILE, ply);
 					case Element.SPACE:
-						return new SpellSpace(position, targetVector, CastType.PROJECTILE, ply);
+						return new SpellSpace(position, vector, CastType.PROJECTILE, ply);
 					case Element.BLAST:
 						//	return new BlastSpell(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir)? 4 : 0) ), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
 						return null;
