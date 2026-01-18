@@ -1,4 +1,6 @@
 ﻿using SFDGameScriptInterface;
+using System;
+using System.Runtime.InteropServices;
 
 
 namespace SFDScript
@@ -37,52 +39,58 @@ namespace SFDScript
 						PlayerModifiers pmod = caster.GetModifiers();
 
 
-						float spellPowerPlus = effectivePower + effectivePower * ((pmod.MaxHealth - pmod.CurrentHealth)/100f);
+						float spellPowerPlusMissingHealth = effectivePower + effectivePower * ((pmod.MaxHealth - pmod.CurrentHealth)/100f);
 
-						float tt = ply.GetHealth();
+						float victimHealth = ply.GetHealth();
 
-						float damage = spellPowerPlus;
+						float damage = spellPowerPlusMissingHealth;
 
 						if (data != null) damage *= data.darkDamageTaken;
 
-						double chance;
-						double maxChange = 0.4f * (effectivePower / 12);
+						double roll;
+						double maxChange = 0.8f * (effectivePower / 12.5f);
 						if (!ply.IsDead)
 						{
 
 							if (data != null)
 							{
-								double input = (rnd.NextDouble());
+								double input = (rnd.NextDouble()); 
 
 
-								double curve = (-maxChange) * ((input - 1) * (input - 1));
-								double line = maxChange * input - maxChange;
+								double curve = (-maxChange) * (Math.Pow(input - 1, 2));
+								double line = maxChange * (input - 1);
+								double percentageChance = (spellPowerPlusMissingHealth - 5) / 40;
 
-								double percentage = (spellPowerPlus - 5) / 40;
+								double subtractor = (curve * (1 - percentageChance)) + (line * percentageChance);
 
-								data.corruption += (curve * (1 - percentage)) + (line * percentage);
-								chance = data.corruption;
+                                roll = data.corruption + subtractor;
+                                //limited curve function:
+                                roll = Math.Pow(10, roll) / 10;
+
+                                if (data.corruption > roll) data.corruption = data.corruption - (data.corruption - roll) /3f;
+
 
 								if (data.corruption > 1.0) data.corruption = 1.0;
 								else if (data.corruption < 0) data.corruption = 0;
 								messageRoss(ply.Name + "'s corruption level changed to " + (((int)(data.corruption * 1000)) / 1000D));
+                                messageRoss("you rolled " + (((int)(roll * 1000)) / 1000D));
 
-							}
-							else chance = rnd.NextDouble();
+                            }
+							else roll = rnd.NextDouble(); 
 
-							double scale = (0.25 * (effectivePower / 15)) * ((100 - tt)) / 100;
-							if (chance < scale)
+							double chance = (0.25 * (effectivePower / 15)) * ((100 - victimHealth)) / 100;
+							if (chance > roll)
 							{ // smash bros formulas, 
 								Game.ShowChatMessage("YOU HAD A SUDDEN HEART ATTACK", elementColors1[(int)element], ply.UserIdentifier);
 								Game.ShowChatMessage("thwakc", new Color(250, 0, 0));
 								ply.Kill();
 							}
-							else if (chance < scale * (3 + spellPowerPlus / 10))
+							else if (roll < chance * (3 + spellPowerPlusMissingHealth / 10))
 							{
 								Game.ShowChatMessage("YOU FELT YOUR HEART STOP FOR A MOMENT", elementColors1[(int)element], ply.UserIdentifier);
 								damage += 1f;
 
-								messageRoss(ply.Name + "'s limit is " + scale);
+								messageRoss(ply.Name + "'s limit is " + chance);
 							}
 						}
 
@@ -106,8 +114,8 @@ namespace SFDScript
 			}
 			protected override void setUpStats()
 			{
-				spellPower = 10; //starts at 10 and rises to 200% depending on playerhealth
-				cooldown = 3500;
+				spellPower = 11.5f; //starts at 10 and rises to 200% depending on playerhealth
+				cooldown = 3700;
 				speed = 5.3f;
 				range = 1.2f;
 				splash = 18;
