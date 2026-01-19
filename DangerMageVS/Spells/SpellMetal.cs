@@ -36,9 +36,21 @@ namespace SFDScript
 				}
 				Game.PlaySound("ImpactMetal", sender.position, 1f);
 				particleExplosion("S_P", sender.position, 3, 8f);
-			}
+            }
+            public override void explode(Cast sender, IObject alreadyHit, Vector2 position) {
+				float bullets = splash;
+				for (int i = 0; i < bullets; i++) {
+					double rotation = rnd.NextDouble() * Math.PI * 2;
+					Vector2 vector = new Vector2((float)Math.Cos(rotation) / 10f, (float)Math.Sin(rotation) / 10f);
 
-			public override void passive(Cast sender, IObject target, Vector2 vector)
+                    IProjectile shrapnel = Game.SpawnProjectile(ProjectileItem.PISTOL, position + vector * 15f, vector);
+					shrapnel.DamageDealtModifier = 0.3f;
+					shrapnel.CritChanceDealtModifier = 0f;
+					//shrapnel.Velocity = vector;
+                }
+            }
+
+            public override void passive(Cast sender, IObject target, Vector2 vector)
 			{
 				/*
 				Vector2 pos = sender.position;
@@ -52,6 +64,8 @@ namespace SFDScript
 				//}
 			}
 
+
+
 			protected override void projectile(Vector2 position, Vector2 direction)
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
@@ -59,11 +73,13 @@ namespace SFDScript
 			}
 			protected override void setUpStats()
 			{
-				spellPower = 19f;
+				spellPower = 16f;
 				cooldown = 3700;
 				speed = 7.5f;
 				range = 2f;
+				splash = 18;
 			}
+
 		}
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */

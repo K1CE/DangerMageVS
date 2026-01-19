@@ -29,7 +29,10 @@ namespace SFDScript
          * gib on kill for blood magic
          * add flying giblets for blood magic
          * thwakc spinning animation
-         * metal projectile splash into bullets
+         * insane idea: sawblades move across surfaces
+         * fix hitting scaffolding
+         * fix crash on death
+         * 
          * 
          * */
 
