@@ -1,5 +1,6 @@
 ﻿using System;
 using SFDGameScriptInterface;
+using static SFDScript.GameScript;
 
 
 namespace SFDScript
@@ -79,6 +80,7 @@ namespace SFDScript
 				cast.onPassiveEvent += new Cast.PassiveHandler(passive);
 				cast.onParticleEvent += new Cast.ParticleHandler(particles);
                 cast.onParticleExplosionEvent += new Cast.ParticleExplosionHandler(particleExplosion);
+				cast.onExplodeEvent += new Cast.ExplosionHandler(explode);
             }
 
 			protected abstract void setUpStats();
@@ -87,7 +89,23 @@ namespace SFDScript
 
 			public abstract void passive(Cast sender, IObject target, Vector2 vector);
 
-			public virtual void particles(Cast sender, Vector2 position, int count, float radius)
+            public void explode(Cast sender, IObject alreadyHit, Vector2 position) {
+                int blacklistID = 0;
+                if (alreadyHit != null) blacklistID = alreadyHit.UniqueID;
+                if (splash <= 0) return;
+                particleExplosion(sender, position, 14, splash);
+                Area area = new Area(position.Y + splash, position.X - splash, position.Y - splash, position.X + splash);
+                foreach (IObject obj in Game.GetObjectsByArea(area)) {
+                    float distance = Vector2.Distance(position, obj.GetWorldPosition());
+                    if (obj.GetBodyType() == BodyType.Dynamic && obj.UniqueID != blacklistID && distance <= splash) {
+                        float powerMod = (float)Math.Sin(distance * Math.PI / 2 + Math.PI / 2);
+
+                        affect(sender, obj, Vector2.Normalize(obj.GetWorldPosition() - position), powerMod);
+                    }
+                }
+            }
+
+            public virtual void particles(Cast sender, Vector2 position, int count, float radius)
 			{
 				if (particleEffect != "")
 					while (count > 0)
