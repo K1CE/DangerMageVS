@@ -59,6 +59,7 @@ namespace SFDScript
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage);
 
+						//note: cant give speed buff because it gives infinite stamina
 						PlayerModifiers pmod = ply.GetModifiers();
 						if (pmod.CurrentEnergy > damage * 4)
 							pmod.CurrentEnergy = pmod.CurrentEnergy - (damage * 4f);
@@ -89,6 +90,8 @@ namespace SFDScript
 						//if (target.GetHealth() <= effectivePower) target.Destroy();
 						//else target.SetHealth(target.GetHealth() - effectivePower);
 					}
+
+					target.ClearFire();
 
 				}
 
@@ -125,7 +128,7 @@ namespace SFDScript
 					if(target.CustomID != "iceBit") frozen.AddTargetObject(target);
 					//unfreezer.Trigger();
 
-					//TODO: fix glass sheet breaking weld when broken
+					//NOTE: glass shards will still sometimes break welds
 					IObject iceBit = Game.CreateObject((rnd.Next(5) == 1)? "GlassShard00A" : "BgDirt00B", target.GetWorldPosition() + new Vector2(rnd.Next(-10, 10), rnd.Next(-10, 10)));
 					if (iceBit.Name == "GlassShard00A") iceBit.SetAngle((float)(rnd.NextDouble() * Math.PI * 2));
 					if (rnd.Next(2) == 1)
@@ -138,7 +141,7 @@ namespace SFDScript
                     iceBit.CustomID = "iceBit";
                     frozen.AddTargetObject(iceBit);
 
-
+                    target.ClearFire();
                 }
 			}
 

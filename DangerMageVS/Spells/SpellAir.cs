@@ -42,9 +42,8 @@ namespace SFDScript
 
 				//particleExplosion("STM", pos, 14, 22f);
 
-				if (target != null)
-					if (target is IPlayer)
-					{
+				if (target != null) {
+					if (target is IPlayer) {
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 
@@ -65,23 +64,25 @@ namespace SFDScript
 						vector.Normalize();
 						//vector += direction;
 						//vector /= 2f;
-						ply.SetLinearVelocity((vector * (effectivePower / 1.3f)) + ply.GetLinearVelocity()/1.4f);// + new Vector2(0,8));
+						ply.SetLinearVelocity((vector * (effectivePower / 1.3f)) + ply.GetLinearVelocity() / 1.4f);// + new Vector2(0,8));
 						ply.SetWorldPosition(ply.GetWorldPosition() + new Vector2(0, 2.5f));
 
 					}
-					else
-					{
+					else {
 						if (!cantMeleeDamage(target))
 							target.DealDamage(effectivePower, caster.UniqueID);
-							//if (target.GetHealth() <= effectivePower) target.Destroy();
-							//else target.SetHealth(target.GetHealth() - effectivePower);
+						//if (target.GetHealth() <= effectivePower) target.Destroy();
+						//else target.SetHealth(target.GetHealth() - effectivePower);
 
 						vector += new Vector2(0, 4);
 						vector.Normalize();
 
 						target.SetLinearVelocity((vector * (effectivePower / 1.2f)) + target.GetLinearVelocity());// + new Vector2(0,8));
-                        if (target.GetBodyType() == BodyType.Dynamic) target.SetWorldPosition(target.GetWorldPosition() + new Vector2(0, 2.5f));
+						if (target.GetBodyType() == BodyType.Dynamic) target.SetWorldPosition(target.GetWorldPosition() + new Vector2(0, 2.5f));
 					}
+
+                    target.ClearFire();
+                }
 
 			}
 
@@ -93,7 +94,9 @@ namespace SFDScript
 				newdir *= 4f;
 				target.SetLinearVelocity(target.GetLinearVelocity() + ((newdir / (target.GetMass() * 100) + newdir) / 2)); //fix to make more realistic
 				target.SetAngularVelocity(newdir.X * 2f);
-			}
+
+                target.ClearFire();
+            }
 
 			protected override void setUpStats()
 			{
