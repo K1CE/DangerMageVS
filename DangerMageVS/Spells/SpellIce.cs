@@ -59,15 +59,34 @@ namespace SFDScript
 					}
 					else
 					{
-						target.DealDamage(effectivePower, caster.UniqueID);
-						//if (target.GetHealth() <= effectivePower) target.Destroy();
-						//else target.SetHealth(target.GetHealth() - effectivePower);
-					}
+						if (cantMeleeDamage(target) && !target.Name.Contains("Bg")) 
+						{
+							Game.CreateObject("ReinforcedGlass00A", target.GetWorldPosition(), target.GetAngle()).SetBodyType(BodyType.Dynamic);
+							target.Remove();
+
+						} 
+						else target.DealDamage(effectivePower, caster.UniqueID);
+
+
+                        //if (target.GetHealth() <= effectivePower) target.Destroy();
+                        //else target.SetHealth(target.GetHealth() - effectivePower);
+                    }
 
 				Spell.particleExplosion("GLM", sender.position, 1, (int)splash);
 
 
 			}
+
+			public override void explode(Cast sender, IObject alreadyHit, Vector2 position) 
+            {
+				base.explode(sender, alreadyHit, position);
+
+				Vector2 normalizedDirection = Vector2.Normalize(sender.direction);
+				messageRoss("normalizedDirection x " +  normalizedDirection.X);
+				IObject ice = Game.CreateObject("GlassSheet00A", sender.position, (float)Math.Acos(normalizedDirection.X));
+
+            }
+
 			protected override void setUpStats()
 			{
 				spellPower = 13.5f;
@@ -101,7 +120,6 @@ namespace SFDScript
 
 
                 }
-				//make it freeze objects
 			}
 
 			protected override void projectile(Vector2 position, Vector2 direction)

@@ -89,7 +89,8 @@ namespace SFDScript
 
 			public abstract void passive(Cast sender, IObject target, Vector2 vector);
 
-            public virtual void explode(Cast sender, IObject alreadyHit, Vector2 position) {
+            public virtual void explode(Cast sender, IObject alreadyHit, Vector2 position)
+			{
                 int blacklistID = 0;
                 if (alreadyHit != null) blacklistID = alreadyHit.UniqueID;
                 if (splash <= 0) return;
