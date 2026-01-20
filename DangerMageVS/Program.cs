@@ -30,7 +30,6 @@ namespace SFDScript
          * add flying giblets for blood magic
          * thwakc spinning animation
          * insane idea: sawblades move across surfaces
-         * fix hitting scaffolding
          * fix crash on death
          * 
          * 
@@ -474,6 +473,8 @@ namespace SFDScript
             {
                 IPlayer ply = fireQueue[0].player;
                 ply.ClearFire();
+
+                //messageRoss("fire damage after: " + ply.Statistics.TotalFireDamageTaken);
 
                 if (!(ply.IsRolling || ply.IsDiving))
                 {

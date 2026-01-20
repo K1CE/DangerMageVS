@@ -32,18 +32,20 @@ namespace SFDScript
 
 						float damage = effectivePower;
 
+						messageRoss("fire damage current: " + ply.Statistics.TotalFireDamageTaken);
 						if (data != null) damage *= (data.player.GetModifiers().FireDamageTakenModifier) * ((ply.IsBurningInferno) ? 1.5f : 1f);
 
-						float hdamage = damage / 3f;
+						float hdamage = damage * 2 / 3f;
 
                         //if (ply.GetHealth() <= hdamage && !ply.IsStrengthBoostActive) ply.Kill();
                         //else ply.SetHealth(ply.GetHealth() - hdamage);
-                        target.DealDamage(damage, caster.UniqueID);
+                        target.DealDamage(damage * 1 / 3f, caster.UniqueID);
+
 
                         //add fire extinguisher
                         if (data != null && !ply.IsBurningInferno)
 						{
-							data.fireRecovery.SetIntervalTime((int)(((hdamage * 2) / FIRE_PER_SECOND) * 1000));
+							data.fireRecovery.SetIntervalTime((int)(((hdamage) / FIRE_PER_SECOND) * 1000));
 							data.fireRecovery.Trigger();
 							fireQueue.Add(data);
 						}
