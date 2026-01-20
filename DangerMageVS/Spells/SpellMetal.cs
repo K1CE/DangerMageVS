@@ -59,7 +59,7 @@ namespace SFDScript
 				input.IncludeOverlap = true;
 				RayCastResult outPut = Game.RayCast(pos, pos + vector, input)[0];
 				if (outPut.Hit && Vector2.Distance(outPut.Position, pos) < 2f){*/
-				if (target.GetCollisionFilter().BlockMelee && Math.Abs(target.GetWorldPosition().Y - (sender.position.Y - 1f)) < 5f)
+				if (target.GetCollisionFilter().AbsorbProjectile && Math.Abs(target.GetWorldPosition().Y - (sender.position.Y - 1f)) < 5f)
 					cast.hit(target);
 				//}
 			}
