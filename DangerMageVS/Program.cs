@@ -24,7 +24,6 @@ namespace SFDScript
          * fix ice freeze?
          * give ice speedup syringe for blue glow
          * make elements put out fire like ice and air
-         * fix fire damage
          * add bloodlust and hunger for blood magic
          * gib on kill for blood magic
          * add flying giblets for blood magic

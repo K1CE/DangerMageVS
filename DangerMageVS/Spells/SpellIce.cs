@@ -1,4 +1,5 @@
 ﻿using SFDGameScriptInterface;
+using System;
 
 
 namespace SFDScript
@@ -82,11 +83,12 @@ namespace SFDScript
 			{
 				if (target.GetBodyType() == BodyType.Dynamic)
 				{
-					frozen.AddTargetObject(target);
-					unfreezer.Trigger();
+					if(target.CustomID != "iceBit") frozen.AddTargetObject(target);
+					//unfreezer.Trigger();
 
-
-					IObject iceBit = Game.CreateObject((rnd.Next(2) == 1)? "BgDirt00B" : "GlassSheet00A", target.GetWorldPosition() + new Vector2(rnd.Next(-10, 10), rnd.Next(-10, 10)));
+					//TODO: fix glass sheet breaking weld when broken
+					IObject iceBit = Game.CreateObject((rnd.Next(5) == 1)? "GlassShard00A" : "BgDirt00B", target.GetWorldPosition() + new Vector2(rnd.Next(-10, 10), rnd.Next(-10, 10)));
+					if (iceBit.Name == "GlassShard00A") iceBit.SetAngle((float)(rnd.NextDouble() * Math.PI * 2));
 					if (rnd.Next(2) == 1)
 						iceBit.SetColor1("BgCyan");
 					else
@@ -96,6 +98,8 @@ namespace SFDScript
                     iceBit.SetMass(0.00005f);
                     iceBit.CustomID = "iceBit";
                     frozen.AddTargetObject(iceBit);
+
+
                 }
 				//make it freeze objects
 			}
@@ -103,6 +107,7 @@ namespace SFDScript
 			protected override void projectile(Vector2 position, Vector2 direction)
 			{
 				frozen = (IObjectWeldJoint)Game.CreateObject("WeldJoint");
+				frozen.SetBodyType(BodyType.Static);
 
 				cast = new CastProjectile(position, direction + position, speed, this);
 				IObject iceBall = Game.CreateObject("BgLamp01A", position);
