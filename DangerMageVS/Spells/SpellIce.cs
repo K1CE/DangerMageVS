@@ -23,14 +23,35 @@ namespace SFDScript
 			{
                 float effectivePower = spellPower * powerMod;
 
+				
+
                 Game.PlaySound("DestroyStone", sender.position, 10f);
-				if (target != null)
-					if (target is IPlayer)
+
+				if (target != null) {
+
+					//weather damage bonus
+					if (Game.GetWeatherType() > 0 && target.GetHealth() > 1f)
 					{
+						RayCastInput skyRay = new RayCastInput(true);
+						skyRay.AbsorbProjectile = RayCastFilterMode.True;
+						skyRay.ProjectileHit = RayCastFilterMode.True;
+						skyRay.IncludeOverlap = false;
+						RayCastResult result = Game.RayCast(target.GetWorldPosition(), target.GetWorldPosition() + new Vector2(0, 400), skyRay)[0];
+						if (!result.Hit) 
+						{
+
+							effectivePower *= 1.25f;
+
+						}
+
+                    }
+
+					if (target is IPlayer) {
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 						bool dataNull = data == null;
 						float damage = effectivePower;
+
 
 						if (!dataNull) damage *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f)); //cold damage does more damage if target is cold
 						else damage *= ((data.cold) ? 1.5f : 1f);
@@ -42,8 +63,7 @@ namespace SFDScript
 						if (pmod.CurrentEnergy > damage * 4)
 							pmod.CurrentEnergy = pmod.CurrentEnergy - (damage * 4f);
 						else pmod.CurrentEnergy = 0f;
-						if (!dataNull && !data.cold)
-						{
+						if (!dataNull && !data.cold) {
 							data.savedEnergyRecharge = pmod.EnergyRechargeModifier;
 							data.savedRunSpeed = pmod.RunSpeedModifier;
 							data.savedMeleeDamage = pmod.MeleeDamageDealtModifier;
@@ -57,20 +77,20 @@ namespace SFDScript
 						if (!dataNull) data.cold = true;
 
 					}
-					else
-					{
-						if (cantMeleeDamage(target) && !target.Name.Contains("Bg")) 
-						{
+					else {
+						if (cantMeleeDamage(target) && !target.Name.Contains("Bg")) {
 							Game.CreateObject("ReinforcedGlass00A", target.GetWorldPosition(), target.GetAngle()).SetBodyType(BodyType.Dynamic);
 							target.Remove();
 
-						} 
+						}
 						else target.DealDamage(effectivePower, caster.UniqueID);
 
 
-                        //if (target.GetHealth() <= effectivePower) target.Destroy();
-                        //else target.SetHealth(target.GetHealth() - effectivePower);
-                    }
+						//if (target.GetHealth() <= effectivePower) target.Destroy();
+						//else target.SetHealth(target.GetHealth() - effectivePower);
+					}
+
+				}
 
 				Spell.particleExplosion("GLM", sender.position, 1, (int)splash);
 
@@ -81,8 +101,8 @@ namespace SFDScript
             {
 				base.explode(sender, alreadyHit, position);
 
+				//freeze air
 				Vector2 normalizedDirection = Vector2.Normalize(sender.direction);
-				messageRoss("normalizedDirection x " +  normalizedDirection.X);
 				IObject ice = Game.CreateObject("GlassSheet00A", sender.position, (float)Math.Acos(normalizedDirection.X));
 
             }
