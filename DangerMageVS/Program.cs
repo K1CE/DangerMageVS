@@ -21,10 +21,7 @@ namespace SFDScript
         //TODO:
         /*
          * particle effects framework for space wand
-         * fix ice freeze?
-         * give ice speedup syringe for blue glow
-         * make elements put out fire like ice and air
-         * add bloodlust and hunger for blood magic
+         * add bloodlust and bloodthirst for blood magic
          * gib on kill for blood magic
          * add flying giblets for blood magic
          * thwakc spinning animation

@@ -43,7 +43,7 @@ namespace SFDScript
 					double rotation = rnd.NextDouble() * Math.PI * 2;
 					Vector2 vector = new Vector2((float)Math.Cos(rotation) / 10f, (float)Math.Sin(rotation) / 10f);
 
-                    IProjectile shrapnel = Game.SpawnProjectile(ProjectileItem.PISTOL, position + vector * 15f, vector);
+                    IProjectile shrapnel = Game.SpawnProjectile(ProjectileItem.PISTOL, position + vector * 25f, vector);
 					shrapnel.DamageDealtModifier = 0.3f;
 					shrapnel.CritChanceDealtModifier = 0f;
 					//shrapnel.Velocity = vector;

@@ -64,7 +64,8 @@ namespace SFDScript
 						if (pmod.CurrentEnergy > damage * 4)
 							pmod.CurrentEnergy = pmod.CurrentEnergy - (damage * 4f);
 						else pmod.CurrentEnergy = 0f;
-						if (!dataNull && !data.cold) {
+						if (!dataNull && !data.cold) 
+						{
 							data.savedEnergyRecharge = pmod.EnergyRechargeModifier;
 							data.savedRunSpeed = pmod.RunSpeedModifier;
 							data.savedMeleeDamage = pmod.MeleeDamageDealtModifier;

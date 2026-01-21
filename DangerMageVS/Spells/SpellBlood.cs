@@ -37,27 +37,43 @@ namespace SFDScript
 
 						ply.DealDamage(damage, caster.UniqueID);
 
+
+                        PlayerData casterData = dataFromPlayer(caster);
                         PlayerModifiers casterMod = caster.GetModifiers();
+                        bool fullHp = casterMod.CurrentHealth > casterMod.MaxHealth - 0.5f - spellPower / 3f;
 
+						//bloodfrenzy
+						if (ply.IsDead)
+						{
+							ply.Gib();
+							Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 10f - 5f, 15f), "BLOODFRENZY", elementColors1[(int)Element.BLOOD], 1500f, 1.1f, true);
+                            Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 20f - 5f, 20f), "+5", elementColors2[(int)Element.BLOOD], 1500f, 0.8f, true);
 
+                            casterMod.MaxHealth += 5;
+                            casterMod.CurrentHealth += 50;
+                            caster.SetStrengthBoostTime(10000f);
+
+                            for (int i = 0; i < casterData.lastSpellCasts.Length; i++)
+							{
+								casterData.cooldowns[i] = 0;
+							}
+						}
+						else
 						//bloodthirst
-                        messageRoss("hp: " + (-casterMod.CurrentHealth + casterMod.MaxHealth));
-						bool fullHp = casterMod.CurrentHealth > casterMod.MaxHealth - 0.5f - spellPower/3f;
-                        if (fullHp || rnd.NextDouble() < 0.5f) 
+						if (fullHp || rnd.NextDouble() < 0.5f)
 						{
 							Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 10f - 5f, 15f), "BLOODTHIRST", elementColors1[(int)Element.BLOOD], 1500f, 1.1f, true);
 							caster.SetStrengthBoostTime(2200f);
-							PlayerData casterData = dataFromPlayer(caster);
-							if(casterData != null) 
+							if (casterData != null)
 							{
 
 								int longestCooldownIndex = 0;
 								float longestCooldown = 100000000f;
-								for (int i = 0; i < casterData.lastSpellCasts.Length; i++) 
+								for (int i = 0; i < casterData.lastSpellCasts.Length; i++)
 								{
 									float currentCooldown = casterData.cooldowns[i] - casterData.lastSpellCasts[i];
 
-									if (currentCooldown < longestCooldown) 
+									if (currentCooldown < longestCooldown)
 									{
 										longestCooldown = currentCooldown;
 										longestCooldownIndex = i;
@@ -66,19 +82,18 @@ namespace SFDScript
 
 								casterData.cooldowns[longestCooldownIndex] = 0;
 								casterData.castingOrder = longestCooldownIndex;
-								messageRoss("removed cooldown " + longestCooldownIndex);
 							}
 
 							if (fullHp)
 							{
 								int extraHealth = (int)(casterMod.MaxHealth + damage / 10f);
-                                casterMod.MaxHealth = extraHealth;
-                                Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 20f - 5f, 20f), "+"+(damage / 10f), elementColors2[(int)Element.BLOOD], 1500f,0.8f, true);
+								casterMod.MaxHealth = extraHealth;
+								Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 20f - 5f, 20f), "+" + (damage / 10f), elementColors2[(int)Element.BLOOD], 1500f, 0.8f, true);
 
-                            }
+							}
 
-                        }
-						casterMod.CurrentHealth = casterMod.CurrentHealth + damage;
+						}
+						casterMod.CurrentHealth += damage;
 						caster.SetModifiers(casterMod);
 
                     }
