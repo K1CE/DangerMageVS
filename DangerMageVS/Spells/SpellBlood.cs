@@ -18,7 +18,7 @@ namespace SFDScript
 
 			public SpellBlood(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
-				ply.DealDamage(spellPower/3f);
+				if(!ply.IsStrengthBoostActive) ply.DealDamage(spellPower/3f);
             }
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
