@@ -106,7 +106,6 @@ namespace SFDScript
                     }
 
 
-                particleExplosion("BLD", pos, 10, 13f);
 			}
 			protected override void setUpStats()
 			{
@@ -136,7 +135,7 @@ namespace SFDScript
                 int blacklistID = 0;
                 if (alreadyHit != null) blacklistID = alreadyHit.UniqueID;
                 if (splash <= 0) return;
-                particleExplosion("BLD", position, 14, splash);
+                particleExplosion("HIT_S", position, 14 + (int)(splash/2), splash);
                 Area area = new Area(position.Y + splash, position.X - splash, position.Y - splash, position.X + splash);
                 foreach (IObject obj in Game.GetObjectsByArea(area))
                 {
