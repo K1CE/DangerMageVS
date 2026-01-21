@@ -1,4 +1,5 @@
 ﻿using SFDGameScriptInterface;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace SFDScript
@@ -16,7 +17,7 @@ namespace SFDScript
 
 			public SpellBlood(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
-
+				ply.DealDamage(spellPower/3f);
 			}
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
@@ -28,36 +29,78 @@ namespace SFDScript
 					if (target is IPlayer)
 					{
 						IPlayer ply = (IPlayer)target;
-						PlayerData data = dataFromPlayer(ply);
+						PlayerData victimData = dataFromPlayer(ply);
 
 						float damage = effectivePower;
 
-						if (data != null) damage *= data.darkDamageTaken;
+						if (victimData != null) damage *= victimData.darkDamageTaken;
 
 						ply.DealDamage(damage, caster.UniqueID);
-						//if (ply.GetHealth() <= damage) ply.Kill();
-						//else ply.SetHealth(ply.GetHealth() - damage);
 
-						caster.SetHealth(caster.GetHealth() + damage);
+                        PlayerModifiers casterMod = caster.GetModifiers();
 
-					}
+
+						//bloodthirst
+                        messageRoss("hp: " + (-casterMod.CurrentHealth + casterMod.MaxHealth));
+						bool fullHp = casterMod.CurrentHealth > casterMod.MaxHealth - 0.5f - spellPower/3f;
+                        if (fullHp || rnd.NextDouble() < 0.5f) 
+						{
+							Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 10f - 5f, 15f), "BLOODTHIRST", elementColors1[(int)Element.BLOOD], 1500f, 1.1f, true);
+							caster.SetStrengthBoostTime(2200f);
+							PlayerData casterData = dataFromPlayer(caster);
+							if(casterData != null) 
+							{
+
+								int longestCooldownIndex = 0;
+								float longestCooldown = 100000000f;
+								for (int i = 0; i < casterData.lastSpellCasts.Length; i++) 
+								{
+									float currentCooldown = casterData.cooldowns[i] - casterData.lastSpellCasts[i];
+
+									if (currentCooldown < longestCooldown) 
+									{
+										longestCooldown = currentCooldown;
+										longestCooldownIndex = i;
+									}
+								}
+
+								casterData.cooldowns[longestCooldownIndex] = 0;
+								casterData.castingOrder = longestCooldownIndex;
+								messageRoss("removed cooldown " + longestCooldownIndex);
+							}
+
+							if (fullHp)
+							{
+								int extraHealth = (int)(casterMod.MaxHealth + damage / 10f);
+                                casterMod.MaxHealth = extraHealth;
+                                Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 20f - 5f, 20f), "+"+(damage / 10f), elementColors2[(int)Element.BLOOD], 1500f,0.8f, true);
+
+                            }
+
+                        }
+						casterMod.CurrentHealth = casterMod.CurrentHealth + damage;
+						caster.SetModifiers(casterMod);
+
+                    }
 					else
 					{
 						target.DealDamage(effectivePower * 1.2f, caster.UniqueID);
-					//	if (target.GetHealth() <= effectivePower) target.Destroy();
-					//	else target.SetHealth(target.GetHealth() - effectivePower);
-					}
+                        //	if (target.GetHealth() <= effectivePower) target.Destroy();
+                        //	else target.SetHealth(target.GetHealth() - effectivePower);
+                    }
 
-				particleExplosion("BLD", pos, 10, 13f);
+
+                particleExplosion("BLD", pos, 10, 13f);
 			}
 			protected override void setUpStats()
 			{
-				spellPower = 12;
-				cooldown = 3850;
+				spellPower = 10;
+				cooldown = 4000;
 				speed = 5.6f;
 				range = 1.0f;
 				splash = 6;
 				particleEffect = "BLD";
+				
 			}
 
 			protected override void projectile(Vector2 position, Vector2 direction)
