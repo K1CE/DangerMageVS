@@ -78,7 +78,7 @@ namespace SFDScript
 	}
 	protected override void setUpStats()
 	{
-		spellPower = 17;
+		spellPower = 18;
 		cooldown = 3700;
 		speed = 8.5f;
 		range = 1f;

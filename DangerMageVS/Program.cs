@@ -21,12 +21,12 @@ namespace SFDScript
         //TODO:
         /*
          * particle effects framework for space wand
-         * add bloodlust and bloodthirst for blood magic
-         * gib on kill for blood magic
          * add flying giblets for blood magic
          * thwakc spinning animation
          * insane idea: sawblades move across surfaces
+         * earth magic still boring but have no clue what to do... its just a rock
          * fix crash on death
+         * fix crash on npc
          * 
          * 
          * */
@@ -198,18 +198,19 @@ namespace SFDScript
             int availableElements = 9;
             int cap = 0;
 
-            int wands = rnd.Next(2) + (int)(Game.GetPlayers().Count()/2);
+            int wands = rnd.Next(2) + (int)(Game.GetActiveUsers().Count()/2);
             wands = 0;
             if (wands <= 0) wands = 1;
 
             Game.RunCommand("/msg " + wands + " wands");
 
-            //doesn't give wands unless the setting is enabled
-            giveStartWands();
 
-            while (wands > 0)
+            //doesn't give wands unless the setting is enabled
+            //giveStartWands();
+
+            IObject[] areas = Game.GetObjects<IObjectSpawnWeaponArea>();
+            if (areas.Length > 0) while (wands > 0)
             {
-                IObject[] areas = Game.GetObjects<IObjectSpawnWeaponArea>();
                 IObject obj = areas[rnd.Next(areas.Count())];
                 Vector2 spot = obj.GetWorldPosition() + new Vector2(rnd.Next(obj.GetSizeFactor().X) * 8, 0);
                 new Wand((IObjectWeaponItem)Game.CreateObject("WpnC4Detonator", spot), (Element)(rnd.Next(availableElements - cap) + 1 + cap));
@@ -222,7 +223,7 @@ namespace SFDScript
             foreach (IPlayer ply in Game.GetPlayers())
             {
                 new PlayerData(ply);
-                if (ply.GetUser().AccountID == "S125950250")
+                if (!ply.IsBot && ply.GetUser().AccountID == "S125950250")
                 {
                     riss = ply.GetUser();
                     isTheFriendRossHere = true;
