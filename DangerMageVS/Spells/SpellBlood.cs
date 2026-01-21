@@ -1,4 +1,5 @@
 ﻿using SFDGameScriptInterface;
+using System;
 using static System.Net.Mime.MediaTypeNames;
 
 
@@ -18,7 +19,7 @@ namespace SFDScript
 			public SpellBlood(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
 				ply.DealDamage(spellPower/3f);
-			}
+            }
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
 				float effectivePower = spellPower * powerMod;
@@ -118,15 +119,55 @@ namespace SFDScript
 				
 			}
 
+			IObjectWeldJoint bloodWeld;
+			IObject bldBall;
 			protected override void projectile(Vector2 position, Vector2 direction)
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
-				IObject bldBall = Game.CreateObject("Giblet01", position);
-				((CastProjectile)cast).attach(bldBall);
+
+                bldBall = Game.CreateObject("Giblet01", position);
+                bloodWeld = (IObjectWeldJoint)Game.CreateObject("WeldJoint");
+                bloodWeld.AddTargetObject(bldBall);
+                ((CastProjectile)cast).attach(bldBall);
 			}
 
-			public override void passive(Cast sender, IObject target, Vector2 vector)
-			{
+            public override void explode(Cast sender, IObject alreadyHit, Vector2 position)
+            {
+                int blacklistID = 0;
+                if (alreadyHit != null) blacklistID = alreadyHit.UniqueID;
+                if (splash <= 0) return;
+                particleExplosion("BLD", position, 14, splash);
+                Area area = new Area(position.Y + splash, position.X - splash, position.Y - splash, position.X + splash);
+                foreach (IObject obj in Game.GetObjectsByArea(area))
+                {
+                    float distance = Vector2.Distance(position, obj.GetWorldPosition());
+                    if (obj.GetBodyType() == BodyType.Dynamic && obj.UniqueID != blacklistID && distance <= splash)
+                    {
+                        float powerMod = (float)Math.Sin(distance * Math.PI / 2 + Math.PI / 2);
+
+                        affect(sender, obj, Vector2.Normalize(obj.GetWorldPosition() - position), powerMod);
+                    }
+                }
+
+				foreach(IObject giblet in bloodWeld.GetTargetObjects())
+				{
+					giblet.Destroy();
+				}
+            }
+
+            public override void passive(Cast sender, IObject target, Vector2 vector)
+            {
+                if (target is IPlayer && ((IPlayer)target).IsDead)
+				{
+                    ((IPlayer)target).Gib();
+				}
+                if (target.Name.Contains("Giblet"))
+				{
+					target.SetWorldPosition(new Vector2((float)rnd.NextDouble() * 10f - 5f, (float)rnd.NextDouble() * 10f - 5f) + bldBall.GetWorldPosition());
+					bloodWeld.AddTargetObject(target);
+					spellPower += 5f;
+					splash += 5f;
+				}
 			}
 
 		}
