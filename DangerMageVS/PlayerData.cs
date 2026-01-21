@@ -138,7 +138,7 @@ namespace SFDScript
 				if (cold)
 				{
 					PlayerModifiers pmod = player.GetModifiers();
-					if (pmod.CurrentEnergy == pmod.MaxEnergy)
+					if (pmod.CurrentEnergy == pmod.MaxEnergy || ( (player.IsBurning || player.IsBurningInferno) && rnd.NextDouble() < 0.2f))
 					{
 						pmod.EnergyRechargeModifier = savedEnergyRecharge;
 						pmod.RunSpeedModifier = savedRunSpeed;
