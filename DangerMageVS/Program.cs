@@ -217,7 +217,7 @@ namespace SFDScript
                 wands--;
             }
 
-            unfreezer = (IObjectTimerTrigger)CreateTimer(15000, 1, "unfreeze", "4");
+            unfreezer = CreateTimer(15000, 1, "unfreeze", "4");
             unfreezer.SetActivateOnStartup(false);
 
             foreach (IPlayer ply in Game.GetPlayers())
@@ -351,6 +351,7 @@ namespace SFDScript
         public void OnPlayerKeyInput(IPlayer player, VirtualKeyInfo[] keyEvents)
         {
             PlayerData data = dataFromPlayer(player);
+            if (data == null) return;
             for (int i = 0; i < keyEvents.Length; i++)
             {
                 if (player.CurrentThrownItem.WeaponItem == WeaponItem.C4DETONATOR && keyEvents[i].Event == VirtualKeyEvent.Pressed && keyEvents[i].Key == VirtualKey.ACTIVATE)
