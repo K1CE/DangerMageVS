@@ -266,11 +266,6 @@ namespace SFDScript
                     Wand.unsheathed.Add(i);
                     wand.toQueue = false;
                 }
-                if (wand.removed)
-                {
-                    Wand.wands.RemoveAt(i);
-                    i--;
-                }
             }
             for (int i = 0; i < players.Count; i++)
             {
@@ -295,6 +290,11 @@ namespace SFDScript
             for (int i = 0; i < Wand.unsheathed.Count; i++)
             {
                 Wand wand = Wand.wands[Wand.unsheathed[i]];
+                if (wand.removed)
+                {
+                    Wand.wands.RemoveAt(i);
+                    i--;
+                }
                 if (!wand.sheathed)
                 {
                     wand.checkWand();
@@ -317,7 +317,7 @@ namespace SFDScript
                     i--;
                 }
             }
-            foreach(Wand wand in Wand.wands)
+            foreach (Wand wand in Wand.wands)
             {
                 if(wand != null)
                 {
