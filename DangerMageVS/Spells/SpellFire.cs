@@ -28,17 +28,15 @@ namespace SFDScript
 					{
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
-
+						if (data == null) data = new PlayerData(ply);
 
 						float damage = effectivePower;
 
 						messageRoss("fire damage current: " + ply.Statistics.TotalFireDamageTaken);
 						if (data != null) damage *= (data.player.GetModifiers().FireDamageTakenModifier) * ((ply.IsBurningInferno) ? 1.5f : 1f);
-
+						messageRoss("fire immunity: " + ply.GetModifiers().FireDamageTakenModifier);
 						float hdamage = damage * 2 / 3f;
 
-                        //if (ply.GetHealth() <= hdamage && !ply.IsStrengthBoostActive) ply.Kill();
-                        //else ply.SetHealth(ply.GetHealth() - hdamage);
                         target.DealDamage(damage * 1 / 3f, caster.UniqueID);
 
 
@@ -52,7 +50,7 @@ namespace SFDScript
 
 						target.SetMaxFire();
 
-					}
+                    }
 					else
 					{
 						//if (target.GetHealth() <= effectivePower) target.Destroy();

@@ -49,12 +49,11 @@ namespace SFDScript
 					if (target is IPlayer) {
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
-						bool dataNull = data == null;
+						if(data == null) data = new PlayerData(ply);
 						float damage = effectivePower;
 
 
-						if (!dataNull) damage *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f)); //cold damage does more damage if target is cold
-						else damage *= ((data.cold) ? 1.5f : 1f);
+						damage *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f)); //cold damage does more damage if target is cold
 						ply.DealDamage(damage, caster.UniqueID);
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage);
@@ -64,7 +63,7 @@ namespace SFDScript
 						if (pmod.CurrentEnergy > damage * 4)
 							pmod.CurrentEnergy = pmod.CurrentEnergy - (damage * 4f);
 						else pmod.CurrentEnergy = 0f;
-						if (!dataNull && !data.cold) 
+						if (!data.cold) 
 						{
 							data.savedEnergyRecharge = pmod.EnergyRechargeModifier;
 							data.savedRunSpeed = pmod.RunSpeedModifier;
@@ -76,7 +75,7 @@ namespace SFDScript
 
 						ply.SetModifiers(pmod);
 
-						if (!dataNull) data.cold = true;
+						data.cold = true;
 
 					}
 					else {
