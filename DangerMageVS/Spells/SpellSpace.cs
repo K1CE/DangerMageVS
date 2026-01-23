@@ -1,4 +1,5 @@
 ﻿using SFDGameScriptInterface;
+using System;
 
 
 namespace SFDScript
@@ -50,12 +51,73 @@ namespace SFDScript
 				//}
 			}
 
-
-			protected override void projectile(Vector2 position, Vector2 direction)
+			private const int MAX_PARTICLES = 16;
+			private const int ARM_LENGTH = 4;
+            protected override void projectile(Vector2 position, Vector2 direction)
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
-				IObject darkBall = Game.CreateObject("BgValve00D", position);
-				darkBall.SetColor1("Black");
+				IObject darkBall = Game.CreateObject("InvisibleBlockNoCollision", position);
+				IObject anchor = Game.CreateObject("InvisibleBlockNoCollision", position);
+				anchor.SetBodyType(BodyType.Dynamic);
+                IObjectWeldJoint weldJoint = (IObjectWeldJoint)Game.CreateObject("WeldJoint", position);
+                IObjectRevoluteJoint revolute = (IObjectRevoluteJoint)Game.CreateObject("RevoluteJoint", position);
+                revolute.SetTargetObjectA(darkBall);
+                revolute.SetTargetObjectB(anchor);
+                revolute.SetMotorEnabled(true);
+				revolute.SetMotorSpeed(-3f);
+				weldJoint.AddTargetObject(anchor);
+
+                IObject anchor2 = Game.CreateObject("InvisibleBlockNoCollision", position + new Vector2(0, 1000));
+                IObjectTargetObjectJoint target = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", position);
+				target.SetTargetObject(anchor2);
+                //int halfWay = MAX_PARTICLES / 2;
+				//float offset = (1f / halfWay) / 2f;
+				for(int p = 0; p < MAX_PARTICLES; p++)
+                {
+                    IObjectText particle = (IObjectText)Game.CreateObject("Text", position);
+					/*
+					IObjectPullJoint antiGravity = (IObjectPullJoint)Game.CreateObject("PullJoint", position);
+					antiGravity.SetForcePerDistance(0);
+					antiGravity.SetForce(0.001f);
+					antiGravity.SetTargetObject(particle);
+					antiGravity.SetTargetObjectJoint(target);*/
+
+					int localIndex = p % ARM_LENGTH;
+                    particle.SetTextScale((MAX_SPACE_PARTICLE_SIZE) * (((float)localIndex + 1) / ARM_LENGTH));
+                    particle.SetAngle((float)((2 * Math.PI) * ((float)p / MAX_PARTICLES)));
+					/*
+                    particle.SetAngle((float)(
+						(2 * Math.PI) / (MAX_PARTICLES / ARM_LENGTH) * (localIndex / ARM_LENGTH) 
+						+ ((2 * Math.PI) / (MAX_PARTICLES / ARM_LENGTH)) * (p / ARM_LENGTH)
+						));
+					*/
+
+
+					/*
+                    messageRoss("angles: " + ((2 * Math.PI) * ((float)p / halfWay)));
+
+                    for (int a = 0; a < ARM_LENGTH; )
+					if(p < halfWay)
+                    {
+                        particle.SetTextScale(4f);
+						particle.SetAngle((float)((2 * Math.PI) * ((float)p /halfWay)));
+						messageRoss("angles: " + ((2 * Math.PI) * ((float)p / halfWay)));
+                    }
+					else if(p >= halfWay)
+					{
+                        particle.SetTextScale(2f);
+                        particle.SetAngle((float)((2 * Math.PI) * ((float)p / halfWay)) + offset);
+                    }
+					*/
+
+                    particle.SetText(".");
+                    particle.SetBodyType(BodyType.Dynamic);
+                    weldJoint.AddTargetObject(particle);
+                    spaceParticleQueue.Add(particle);
+
+                }
+
+				//darkBall.SetColor1("Black");
 				((CastProjectile)cast).attach(darkBall);
 			}
 
@@ -63,7 +125,7 @@ namespace SFDScript
 			{
 				spellPower = 18f;
 				cooldown = 3700;
-				speed = 2f;
+				speed = 1f; //used to be 2
 				range = 4f;
 			}
 		}

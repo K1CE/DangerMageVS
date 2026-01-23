@@ -89,7 +89,7 @@ namespace SFDScript
 							{
 								int extraHealth = (int)(casterMod.MaxHealth + damage / 10f);
 								casterMod.MaxHealth = extraHealth;
-								Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 20f - 5f, 20f), "+" + (damage / 10f), elementColors2[(int)Element.BLOOD], 1500f, 0.8f, true);
+								Game.PlayEffect("CFTXT", caster.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 20f - 5f, 20f), "+" + (int)(damage / 10f), elementColors2[(int)Element.BLOOD], 1500f, 0.8f, true);
 
 							}
 

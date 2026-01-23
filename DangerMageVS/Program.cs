@@ -25,8 +25,6 @@ namespace SFDScript
          * thwakc spinning animation
          * insane idea: sawblades move across surfaces
          * earth magic still boring but have no clue what to do... its just a rock
-         * fix crash on death
-         * fix crash on npc
          * 
          * 
          * */
@@ -120,6 +118,8 @@ namespace SFDScript
         public static List<Cast> casts = new List<Cast>();
         public const string attachmentID = "att";
         public static List<CastProjectile> projectiles = new List<CastProjectile>();
+        public IObjectDistanceJoint antiGravity;
+        
 
         public static void hitBoxImpact(TriggerArgs args)
         {
@@ -190,7 +190,6 @@ namespace SFDScript
 
         public void OnStartup()
         {
-
             m_playerKeyInputEvent = Events.PlayerKeyInputCallback.Start(OnPlayerKeyInput);
 
             rossColor = new Color(255, 65, 49);
@@ -336,6 +335,7 @@ namespace SFDScript
                     
                 }
             }
+            updateSpaceParticles();
         }
 
         public void effectTick(TriggerArgs args)
@@ -504,6 +504,36 @@ namespace SFDScript
             unfreezeQueue = new List<IObjectWeldJoint>();
         }
 
+        public const float MAX_SPACE_PARTICLE_SIZE = 4f;
+        public static List<IObjectText> spaceParticleQueue = new List<IObjectText>();
+        public void updateSpaceParticles()
+        {
+            foreach(IObjectText particle in spaceParticleQueue)
+            {
+                particle.SetTextScale(MAX_SPACE_PARTICLE_SIZE - ((MAX_SPACE_PARTICLE_SIZE - (particle.GetTextScale() - 0.3f)) % MAX_SPACE_PARTICLE_SIZE));
+
+                float currentScale = particle.GetTextScale();
+                float halfMaxSize = (MAX_SPACE_PARTICLE_SIZE / 2f);
+                if (currentScale > halfMaxSize)
+                {
+                    //fade from black
+                    particle.SetTextColor(new Color(
+                        (byte)(elementColors1[(int)Element.SPACE].R * (1 - ((currentScale - halfMaxSize) / halfMaxSize)) ),
+                        (byte)(elementColors1[(int)Element.SPACE].G * (1 - ((currentScale - halfMaxSize) / halfMaxSize)) ),
+                        (byte)(elementColors1[(int)Element.SPACE].B * (1 - ((currentScale - halfMaxSize) / halfMaxSize)) )
+                        ));
+                } 
+                else if (currentScale <= halfMaxSize)
+                {
+                    //fade to white
+                    particle.SetTextColor(new Color(
+                        (byte)(elementColors1[(int)Element.SPACE].R + (255 - elementColors1[(int)Element.SPACE].R) * ((halfMaxSize - currentScale) / halfMaxSize) ),
+                        (byte)(elementColors1[(int)Element.SPACE].G + (255 - elementColors1[(int)Element.SPACE].G) * ((halfMaxSize - currentScale) / halfMaxSize) ),
+                        (byte)(elementColors1[(int)Element.SPACE].B + (255 - elementColors1[(int)Element.SPACE].B) * ((halfMaxSize - currentScale) / halfMaxSize) )
+                        ));
+                }
+            }
+        }
         public static PlayerData dataFromPlayer(IPlayer ply)
         {
             int idIn = ply.UniqueID;
