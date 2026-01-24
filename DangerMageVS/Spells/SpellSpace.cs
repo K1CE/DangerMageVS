@@ -25,16 +25,37 @@ namespace SFDScript
 
                 if (target != null)
 				{
-					Vector2 pos = sender.position;
+					target.DealDamage(effectivePower);
+					if (target.GetBodyType() == BodyType.Dynamic)
+					{
 
-					IProjectile prj = Game.SpawnProjectile(ProjectileItem.PISTOL, target.GetWorldPosition() - vector, vector);
-					prj.CritChanceDealtModifier = 100f;
-					float damage = (effectivePower / 8);
-					prj.DamageDealtModifier = damage;
+						Vector2 displaceTo = Vector2.Zero;
+						double rDistance;
+						double rAngle;
+						RayCastInput rayIn = new RayCastInput(true);
+						rayIn.AbsorbProjectile = RayCastFilterMode.True;
+						rayIn.BlockFire = RayCastFilterMode.True;
+						rayIn.IncludeOverlap = true;
+						for (int v = 0; v < 30; v++)
+						{
+							rDistance = rnd.NextDouble() * effectivePower * 4f;
+							rAngle = rnd.NextDouble() * 2 * Math.PI;
+							displaceTo = target.GetWorldPosition() + new Vector2((float)(rDistance * Math.Cos(rAngle)), (float)(rDistance * Math.Sin(rAngle)));
+
+							if (!Game.RayCast(displaceTo, displaceTo + new Vector2(0, 2f), rayIn)[0].Hit) break;
+							else displaceTo = Vector2.Zero;
+						}
+						if (!displaceTo.Equals(Vector2.Zero))
+						{
+							target.SetWorldPosition(displaceTo);
+                           // particleExplosion(elementEffects[(int)Element.SPACE], displaceTo, 1, 7);
+                        }
+					}
+					
 				}
 
-				Game.PlaySound("ImpactMetal", sender.position, 1f);
-				particleExplosion("S_P", sender.position, 3, 8f);
+				Game.PlaySound("GetSlomo", sender.position, 1f);
+				particleExplosion(elementEffects[(int)Element.SPACE], sender.position, 3, splash);
 			}
 
 			//make it switch objects of similar mass around
@@ -53,6 +74,8 @@ namespace SFDScript
 
 			private const int MAX_PARTICLES = 16;
 			private const int ARM_LENGTH = 4;
+
+
             protected override void projectile(Vector2 position, Vector2 direction)
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
@@ -68,19 +91,20 @@ namespace SFDScript
 				weldJoint.AddTargetObject(anchor);
 
                 IObject anchor2 = Game.CreateObject("InvisibleBlockNoCollision", position + new Vector2(0, 1000));
-                IObjectTargetObjectJoint target = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", position);
+                IObjectTargetObjectJoint target = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", anchor2.GetWorldPosition());
 				target.SetTargetObject(anchor2);
                 //int halfWay = MAX_PARTICLES / 2;
 				//float offset = (1f / halfWay) / 2f;
 				for(int p = 0; p < MAX_PARTICLES; p++)
                 {
                     IObjectText particle = (IObjectText)Game.CreateObject("Text", position);
-					/*
+					
 					IObjectPullJoint antiGravity = (IObjectPullJoint)Game.CreateObject("PullJoint", position);
 					antiGravity.SetForcePerDistance(0);
-					antiGravity.SetForce(0.001f);
+					antiGravity.SetForce(0.000006f);
 					antiGravity.SetTargetObject(particle);
-					antiGravity.SetTargetObjectJoint(target);*/
+					//antiGravity.SetLineVisual(LineVisual.DJRope);
+					antiGravity.SetTargetObjectJoint(target);
 
 					int localIndex = p % ARM_LENGTH;
                     particle.SetTextScale((MAX_SPACE_PARTICLE_SIZE) * (((float)localIndex + 1) / ARM_LENGTH));
@@ -123,10 +147,11 @@ namespace SFDScript
 
 			protected override void setUpStats()
 			{
-				spellPower = 18f;
+				spellPower = 14f;
 				cooldown = 3700;
 				speed = 1f; //used to be 2
 				range = 4f;
+				splash = 32;
 			}
 		}
 

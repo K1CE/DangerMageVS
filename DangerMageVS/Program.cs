@@ -25,7 +25,7 @@ namespace SFDScript
          * thwakc spinning animation
          * insane idea: sawblades move across surfaces
          * earth magic still boring but have no clue what to do... its just a rock
-         * 
+         * fix duping bug
          * 
          * */
 
