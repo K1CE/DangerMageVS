@@ -29,6 +29,11 @@ namespace SFDScript
 					if (target.GetBodyType() == BodyType.Dynamic)
 					{
 
+						if(target is IPlayer)
+						{
+							((IPlayer)target).SetFaceDirection(-((IPlayer)target).FacingDirection);
+						}
+
 						Vector2 displaceTo = Vector2.Zero;
 						double rDistance;
 						double rAngle;
@@ -38,7 +43,7 @@ namespace SFDScript
 						rayIn.IncludeOverlap = true;
 						for (int v = 0; v < 30; v++)
 						{
-							rDistance = rnd.NextDouble() * effectivePower * 4f;
+							rDistance = rnd.NextDouble() * effectivePower * 5f;
 							rAngle = rnd.NextDouble() * 2 * Math.PI;
 							displaceTo = target.GetWorldPosition() + new Vector2((float)(rDistance * Math.Cos(rAngle)), (float)(rDistance * Math.Sin(rAngle)));
 
@@ -151,7 +156,7 @@ namespace SFDScript
 				cooldown = 3700;
 				speed = 1f; //used to be 2
 				range = 4f;
-				splash = 32;
+				splash = 35;
 			}
 		}
 
