@@ -94,7 +94,7 @@ namespace SFDScript
                 int blacklistID = 0;
                 if (alreadyHit != null) blacklistID = alreadyHit.UniqueID;
                 if (splash <= 0) return;
-                particleExplosion(sender, position, 14, splash);
+                particleExplosion(sender, position, (int)(3 * (splash / 10)), splash);
                 Area area = new Area(position.Y + splash, position.X - splash, position.Y - splash, position.X + splash);
                 foreach (IObject obj in Game.GetObjectsByArea(area)) {
                     float distance = Vector2.Distance(position, obj.GetWorldPosition());
