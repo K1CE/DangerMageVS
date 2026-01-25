@@ -207,7 +207,7 @@ namespace SFDScript
 
 
             //doesn't give wands unless the setting is enabled
-            //giveStartWands();
+            giveStartWands();
 
             IObject[] areas = Game.GetObjects<IObjectSpawnWeaponArea>();
             if (areas.Length > 0) while (wands > 0)
