@@ -18,8 +18,8 @@ namespace SFDScript
 			public IObjectTargetObjectJoint targetJoint;
 			public IObjectRailJoint rail;
 			public IObjectRailAttachmentJoint railAttachment;
+			public List<IObjectRailAttachmentJoint> railAttachments = new List<IObjectRailAttachmentJoint>();
 			public Vector2 targetVector;
-			private float speed;
 
 			public CastProjectile(Vector2 pos, Vector2 target, float speed, Spell spell) : base(spell)
 			{
@@ -28,7 +28,6 @@ namespace SFDScript
 				targetVector = target - pos;
 				direction = targetVector;
 				direction.Normalize();
-				this.speed = speed;
 
 				ID = "PC-" + nextID;
 				nextID++;
@@ -82,7 +81,7 @@ namespace SFDScript
 				attachment.SetTargetObject(obj);
 				attachment.SetRailJoint(rail);
 				attachment.SetMotorEnabled(true);
-				attachment.SetMotorSpeed(speed);
+				attachment.SetMotorSpeed(spell.speed);
 				attachment.CustomID = ID;
 
 				bits.Add(attachment);
@@ -128,6 +127,12 @@ namespace SFDScript
 				}
 
 			}
+
+			protected override void onSpeedChange()
+			{
+				railAttachment.SetMotorSpeed(spell.speed);
+
+            }
 		}
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */

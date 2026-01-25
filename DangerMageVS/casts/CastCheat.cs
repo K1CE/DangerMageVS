@@ -44,7 +44,12 @@ namespace SFDScript
 			{
 				position = target.GetWorldPosition();
 			}
-		}
+
+            protected override void onSpeedChange()
+            {
+                
+            }
+        }
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */
 

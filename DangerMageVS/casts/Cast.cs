@@ -1,6 +1,7 @@
 ﻿using SFDGameScriptInterface;
 using System;
 using System.Collections.Generic;
+using static SFDScript.GameScript;
 
 
 namespace SFDScript
@@ -27,6 +28,9 @@ namespace SFDScript
             public delegate void ExplosionHandler(Cast sender, IObject hit, Vector2 position);
             public event ExplosionHandler onExplodeEvent;
 
+            public delegate void SpeedChangeHandler();
+            public event SpeedChangeHandler onSpeedChangeEvent;
+
             protected List<IObject> cleanUp = new List<IObject>();
 
             public Vector2 position = Vector2.Zero;
@@ -37,7 +41,8 @@ namespace SFDScript
 			{
 				this.spell = spell;
 				casts.Add(this);
-			}
+				spell.onSpeedChangeEvent += new Spell.SpeedChangeHandler(onSpeedChange);
+            }
 			
 			
 			public void hit(IObject affected)
@@ -81,6 +86,8 @@ namespace SFDScript
 			public abstract void particleTick();
 
 			public abstract void destroy();
+
+			protected abstract void onSpeedChange();
 		}
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */

@@ -22,7 +22,7 @@ namespace SFDScript
         /*
          * particle effects framework for space wand
          * space wand passive
-         * space wand cleanup
+         * space speed ramp-up
          * add flying giblets for blood magic
          * thwakc spinning animation
          * insane idea: sawblades move across surfaces

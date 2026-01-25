@@ -11,12 +11,28 @@ namespace SFDScript
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public abstract class Spell
 		{
-			protected Cast cast;
+
+            public delegate void SpeedChangeHandler();
+            public event SpeedChangeHandler onSpeedChangeEvent;
+
+            protected Cast cast;
 			public string particleEffect;
 
 			public float spellPower = 0;
 			public int cooldown = 0;
-			public float speed = 0f;
+			public float speed
+			{
+				get
+				{
+					return speed;
+				}
+				set
+				{
+					onSpeedChangeEvent();
+					speed = value;
+				}
+			}
+			
 			public float range = 0f;
 			public float splash = 0f;
 
