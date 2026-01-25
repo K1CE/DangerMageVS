@@ -21,6 +21,8 @@ namespace SFDScript
         //TODO:
         /*
          * particle effects framework for space wand
+         * space wand passive
+         * space wand cleanup
          * add flying giblets for blood magic
          * thwakc spinning animation
          * insane idea: sawblades move across surfaces

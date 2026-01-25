@@ -122,6 +122,11 @@ namespace SFDScript
 				projectiles.Remove(this);
 				casts.Remove(this);
 
+				foreach(IObject obj in cleanUp)
+				{
+					obj.Remove();
+				}
+
 			}
 		}
 

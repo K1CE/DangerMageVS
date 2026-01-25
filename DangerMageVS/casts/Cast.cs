@@ -1,5 +1,6 @@
 ﻿using SFDGameScriptInterface;
 using System;
+using System.Collections.Generic;
 
 
 namespace SFDScript
@@ -25,6 +26,8 @@ namespace SFDScript
 
             public delegate void ExplosionHandler(Cast sender, IObject hit, Vector2 position);
             public event ExplosionHandler onExplodeEvent;
+
+            protected List<IObject> cleanUp = new List<IObject>();
 
             public Vector2 position = Vector2.Zero;
 			public Vector2 direction = Vector2.Zero;
@@ -68,7 +71,10 @@ namespace SFDScript
 				onParticleEvent(this, pos, count, radius);
 			}
 
-
+			public void addForCleanup(IObject toClean)
+			{
+				cleanUp.Add(toClean);
+			}
 
 			protected abstract void updatePosition();
 
