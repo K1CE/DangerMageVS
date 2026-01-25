@@ -21,8 +21,6 @@ namespace SFDScript
         //TODO:
         /*
          * particle effects framework for space wand
-         * space wand passive
-         * space speed ramp-up
          * add flying giblets for blood magic
          * thwakc spinning animation
          * insane idea: sawblades move across surfaces
@@ -39,6 +37,7 @@ namespace SFDScript
         Events.PlayerKeyInputCallback m_playerKeyInputEvent = null;
         public static IObjectTimerTrigger unfreezer;
         public const string STARTWANDS_KEY = "START WANDS";
+        public const int AVAILABLE_ELEMENTS = 10;
 
         public static string[] elementNames = new String[] { "", "earth", "shock", "air", "dark", "fire", "blood", "ice", "acid", "metal", "space", "blast", "plant", "chaos" };
         public static char[] elementLetters = new char[] { ' ', 'p', 'k', 'f', 'z', 'r', 'g', 's', 'l', 't', 'w', 'c', 'm', '&' };
@@ -196,7 +195,6 @@ namespace SFDScript
 
             rossColor = new Color(255, 65, 49);
 
-            int availableElements = 9;
             int cap = 0;
 
             int wands = rnd.Next(2) + (int)(Game.GetActiveUsers().Count()/2);
@@ -214,7 +212,7 @@ namespace SFDScript
             {
                 IObject obj = areas[rnd.Next(areas.Count())];
                 Vector2 spot = obj.GetWorldPosition() + new Vector2(rnd.Next(obj.GetSizeFactor().X) * 8, 0);
-                new Wand((IObjectWeaponItem)Game.CreateObject("WpnC4Detonator", spot), (Element)(rnd.Next(availableElements - cap) + 1 + cap));
+                new Wand((IObjectWeaponItem)Game.CreateObject("WpnC4Detonator", spot), (Element)(rnd.Next(AVAILABLE_ELEMENTS - cap) + 1 + cap));
                 wands--;
             }
 
@@ -583,7 +581,7 @@ namespace SFDScript
                 if (data == null) {
                     data = new PlayerData(ply);
                 }
-                new Wand(data, (Element)rnd.Next(elementNames.Length - 5) + 1);
+                new Wand(data, (Element)rnd.Next(AVAILABLE_ELEMENTS) + 1);
             }
         }
 

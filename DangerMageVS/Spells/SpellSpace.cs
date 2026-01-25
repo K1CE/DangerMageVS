@@ -66,17 +66,25 @@ namespace SFDScript
 			}
 
 			//make it switch objects of similar mass around
+			IObject cachedObject;
 			public override void passive(Cast sender, IObject target, Vector2 vector)
 			{
-				/*
-				Vector2 pos = sender.position;
-				RayCastInput input = new RayCastInput(true);
-				input.ProjectileHit = RayCastFilterMode.True;
-				input.IncludeOverlap = true;
-				RayCastResult outPut = Game.RayCast(pos, pos + vector, input)[0];
-				if (outPut.Hit && Vector2.Distance(outPut.Position, pos) < 2f){*/
+				if(cachedObject != target)
+				{
+					if (cachedObject == null || cachedObject.IsRemoved) 
+					{
+						cachedObject = target;
+						return;
+					}
 
-				//}
+					if (Math.Abs(cachedObject.GetMass() - target.GetMass()) < 0.05)
+					{
+						Vector2 tempV = cachedObject.GetWorldPosition();
+						cachedObject.SetWorldPosition(target.GetWorldPosition());
+						target.SetWorldPosition(tempV);
+						cachedObject = null;
+					}
+				}
 			}
 
 			private const int MAX_PARTICLES = 16;
@@ -166,7 +174,7 @@ namespace SFDScript
                 Events.UpdateCallback delay = null;
 				int speedUps = 0;
                 delay = Events.UpdateCallback.Start(e => {
-					speed = speed + speed * 0.05f;
+					speed = speed + speed * 0.15f;
 					speedUps++;
 					if (speedUps > 50) delay.Stop();
                 }, 100);
@@ -178,7 +186,7 @@ namespace SFDScript
 				cooldown = 3700;
 				speed = 1f; //used to be 2
 				range = 4f;
-				splash = 35;
+				splash = 25;
 			}
 		}
 
