@@ -1,5 +1,7 @@
 ﻿using SFDGameScriptInterface;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 
 namespace SFDScript
@@ -85,10 +87,14 @@ namespace SFDScript
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
 				IObject darkBall = Game.CreateObject("InvisibleBlockNoCollision", position);
+				cast.addForCleanup(darkBall);
 				IObject anchor = Game.CreateObject("InvisibleBlockNoCollision", position);
-				anchor.SetBodyType(BodyType.Dynamic);
+                cast.addForCleanup(anchor);
+                anchor.SetBodyType(BodyType.Dynamic);
                 IObjectWeldJoint weldJoint = (IObjectWeldJoint)Game.CreateObject("WeldJoint", position);
+                cast.addForCleanup(weldJoint);
                 IObjectRevoluteJoint revolute = (IObjectRevoluteJoint)Game.CreateObject("RevoluteJoint", position);
+                cast.addForCleanup(revolute);
                 revolute.SetTargetObjectA(darkBall);
                 revolute.SetTargetObjectB(anchor);
                 revolute.SetMotorEnabled(true);
@@ -96,16 +102,20 @@ namespace SFDScript
 				weldJoint.AddTargetObject(anchor);
 
                 IObject anchor2 = Game.CreateObject("InvisibleBlockNoCollision", position + new Vector2(0, 1000));
+                cast.addForCleanup(anchor2);
                 IObjectTargetObjectJoint target = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", anchor2.GetWorldPosition());
-				target.SetTargetObject(anchor2);
+                cast.addForCleanup(target);
+                target.SetTargetObject(anchor2);
                 //int halfWay = MAX_PARTICLES / 2;
 				//float offset = (1f / halfWay) / 2f;
 				for(int p = 0; p < MAX_PARTICLES; p++)
                 {
                     IObjectText particle = (IObjectText)Game.CreateObject("Text", position);
-					
-					IObjectPullJoint antiGravity = (IObjectPullJoint)Game.CreateObject("PullJoint", position);
-					antiGravity.SetForcePerDistance(0);
+                    cast.addForCleanup(particle);
+
+                    IObjectPullJoint antiGravity = (IObjectPullJoint)Game.CreateObject("PullJoint", position);
+                    cast.addForCleanup(antiGravity);
+                    antiGravity.SetForcePerDistance(0);
 					antiGravity.SetForce(0.000006f);
 					antiGravity.SetTargetObject(particle);
 					//antiGravity.SetLineVisual(LineVisual.DJRope);
