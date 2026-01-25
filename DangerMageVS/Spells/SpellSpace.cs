@@ -34,6 +34,7 @@ namespace SFDScript
 						if(target is IPlayer)
 						{
 							((IPlayer)target).SetFaceDirection(-((IPlayer)target).FacingDirection);
+							if (((IPlayer)target).IsDead) target.Remove();
 						}
 
 						Vector2 displaceTo = Vector2.Zero;
@@ -174,7 +175,7 @@ namespace SFDScript
                 Events.UpdateCallback delay = null;
 				int speedUps = 0;
                 delay = Events.UpdateCallback.Start(e => {
-					speed = speed + speed * 0.15f;
+					speed = speed + speed * 0.18f;
 					speedUps++;
 					if (speedUps > 50) delay.Stop();
                 }, 100);
@@ -182,7 +183,7 @@ namespace SFDScript
 
 			protected override void setUpStats()
 			{
-				spellPower = 14f;
+				spellPower = 18f;
 				cooldown = 3700;
 				speed = 1f; //used to be 2
 				range = 4f;
