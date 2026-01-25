@@ -157,8 +157,20 @@ namespace SFDScript
                 }
 
 				//darkBall.SetColor1("Black");
-				((CastProjectile)cast).attach(darkBall);
+				speedUpLoop();
+                ((CastProjectile)cast).attach(darkBall);
 			}
+
+			private void speedUpLoop()
+			{
+                Events.UpdateCallback delay = null;
+				int speedUps = 0;
+                delay = Events.UpdateCallback.Start(e => {
+					speed = speed + speed * 0.05f;
+					speedUps++;
+					if (speedUps > 50) delay.Stop();
+                }, 100);
+            }
 
 			protected override void setUpStats()
 			{

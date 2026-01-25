@@ -78,6 +78,7 @@ namespace SFDScript
 				bits.Add(obj);
 
 				IObjectRailAttachmentJoint attachment = (IObjectRailAttachmentJoint)Game.CreateObject("RailAttachmentJoint", hitBox.GetWorldPosition());
+				railAttachments.Add(attachment);
 				attachment.SetTargetObject(obj);
 				attachment.SetRailJoint(rail);
 				attachment.SetMotorEnabled(true);
@@ -125,12 +126,22 @@ namespace SFDScript
 				{
 					obj.Remove();
 				}
-
+				foreach(IObjectRailAttachmentJoint attachment in railAttachments)
+				{
+					attachment.Remove();
+				}
 			}
 
 			protected override void onSpeedChange()
 			{
-				railAttachment.SetMotorSpeed(spell.speed);
+				if(railAttachment != null)
+                {
+                    railAttachment.SetMotorSpeed(spell.speed);
+					foreach(IObjectRailAttachmentJoint rail in railAttachments)
+					{
+						rail.SetMotorSpeed(spell.speed);
+					}
+                }
 
             }
 		}

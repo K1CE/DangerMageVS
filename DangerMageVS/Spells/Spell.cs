@@ -20,19 +20,25 @@ namespace SFDScript
 
 			public float spellPower = 0;
 			public int cooldown = 0;
+			bool initialized = false;
+
+
+			private float realSpeed;
+			
 			public float speed
 			{
 				get
 				{
-					return speed;
+					return realSpeed;
 				}
 				set
 				{
-					onSpeedChangeEvent();
-					speed = value;
+                    if(initialized) onSpeedChangeEvent();
+                    realSpeed = value;
 				}
 			}
 			
+			//public float speed = 0;
 			public float range = 0f;
 			public float splash = 0f;
 
@@ -40,9 +46,12 @@ namespace SFDScript
 
 
 			public Spell(Vector2 position, Vector2 direction, CastType castType, IPlayer caster, SpellArguments args)
-			{
-				setUpStats();
-				switch (castType)
+            {
+                this.caster = caster;
+
+                setUpStats();
+
+                switch (castType)
 				{
 					case CastType.TOUCH:
 						break;
@@ -88,15 +97,17 @@ namespace SFDScript
 					case CastType.CHEAT:
 						cheat(args.argObject);
 						break;
-				}
+                }
 
-				this.caster = caster;
 
-				cast.onImpactEvent += new Cast.EffectHandler(affect);
-				cast.onPassiveEvent += new Cast.PassiveHandler(passive);
-				cast.onParticleEvent += new Cast.ParticleHandler(particles);
+
+                cast.onImpactEvent += new Cast.EffectHandler(affect);
+                cast.onPassiveEvent += new Cast.PassiveHandler(passive);
+                cast.onParticleEvent += new Cast.ParticleHandler(particles);
                 cast.onParticleExplosionEvent += new Cast.ParticleExplosionHandler(particleExplosion);
-				cast.onExplodeEvent += new Cast.ExplosionHandler(explode);
+                cast.onExplodeEvent += new Cast.ExplosionHandler(explode);
+
+				initialized = true;
             }
 
 			protected abstract void setUpStats();
