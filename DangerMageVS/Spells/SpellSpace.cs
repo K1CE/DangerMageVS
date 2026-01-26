@@ -20,10 +20,15 @@ namespace SFDScript
 			{
 
 			}
-			//TODO: add impact particle effects
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
-                float effectivePower = spellPower * powerMod;
+                float effectivePower = spellPower * powerMod * (1 / Game.SlowmotionModifier);
+
+				if (Game.SlowmotionModifier < 1)
+				{
+					Game.PlaySound("Madness", target.GetWorldPosition());
+					Game.PlayEffect("Electric", target.GetWorldPosition());
+				}
 
                 if (target != null)
 				{

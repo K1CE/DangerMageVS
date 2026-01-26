@@ -23,9 +23,15 @@ namespace SFDScript
          * particle effects framework for space wand
          * add flying giblets for blood magic
          * thwakc spinning animation
+         * space wand banish players on hit
+         * space wand disarm players on hit
+         * space wand slo mo synergy
          * insane idea: sawblades move across surfaces
          * earth magic still boring but have no clue what to do... its just a rock
          * fix duping bug
+         * make ice lower other stats
+         * fix random collisions with weird objects
+         * faster spell equip
          * 
          * */
 
@@ -291,8 +297,10 @@ namespace SFDScript
                 Wand wand = Wand.wands[Wand.unsheathed[i]];
                 if (wand.removed)
                 {
-                    Wand.wands.RemoveAt(i);
+                    Wand.removeWand(i);
+                    Wand.unsheathed.RemoveAt(i);
                     i--;
+                    continue;
                 }
                 if (!wand.sheathed)
                 {
@@ -306,7 +314,7 @@ namespace SFDScript
                         PlayerModifiers modify = ply.GetModifiers();
                         modify.MeleeDamageDealtModifier = wand.holder.savedMeleeDamage;
                         ply.SetModifiers(modify);
-                    }
+                    } 
                     Wand.unsheathed.RemoveAt(i);
                     i--;
                 }

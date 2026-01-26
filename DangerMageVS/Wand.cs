@@ -219,6 +219,14 @@ namespace SFDScript
 					}
 			}
 
+			public static void removeWand(int i1)
+			{
+				wands.RemoveAt(i1);
+				for(int i2 = 0; i2 < unsheathed.Count; i2++)
+				{
+					if (unsheathed[i2] > i1) unsheathed[i2] -= 1; 
+				}
+			}
 			public void checkSheathe()
 			{
 				if (held)
