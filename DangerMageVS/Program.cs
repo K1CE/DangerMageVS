@@ -144,9 +144,13 @@ namespace SFDScript
                         prj.hit(sent);
                     }
                 }
-                else if (sent.GetCollisionFilter().BlockFire)
+                if (isOddObject(sent))
                 {
-
+                     messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire? " does" : " doesn't") + " block fire");
+                }
+                else if (sent.GetCollisionFilter().BlockFire && !isOddObject(sent))
+                {
+                    
 
                     Vector2 pos = prj.hitBox.GetWorldPosition();
                     RayCastInput input = new RayCastInput(true);
@@ -156,7 +160,7 @@ namespace SFDScript
                     if (outPut.Hit && Vector2.Distance(outPut.Position, pos) < 2f)
                     {
                         prj.hit(outPut.HitObject);
-                       // if (outPut.HitObject.GetMaxHealth() != 1) 
+                        //if (outPut.HitObject.GetMaxHealth() != 1) 
                        // else prj.hit(null);
 
 
@@ -789,6 +793,12 @@ namespace SFDScript
             return target.Name == "BarrelExplosive" || target.Name == "BarrelWreck" || target.Name == "Gascan00" || target.Name == "PropaneTank" || target.Name == "Spotlight00A" ||
                 target.Name == "Spotlight00AWeak" || target.Name == "WpnMineThrown" || target.Name == "WpnGrenadesThrown" || target.Name == "WpnC4Thrown" || target.Name.Contains("Lamp") || target.Name.Contains("pulley") ||
                 target.Name == "HangingCrateHolder";
+        }
+
+        public static bool isOddObject(IObject obj)
+        {
+            string name = obj.Name;
+            return name == "SwivelChair02" || name == "Suitcase00";
         }
 
         static bool isTheFriendRossHere = false;
