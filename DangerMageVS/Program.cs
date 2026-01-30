@@ -135,6 +135,12 @@ namespace SFDScript
                 CastProjectile prj = CastProjectile.projectileFromID(((IObject)(args.Caller)).CustomID);
                 IObject sent = (IObject)args.Sender;
                 prj.position = prj.hitBox.GetWorldPosition();
+
+                if (isOddObject(sent))
+                {
+                    messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire ? " does" : " doesn't") + " block fire");
+                }
+
                 if (sent is IPlayer)
                 {
 
@@ -144,24 +150,20 @@ namespace SFDScript
                         prj.hit(sent);
                     }
                 }
-                if (isOddObject(sent))
-                {
-                     messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire? " does" : " doesn't") + " block fire");
-                }
                 else if (sent.GetCollisionFilter().BlockFire && !isOddObject(sent))
                 {
-                    
+                    messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire ? " does" : " doesn't") + " block fire2");
 
                     Vector2 pos = prj.hitBox.GetWorldPosition();
                     RayCastInput input = new RayCastInput(true);
                     input.BlockExplosions = RayCastFilterMode.True;
                     input.IncludeOverlap = true;
                     RayCastResult outPut = Game.RayCast(pos, prj.targetJoint.GetWorldPosition(), input)[0];
-                    if (outPut.Hit && Vector2.Distance(outPut.Position, pos) < 2f)
+                    if (outPut.Hit && !isOddObject(outPut.HitObject) && Vector2.Distance(outPut.Position, pos) < 2f)
                     {
                         prj.hit(outPut.HitObject);
                         //if (outPut.HitObject.GetMaxHealth() != 1) 
-                       // else prj.hit(null);
+                        // else prj.hit(null);
 
 
                     }
