@@ -28,9 +28,9 @@ namespace SFDScript
          * space wand slo mo synergy
          * insane idea: sawblades move across surfaces
          * earth magic still boring but have no clue what to do... its just a rock
+         * make earth magic penetrate and push
          * fix duping bug
          * make ice lower other stats
-         * fix random collisions with weird objects
          * faster spell equip
          * 
          * */
@@ -837,6 +837,30 @@ namespace SFDScript
 
 
             }
+        }
+
+        public WeaponItemType convertIndexToSlot(IPlayer ply, int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    if (ply.CurrentMeleeMakeshiftWeapon.WeaponItem != WeaponItem.NONE) return ply.CurrentMeleeMakeshiftWeapon.WeaponItemType; 
+                    else if (ply.CurrentMeleeWeapon.WeaponItem != WeaponItem.NONE) return ply.CurrentMeleeWeapon.WeaponItemType;
+                    break;
+                case 1:
+                    if (ply.CurrentSecondaryWeapon.WeaponItem != WeaponItem.NONE) return ply.CurrentSecondaryWeapon.WeaponItemType;
+                    break;
+                case 2:
+                    if (ply.CurrentPrimaryWeapon.WeaponItem != WeaponItem.NONE) return ply.CurrentPrimaryWeapon.WeaponItemType;
+                    break;
+                case 3:
+                    if (ply.CurrentThrownItem.WeaponItem != WeaponItem.NONE) return ply.CurrentThrownItem.WeaponItemType;
+                    break;
+                case 4:
+                    if (ply.CurrentPowerupItem.WeaponItem != WeaponItem.NONE) return ply.CurrentPowerupItem.WeaponItemType;
+                    break;
+            }
+            return WeaponItemType.NONE;
         }
 
         public static IObjectTimerTrigger CreateTimer(int interval, int count, string method, string id)
