@@ -1,6 +1,7 @@
 ﻿using SFDGameScriptInterface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 
@@ -38,8 +39,18 @@ namespace SFDScript
 
 						if(target is IPlayer)
 						{
-							((IPlayer)target).SetFaceDirection(-((IPlayer)target).FacingDirection);
-							if (((IPlayer)target).IsDead) target.Remove();
+							IPlayer vic = (IPlayer)target;
+                            foreach (int i in Enumerable.Range(0, 5).OrderBy(x => rnd.Next()))
+                            {
+								WeaponItemType slot = convertIndexToSlot(vic, i);
+
+								if (slot != WeaponItemType.NONE) {
+									vic.Disarm(slot);
+									break;
+								}
+                            }
+                            vic.SetFaceDirection(-((IPlayer)target).FacingDirection);
+							if (vic.IsDead) target.Remove();
 						}
 
 						Vector2 displaceTo = Vector2.Zero;

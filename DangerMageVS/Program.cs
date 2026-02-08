@@ -839,7 +839,7 @@ namespace SFDScript
             }
         }
 
-        public WeaponItemType convertIndexToSlot(IPlayer ply, int index)
+        public static WeaponItemType convertIndexToSlot(IPlayer ply, int index)
         {
             switch (index)
             {
