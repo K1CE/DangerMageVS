@@ -48,7 +48,7 @@ namespace SFDScript
 				player = ply;
 				user = ply.GetUser();
 				id = ply.UniqueID;
-				unfoldPause = CreateTimer(500, 1, "delayedUnfold", "2");
+				unfoldPause = CreateTimer(300, 1, "delayedUnfold", "2");
 				spellCast = CreateTimer(500, 2, "delayedCast", "2");
 				recovery = CreateTimer(1000, 3, "recoveryTimer", "2");
 				fireRecovery = CreateTimer(0, 1, "fireRecovery", "2");
