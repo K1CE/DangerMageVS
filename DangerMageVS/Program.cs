@@ -32,6 +32,7 @@ namespace SFDScript
          * fix duping bug
          * make ice lower other stats
          * faster spell equip
+         * fix spell collision
          * 
          * */
 

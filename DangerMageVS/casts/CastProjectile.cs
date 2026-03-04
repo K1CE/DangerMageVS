@@ -66,6 +66,7 @@ namespace SFDScript
 
 				obj.CustomID = attachmentID;
 
+				
 				CollisionFilter filt = obj.GetCollisionFilter();
 				filt.MaskBits = 0000;
 				filt.CategoryBits = 0;
