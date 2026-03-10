@@ -79,7 +79,7 @@ namespace SFDScript
                 IObject weight = (IObject)Game.CreateObject("InvisibleBlock", position);
 				weight.SetBodyType(BodyType.Dynamic);
 				weight.SetMass(0.3f);
-
+				weight.CustomID = "mNoCollide";
 
                 CollisionFilter filt = weight.GetCollisionFilter();
 				filt.BlockFire = false;

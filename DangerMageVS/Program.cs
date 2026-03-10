@@ -151,12 +151,13 @@ namespace SFDScript
                         prj.hit(sent);
                     }
                 }
-                else if (sent.GetCollisionFilter().BlockFire && !isOddObject(sent))
+                else if (sent.GetCollisionFilter().BlockFire && !isOddObject(sent) && sent.CustomID != "mNoCollide")
                 {
                     messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire ? " does" : " doesn't") + " block fire2");
 
                     Vector2 pos = prj.hitBox.GetWorldPosition();
                     RayCastInput input = new RayCastInput(true);
+                    input.FilterOnMaskBits = true;
                     input.BlockExplosions = RayCastFilterMode.True;
                     input.IncludeOverlap = true;
                     RayCastResult outPut = Game.RayCast(pos, prj.targetJoint.GetWorldPosition(), input)[0];
