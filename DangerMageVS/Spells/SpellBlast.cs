@@ -22,7 +22,7 @@ namespace SFDScript
 		//TODO: add passive effect
 		public class SpellBlast : Spell
 		{
-			private static Element element = Element.AIR;
+			private static Element element = Element.BLAST;
 			public const int EXPLOSION_DAMAGE = 50;
 			public SpellBlast(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
@@ -36,7 +36,7 @@ namespace SFDScript
 				float effectivePower = spellPower * powerMod;
 				for(int i = 0; i < effectivePower % EXPLOSION_DAMAGE; i++)
                 {
-                    Game.TriggerExplosion(vector + new Vector2((float)rnd.NextDouble(), (float)rnd.NextDouble()));
+                    Game.TriggerExplosion(sender.position + new Vector2((float)rnd.NextDouble(), (float)rnd.NextDouble()));
 
                 }
 
@@ -44,14 +44,6 @@ namespace SFDScript
 
 			public override void passive(Cast sender, IObject target, Vector2 vector)
 			{
-				vector.Normalize();
-				Vector2 newdir = vector + new Vector2(0, 5);
-				newdir.Normalize();
-				newdir *= 4f;
-				target.SetLinearVelocity(target.GetLinearVelocity() + ((newdir / (target.GetMass() * 100) + newdir) / 2)); //fix to make more realistic
-				target.SetAngularVelocity(newdir.X * 2f);
-
-                target.ClearFire();
             }
 
 			protected override void setUpStats()

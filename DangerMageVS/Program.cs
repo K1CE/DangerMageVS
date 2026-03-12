@@ -25,6 +25,7 @@ namespace SFDScript
          * thwakc spinning animation
          * space wand banish players on hit
          * space wand disarm players on hit
+         * make space wand pull objects to deal more damage on hit
          * space wand slo mo synergy
          * insane idea: sawblades move across surfaces
          * earth magic still boring but have no clue what to do... its just a rock
@@ -33,6 +34,7 @@ namespace SFDScript
          * make ice lower other stats
          * faster spell equip
          * fix spell collision
+         * fix blood cooldown cycling
          * 
          * */
 
@@ -44,7 +46,7 @@ namespace SFDScript
         Events.PlayerKeyInputCallback m_playerKeyInputEvent = null;
         public static IObjectTimerTrigger unfreezer;
         public const string STARTWANDS_KEY = "START WANDS";
-        public const int AVAILABLE_ELEMENTS = 10;
+        public const int AVAILABLE_ELEMENTS = 11;
 
         public static string[] elementNames = new String[] { "", "earth", "shock", "air", "dark", "fire", "blood", "ice", "acid", "metal", "space", "blast", "plant", "chaos" };
         public static char[] elementLetters = new char[] { ' ', 'p', 'k', 'f', 'z', 'r', 'g', 's', 'l', 't', 'w', 'c', 'm', '&' };
@@ -209,7 +211,6 @@ namespace SFDScript
 
             rossColor = new Color(255, 65, 49);
 
-            int cap = 0;
 
             int wands = rnd.Next(2) + (int)(Game.GetActiveUsers().Count()/2);
             wands = 0;
@@ -226,7 +227,7 @@ namespace SFDScript
             {
                 IObject obj = areas[rnd.Next(areas.Count())];
                 Vector2 spot = obj.GetWorldPosition() + new Vector2(rnd.Next(obj.GetSizeFactor().X) * 8, 0);
-                new Wand((IObjectWeaponItem)Game.CreateObject("WpnC4Detonator", spot), (Element)(rnd.Next(AVAILABLE_ELEMENTS - cap) + 1 + cap));
+                new Wand((IObjectWeaponItem)Game.CreateObject("WpnC4Detonator", spot), (Element)(rnd.Next(AVAILABLE_ELEMENTS) + 1));
                 wands--;
             }
 
