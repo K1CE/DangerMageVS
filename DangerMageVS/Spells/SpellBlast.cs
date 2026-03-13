@@ -24,6 +24,7 @@ namespace SFDScript
 		{
 			private static Element element = Element.BLAST;
 			public const int EXPLOSION_DAMAGE = 50;
+			public const int EXPLOSION_RADIUS = 40;
 			public SpellBlast(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellBlast(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
@@ -34,9 +35,12 @@ namespace SFDScript
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
 				float effectivePower = spellPower * powerMod;
-				for(int i = 0; i < effectivePower % EXPLOSION_DAMAGE; i++)
+				float radius = (splash - EXPLOSION_RADIUS);
+				radius = (radius < 0 ? 0 : radius);
+
+                for (int i = 0; i < effectivePower / EXPLOSION_DAMAGE; i++)
                 {
-                    Game.TriggerExplosion(sender.position + new Vector2((float)rnd.NextDouble(), (float)rnd.NextDouble()));
+                    Game.TriggerExplosion(sender.position + new Vector2((float)(rnd.NextDouble() - 0.5f) * radius, (float)rnd.NextDouble()));
 
                 }
 
@@ -49,11 +53,11 @@ namespace SFDScript
 			protected override void setUpStats()
 			{
 				spellPower = EXPLOSION_DAMAGE; //explosion damage
-				cooldown = 20000;
+				cooldown = 14000;
 				speed = 4f;
 				range = 1f;
 				splash = 40f;
-				particleEffect = "STM";
+				particleEffect = elementEffects[(int)element];
 			}
 
 		}
