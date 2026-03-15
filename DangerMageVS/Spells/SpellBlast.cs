@@ -34,29 +34,34 @@ namespace SFDScript
 			//TODO: add impact particle effects
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
-				float effectivePower = spellPower * powerMod;
-				float radius = (splash - EXPLOSION_RADIUS);
-				radius = (radius < 0 ? 0 : radius);
+
+            }
+            public override void explode(Cast sender, IObject alreadyHit, Vector2 position)
+            {
+				float effectivePower = spellPower;//* powerMod;
+                float radius = (splash - EXPLOSION_RADIUS);
+                radius = (radius < 0 ? 0 : radius);
 
                 for (int i = 0; i < effectivePower / EXPLOSION_DAMAGE; i++)
                 {
-                    Game.TriggerExplosion(sender.position + new Vector2((float)(rnd.NextDouble() - 0.5f) * radius, (float)rnd.NextDouble()));
-
+                    messageRoss("expl " + i);
+                    Game.TriggerExplosion(sender.position + new Vector2((float)(rnd.NextDouble() - 0.5f) * radius, (float)(rnd.NextDouble() - 0.5f) * radius));
+                    i += 1;
                 }
+            }
 
-			}
 
-			public override void passive(Cast sender, IObject target, Vector2 vector)
+            public override void passive(Cast sender, IObject target, Vector2 vector)
 			{
             }
 
 			protected override void setUpStats()
 			{
 				spellPower = EXPLOSION_DAMAGE; //explosion damage
-				cooldown = 14000;
+				cooldown = 12000;
 				speed = 4f;
 				range = 1f;
-				splash = 40f;
+				splash = EXPLOSION_RADIUS;
 				particleEffect = elementEffects[(int)element];
 			}
 

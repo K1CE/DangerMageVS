@@ -35,6 +35,7 @@ namespace SFDScript
          * faster spell equip
          * fix spell collision
          * fix blood cooldown cycling
+         * change the spell cooldown cycling for cooldowns
          * 
          * */
 
