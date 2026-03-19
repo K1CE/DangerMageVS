@@ -36,6 +36,7 @@ namespace SFDScript
             public Vector2 position = Vector2.Zero;
 			public Vector2 direction = Vector2.Zero;
 			public Spell spell;
+			public bool finished = false;
 
 			public Cast(Spell spell)
 			{
@@ -59,7 +60,8 @@ namespace SFDScript
 				onImpactEvent(this, affected, vector, 1);
 				onExplodeEvent(this, affected, position);
 
-				destroy();
+				finished = true;
+                destroy();
 
 			}
 
