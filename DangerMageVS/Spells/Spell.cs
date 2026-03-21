@@ -103,6 +103,7 @@ namespace SFDScript
 
                 cast.onImpactEvent += new Cast.EffectHandler(affect);
                 cast.onPassiveEvent += new Cast.PassiveHandler(passive);
+				cast.onIntervalEvent += new Cast.IntervalHandler(interval);
                 cast.onParticleEvent += new Cast.ParticleHandler(particles);
                 cast.onParticleExplosionEvent += new Cast.ParticleExplosionHandler(particleExplosion);
                 cast.onExplodeEvent += new Cast.ExplosionHandler(explode);
@@ -115,6 +116,10 @@ namespace SFDScript
 			public abstract void affect(Cast sender, IObject target, Vector2 vector, float powerMod);
 
 			public abstract void passive(Cast sender, IObject target, Vector2 vector);
+            protected bool interval(Cast sender, Vector2 vector)
+			{
+				return false;
+			}
 
             public virtual void explode(Cast sender, IObject alreadyHit, Vector2 position)
 			{
