@@ -19,7 +19,7 @@ namespace SFDScript
 			public delegate void PassiveHandler(Cast sender, IObject affected, Vector2 vector);
 			public event PassiveHandler onPassiveEvent;
 
-            public delegate void IntervalHandler(Cast sender, Vector2 vector);
+            public delegate bool IntervalHandler(Cast sender, Vector2 vector);
             public event IntervalHandler onIntervalEvent;
 
             public delegate void ParticleHandler(Cast sender, Vector2 position, int count, float radius);
