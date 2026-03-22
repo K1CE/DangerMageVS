@@ -253,6 +253,7 @@ namespace SFDScript
 
 
             CreateTimer(1000, 0, "slowTick", "0");
+            CreateTimer(600, 0, "quickTick", "2");
             CreateTimer(300, 0, "fastTick", "1");
             CreateTimer(50, 0, "effectTick", "3");
 
@@ -261,6 +262,14 @@ namespace SFDScript
 
             m_userMessageCallback = Events.UserMessageCallback.Start(OnUserMessage);
 
+        }
+
+        public void quickTick(TriggerArgs args)
+        {
+            foreach (Cast cast in casts)
+            {
+                cast.intervalTick();
+            }
         }
 
         public void slowTick(TriggerArgs args)
@@ -363,6 +372,7 @@ namespace SFDScript
                 cast.particleTick();
             }
         }
+
 
         //TODO: theres a chance for wands to duplicate
 

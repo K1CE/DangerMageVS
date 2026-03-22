@@ -19,7 +19,7 @@ namespace SFDScript
 			public delegate void PassiveHandler(Cast sender, IObject affected, Vector2 vector);
 			public event PassiveHandler onPassiveEvent;
 
-            public delegate bool IntervalHandler(Cast sender, Vector2 vector);
+            public delegate void IntervalHandler(Cast sender, Vector2 vector);
             public event IntervalHandler onIntervalEvent;
 
             public delegate void ParticleHandler(Cast sender, Vector2 position, int count, float radius);
@@ -79,9 +79,13 @@ namespace SFDScript
 			protected void particleTickProxy(Vector2 pos, int count, float radius)
 			{
 				onParticleEvent(this, pos, count, radius);
-			}
+            }
+            protected void intervalTickProxy(Vector2 pos)
+            {
+				onIntervalEvent(this, pos);
+            }
 
-			public void addForCleanup(IObject toClean)
+            public void addForCleanup(IObject toClean)
 			{
 				cleanUp.Add(toClean);
 			}
@@ -90,7 +94,9 @@ namespace SFDScript
 
 			public abstract void particleTick();
 
-			public abstract void destroy();
+            public abstract void intervalTick();
+
+            public abstract void destroy();
 
 			protected abstract void onSpeedChange();
 		}

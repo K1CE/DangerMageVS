@@ -107,7 +107,12 @@ namespace SFDScript
 				particleTickProxy(hitBox.GetWorldPosition(), 2, 4.0f);
 			}
 
-			protected override void updatePosition()
+            public override void intervalTick()
+            {
+				intervalTickProxy(position);
+            }
+
+            protected override void updatePosition()
 			{
 				position = hitBox.GetWorldPosition();
 			}
