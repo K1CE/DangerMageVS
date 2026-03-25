@@ -29,8 +29,8 @@ namespace SFDScript
 
 			public SpellBlast(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
-
 			}
+
 			//TODO: add impact particle effects
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
             {
@@ -55,6 +55,30 @@ namespace SFDScript
 			{
             }
 
+
+            //TODO: balance flak effect
+            public static int BLAST_PROXIMITY = 90;
+            protected override void interval(Cast sender, Vector2 pos)
+            {
+                foreach (IPlayer found in Game.GetObjectsByArea<IPlayer>(new Area(
+                       (float)(pos.Y + (BLAST_PROXIMITY / 2)),
+                       (float)(pos.X + (BLAST_PROXIMITY / -2)),
+                       (float)(pos.Y + (BLAST_PROXIMITY / -2)),
+                       (float)(pos.X + (BLAST_PROXIMITY / 2))
+
+                       )))
+                {
+                    messageRoss("player found");
+                    if (found.UniqueId != caster.UniqueID && !found.IsDead)
+                    {
+                        sender.hit(found);
+                        messageRoss("proxy");
+                        return;
+                    }
+                }
+            }
+
+
 			protected override void setUpStats()
 			{
 				spellPower = EXPLOSION_DAMAGE; //explosion damage
@@ -63,7 +87,8 @@ namespace SFDScript
 				range = 1f;
 				splash = EXPLOSION_RADIUS;
 				particleEffect = elementEffects[(int)element];
-			}
+
+            }
 
 		}
 
