@@ -116,9 +116,9 @@ namespace SFDScript
 			public abstract void affect(Cast sender, IObject target, Vector2 vector, float powerMod);
 
 			public abstract void passive(Cast sender, IObject target, Vector2 vector);
-            protected bool interval(Cast sender, Vector2 vector)
+            protected virtual void interval(Cast sender, Vector2 vector)
 			{
-				return false;
+
 			}
 
             public virtual void explode(Cast sender, IObject alreadyHit, Vector2 position)

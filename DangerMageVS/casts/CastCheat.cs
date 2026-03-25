@@ -40,7 +40,12 @@ namespace SFDScript
 			{
 			}
 
-			protected override void updatePosition()
+            public override void intervalTick()
+            {
+                intervalTickProxy(position);
+            }
+
+            protected override void updatePosition()
 			{
 				position = target.GetWorldPosition();
 			}
