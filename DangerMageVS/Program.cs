@@ -142,7 +142,7 @@ namespace SFDScript
 
                 if (isOddObject(sent))
                 {
-                    messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire ? " does" : " doesn't") + " block fire");
+                    //messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire ? " does" : " doesn't") + " block fire");
                 }
 
                 if (sent is IPlayer)
@@ -160,9 +160,11 @@ namespace SFDScript
 
                     Vector2 pos = prj.hitBox.GetWorldPosition();
                     RayCastInput input = new RayCastInput(true);
-                    input.FilterOnMaskBits = true;
+                    //input.FilterOnMaskBits = true;
                     input.BlockExplosions = RayCastFilterMode.True;
+
                     input.IncludeOverlap = true;
+                    
                     RayCastResult outPut = Game.RayCast(pos, prj.targetJoint.GetWorldPosition(), input)[0];
                     if (outPut.Hit && !isOddObject(outPut.HitObject) && Vector2.Distance(outPut.Position, pos) < 2f)
                     {
@@ -269,6 +271,11 @@ namespace SFDScript
             foreach (Cast cast in casts)
             {
                 cast.intervalTick();
+                if (cast.finished)
+                {
+                    quickTick(args);
+                    return;
+                }
             }
         }
 
