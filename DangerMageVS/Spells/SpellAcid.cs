@@ -17,9 +17,9 @@ namespace SFDScript
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 
 		public class SpellAcid : Spell
-		{
-			private static Element element = Element.ACID;
-			private bool triggerDebounce = false;
+        {
+            public override Element element { get { return Element.ACID; } }
+            private bool triggerDebounce = false;
             Events.UpdateCallback acidDelay = null;
             private List<IObject> acidTagged = new List<IObject>();
 			private List<float> acidTag = new List<float>();
@@ -114,7 +114,8 @@ namespace SFDScript
 				toxicBall.SetColor2("LightGreen");
 				((CastProjectile)cast).attach(toxicBall);
 			}
-		}
+
+        }
 
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */

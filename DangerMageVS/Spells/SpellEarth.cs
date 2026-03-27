@@ -9,10 +9,10 @@ namespace SFDScript
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public class SpellEarth : Spell
-		{
-			private static Element element = Element.EARTH;
+        {
+            public override Element element { get { return Element.EARTH; } }
 
-				public SpellEarth(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            public SpellEarth(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 				public SpellEarth(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 				{
@@ -87,7 +87,7 @@ namespace SFDScript
                 ((CastProjectile)cast).attach(weight);
                 weight.SetCollisionFilter(filt);
             }
-			protected override void setUpStats()
+            protected override void setUpStats()
 			{
 				spellPower = 18;
 				cooldown = 3700;

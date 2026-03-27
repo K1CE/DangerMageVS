@@ -12,10 +12,10 @@ namespace SFDScript
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public class SpellSpace : Spell
-		{
-			private static Element element = Element.SPACE;
+        {
+			public override Element element { get { return Element.SPACE; } }
 
-			public SpellSpace(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            public SpellSpace(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellSpace(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
@@ -204,8 +204,8 @@ namespace SFDScript
 				speed = 1f; //used to be 2
 				range = 4f;
 				splash = 25;
-			}
-		}
+            }
+        }
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */
 

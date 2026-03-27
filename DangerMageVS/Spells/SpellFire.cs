@@ -8,10 +8,10 @@ namespace SFDScript
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public class SpellFire : Spell
-		{
-			private static Element element = Element.FIRE;
+        {
+            public override Element element { get { return Element.FIRE; } }
 
-			public SpellFire(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            public SpellFire(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellFire(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
@@ -61,8 +61,8 @@ namespace SFDScript
 
 				Game.SpawnFireNodes(sender.position, 4, 1f, FireNodeType.Default);
 
-			}
-			protected override void setUpStats()
+            }
+            protected override void setUpStats()
 			{
 				spellPower = 24;
 				cooldown = 3650;

@@ -21,10 +21,10 @@ namespace SFDScript
 
 		//TODO: add passive effect
 		public class SpellAir : Spell
-		{
-			private static Element element = Element.AIR;
+        {
+            public override Element element { get { return Element.AIR; } }
 
-			public SpellAir(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            public SpellAir(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellAir(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
@@ -98,7 +98,7 @@ namespace SFDScript
                 target.ClearFire();
             }
 
-			protected override void setUpStats()
+            protected override void setUpStats()
 			{
 				spellPower = 10;
 				cooldown = 3400;

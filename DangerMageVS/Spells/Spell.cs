@@ -18,7 +18,9 @@ namespace SFDScript
             protected Cast cast;
 			public string particleEffect;
 
-			public float spellPower = 0;
+            public virtual Element element { get { return Element.ARCANE; } }
+
+            public float spellPower = 0;
 			public int cooldown = 0;
 			bool initialized = false;
 
@@ -116,6 +118,7 @@ namespace SFDScript
 			public abstract void affect(Cast sender, IObject target, Vector2 vector, float powerMod);
 
 			public abstract void passive(Cast sender, IObject target, Vector2 vector);
+
             protected virtual void interval(Cast sender, Vector2 vector)
 			{
 

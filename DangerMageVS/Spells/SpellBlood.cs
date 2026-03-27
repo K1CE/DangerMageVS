@@ -10,11 +10,11 @@ namespace SFDScript
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public class SpellBlood : Spell
-		{
-			private static Element element = Element.BLOOD;
+        {
+            public override Element element { get { return Element.BLOOD; } }
 
-			//TODO: add flying giblets that need to be picked up to heal like in excesses script
-			public SpellBlood(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            //TODO: add flying giblets that need to be picked up to heal like in excesses script
+            public SpellBlood(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellBlood(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
@@ -167,9 +167,9 @@ namespace SFDScript
 					spellPower += 5f;
 					splash += 5f;
 				}
-			}
+            }
 
-		}
+        }
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */
 

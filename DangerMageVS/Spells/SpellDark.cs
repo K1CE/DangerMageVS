@@ -11,10 +11,10 @@ namespace SFDScript
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		//make some sort of benefit to killing players with the dark spell
 		public class SpellDark : Spell
-		{
-			private static Element element = Element.DARK;
+        {
+            public override Element element { get { return Element.DARK; } }
 
-			public SpellDark(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            public SpellDark(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellDark(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
@@ -134,9 +134,9 @@ namespace SFDScript
 			public override void passive(Cast sender, IObject target, Vector2 vector)
 			{
 				target.SetHealth(target.GetHealth() - 4f);
-			}
+            }
 
-		}
+        }
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */
 

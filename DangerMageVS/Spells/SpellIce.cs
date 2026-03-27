@@ -9,10 +9,10 @@ namespace SFDScript
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public class SpellIce : Spell
-		{
-			private static Element element = Element.ICE;
+        {
+            public override Element element { get { return Element.ICE; } }
 
-			public SpellIce(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            public SpellIce(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellIce(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{

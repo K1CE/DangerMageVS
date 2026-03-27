@@ -9,10 +9,10 @@ namespace SFDScript
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public class SpellMetal : Spell
-		{
-			private static Element element = Element.METAL;
+        {
+            public override Element element { get { return Element.METAL; } }
 
-			public SpellMetal(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            public SpellMetal(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellMetal(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
@@ -70,8 +70,8 @@ namespace SFDScript
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
 				((CastProjectile)cast).attach(Game.CreateObject("Pulley00", position));
-			}
-			protected override void setUpStats()
+            }
+            protected override void setUpStats()
 			{
 				spellPower = 16f;
 				cooldown = 3700;

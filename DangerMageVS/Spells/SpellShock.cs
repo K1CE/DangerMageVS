@@ -9,10 +9,10 @@ namespace SFDScript
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public class SpellShock : Spell
-		{
-			private static Element element = Element.SHOCK;
+        {
+            public override Element element { get { return Element.SHOCK; } }
 
-			public SpellShock(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
+            public SpellShock(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellShock(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
@@ -88,9 +88,9 @@ namespace SFDScript
 				}
 				else if (cantMeleeDamage(target))
 					target.Destroy();
-			}
+            }
 
-			protected override void setUpStats()
+            protected override void setUpStats()
 			{
 				spellPower = 14;
 				cooldown = 4500;

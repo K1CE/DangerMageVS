@@ -21,9 +21,9 @@ namespace SFDScript
 
 		//TODO: add passive effect
 		public class SpellBlast : Spell
-		{
-			private static Element element = Element.BLAST;
-			public const int EXPLOSION_DAMAGE = 50;
+        {
+            public override Element element { get { return Element.BLAST; } }
+            public const int EXPLOSION_DAMAGE = 50;
 			public const int EXPLOSION_RADIUS = 40;
 			public SpellBlast(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
@@ -79,7 +79,7 @@ namespace SFDScript
             }
 
 
-			protected override void setUpStats()
+            protected override void setUpStats()
 			{
 				spellPower = EXPLOSION_DAMAGE; //explosion damage
 				cooldown = 10000;
