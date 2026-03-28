@@ -163,10 +163,16 @@ namespace SFDScript
                     //input.FilterOnMaskBits = true;
                     input.BlockExplosions = RayCastFilterMode.True;
 
-                    input.IncludeOverlap = true;
+                    input.ClosestHitOnly = true;
+                    if (prj.spell.element == Element.EARTH)
+                    {
+                        input.ClosestHitOnly = false;
+                    }
+
                     
-                    RayCastResult outPut = Game.RayCast(pos, prj.targetJoint.GetWorldPosition(), input)[0];
-                    if (outPut.Hit && !isOddObject(outPut.HitObject) && Vector2.Distance(outPut.Position, pos) < 2f)
+                    RayCastResult[] outputs = Game.RayCast(pos, prj.targetJoint.GetWorldPosition(), input);
+                    foreach (RayCastResult outPut in outputs)
+                    if (outPut.Hit && !isOddObject(outPut.HitObject) && Vector2.Distance(outPut.Position, pos) < 2f && outPut.HitObject.CustomID != "mNoCollide")
                     {
                         prj.hit(outPut.HitObject);
                         //if (outPut.HitObject.GetMaxHealth() != 1) 
