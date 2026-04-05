@@ -57,7 +57,7 @@ namespace SFDScript
 
 
             //TODO: balance flak effect
-            public static int BLAST_PROXIMITY = 90;
+            public static int BLAST_PROXIMITY = 70;
             protected override void interval(Cast sender, Vector2 pos)
             {
                 foreach (IPlayer found in Game.GetObjectsByArea<IPlayer>(new Area(
@@ -82,7 +82,7 @@ namespace SFDScript
             protected override void setUpStats()
 			{
 				spellPower = EXPLOSION_DAMAGE; //explosion damage
-				cooldown = 10000;
+				cooldown = 9000;
 				speed = 4f;
 				range = 1f;
 				splash = EXPLOSION_RADIUS;
