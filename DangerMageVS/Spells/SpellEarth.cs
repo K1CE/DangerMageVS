@@ -22,8 +22,9 @@ namespace SFDScript
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
 				float effectivePower = spellPower * powerMod;
+				Game.PlayEffect("HIT_B", sender.position + vector * 2f);
 
-				Vector2 pos = sender.position;
+                Vector2 pos = sender.position;
 				IObject attacker = Game.CreateObject("StoneDebris00A", pos, rnd.Next(628) / 100f, Vector2.Normalize(vector) * 7, 0f);
 				//if(target == null) messageRoss("" + vector.X + " ," + vector.Y);
 				attacker.TrackAsMissile(true);
