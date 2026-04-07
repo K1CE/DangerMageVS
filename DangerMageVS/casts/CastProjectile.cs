@@ -114,7 +114,11 @@ namespace SFDScript
 
             protected override void updatePosition()
 			{
-				position = hitBox.GetWorldPosition();
+				if (hitBox != null && !hitBox.DestructionInitiated)
+				{ //else itll be zero then
+					position = hitBox.GetWorldPosition();
+					messageRoss("position: "+ position.ToString());
+				}
 			}
 
 			public override void destroy()

@@ -36,6 +36,7 @@ namespace SFDScript
          * fix spell collision
          * fix blood cooldown cycling
          * change the spell cooldown cycling for cooldowns
+         * fix on death error in fast tick
          * 
          * */
 
