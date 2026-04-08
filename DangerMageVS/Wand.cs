@@ -91,8 +91,7 @@ namespace SFDScript
 					case Element.BLAST:
 						return new SpellBlast(position, vector, CastType.PROJECTILE, ply);
 					case Element.PLANT:
-						//	return new PlantSpell(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir)? 4 : 0) ), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
-						return null;
+                        return new SpellPlant(position, vector, CastType.PROJECTILE, ply);
 					case Element.CHAOS:
 						//	return new ChaosSpell(ply.GetWorldPosition() + new Vector2(7 * ply.FacingDirection, 8 - ((ply.IsCrouching || ply.IsInMidAir)? 4 : 0) ), new Vector2(200 * ply.FacingDirection, 0), CastType.PROJECTILE, ply);
 						return null;
