@@ -37,14 +37,15 @@ namespace SFDScript
 				Game.PlaySound("ImpactMetal", sender.position, 1f);
 				particleExplosion("S_P", sender.position, 3, 8f);
             }
+			public const float PISTOL_DAMAGE = 3.33f;
             public override void explode(Cast sender, IObject alreadyHit, Vector2 position) {
-				float bullets = splash;
+				float bullets = splash * 1.5f;
 				for (int i = 0; i < bullets; i++) {
 					double rotation = rnd.NextDouble() * Math.PI * 2;
 					Vector2 vector = new Vector2((float)Math.Cos(rotation) / 10f, (float)Math.Sin(rotation) / 10f);
-
-                    IProjectile shrapnel = Game.SpawnProjectile(ProjectileItem.PISTOL, position + vector * 25f, vector);
-					shrapnel.DamageDealtModifier = 0.3f;
+					vector.Normalize();
+                    IProjectile shrapnel = Game.SpawnProjectile(ProjectileItem.PISTOL, position + vector * 50f, vector);
+					shrapnel.DamageDealtModifier = (spellPower/10f)/PISTOL_DAMAGE;
 					shrapnel.CritChanceDealtModifier = 0f;
 					//shrapnel.Velocity = vector;
                 }
@@ -73,11 +74,11 @@ namespace SFDScript
             }
             protected override void setUpStats()
 			{
-				spellPower = 16f;
-				cooldown = 3700;
+				spellPower = 12f;
+				cooldown = 3000;
 				speed = 7.5f;
-				range = 2f;
-				splash = 18;
+				range = 1.1f;
+				splash = 24;
 			}
 
 		}
