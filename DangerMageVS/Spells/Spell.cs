@@ -124,6 +124,7 @@ namespace SFDScript
 
 			}
 
+			//Raycast for intersecting walls
             public virtual void explode(Cast sender, IObject alreadyHit, Vector2 position)
 			{
                 int blacklistID = 0;

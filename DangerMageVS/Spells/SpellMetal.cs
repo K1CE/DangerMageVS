@@ -17,15 +17,20 @@ namespace SFDScript
 			public SpellMetal(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
 			{
 
-			}
+            }
+			//TODO make it shoot twice
 			//TODO: add impact particle effects
-			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
+			//TODO: add impact sounds
+			//TODO: make explosion only trigger on miss
+			//TODO: delayed shrapnel explosion with cool effect and sounds
+			private bool hitPlayer = false;
+            public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
                 float effectivePower = spellPower * powerMod;
 
                 if (target != null)
 				{
-
+					if (target is IPlayer) hitPlayer = true;
 					Vector2 pos = sender.position;
 					IProjectile prj = Game.SpawnProjectile(ProjectileItem.PISTOL, target.GetWorldPosition() - vector, vector);
 					prj.CritChanceDealtModifier = 100f;
@@ -39,12 +44,13 @@ namespace SFDScript
             }
 			public const float PISTOL_DAMAGE = 3.33f;
             public override void explode(Cast sender, IObject alreadyHit, Vector2 position) {
+				if (hitPlayer) return;
 				float bullets = splash * 1.5f;
 				for (int i = 0; i < bullets; i++) {
 					double rotation = rnd.NextDouble() * Math.PI * 2;
 					Vector2 vector = new Vector2((float)Math.Cos(rotation) / 10f, (float)Math.Sin(rotation) / 10f);
 					vector.Normalize();
-                    IProjectile shrapnel = Game.SpawnProjectile(ProjectileItem.PISTOL, position + vector * 50f, vector);
+                    IProjectile shrapnel = Game.SpawnProjectile(ProjectileItem.PISTOL, position + vector * 10f, vector);
 					shrapnel.DamageDealtModifier = (spellPower/10f)/PISTOL_DAMAGE;
 					shrapnel.CritChanceDealtModifier = 0f;
 					//shrapnel.Velocity = vector;

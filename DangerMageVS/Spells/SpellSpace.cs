@@ -14,7 +14,7 @@ namespace SFDScript
 		public class SpellSpace : Spell
         {
 			public override Element element { get { return Element.SPACE; } }
-
+			//TODO: make it go through walls
             public SpellSpace(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellSpace(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
