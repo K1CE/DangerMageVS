@@ -28,7 +28,6 @@ namespace SFDScript
          * make space wand pull objects to deal more damage on hit
          * space wand slo mo synergy
          * insane idea: sawblades move across surfaces
-         * earth magic still boring but have no clue what to do... its just a rock
          * make earth magic penetrate and push
          * fix duping bug
          * make ice lower other stats
@@ -37,6 +36,9 @@ namespace SFDScript
          * fix blood cooldown cycling
          * change the spell cooldown cycling for cooldowns
          * fix on death error in fast tick
+         * random num seed that makes spells have random ideal vowel combinations. not ideal vowels in a spell results in a debuff and/or unexpected results
+         * prefix should determine cast type somehow
+         * syllables all determine aftercast
          * 
          * */
 

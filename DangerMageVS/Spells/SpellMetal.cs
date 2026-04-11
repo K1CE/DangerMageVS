@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using SFDGameScriptInterface;
 
 
@@ -30,7 +31,11 @@ namespace SFDScript
 
                 if (target != null)
 				{
-					if (target is IPlayer) hitPlayer = true;
+					if (target is IPlayer)
+					{
+						hitPlayer = true;
+                        Game.PlaySound("MeleeHitSharp", sender.position, 1f);
+                    }
 					Vector2 pos = sender.position;
 					IProjectile prj = Game.SpawnProjectile(ProjectileItem.PISTOL, target.GetWorldPosition() - vector, vector);
 					prj.CritChanceDealtModifier = 100f;
@@ -77,13 +82,14 @@ namespace SFDScript
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
 				((CastProjectile)cast).attach(Game.CreateObject("Pulley00", position));
+                Game.PlaySound("Sawblade", position, 1f);
             }
             protected override void setUpStats()
 			{
 				spellPower = 12f;
 				cooldown = 3000;
 				speed = 7.5f;
-				range = 1.1f;
+				range = 0.9f;
 				splash = 24;
 			}
 
