@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using SFDGameScriptInterface;
 
@@ -19,11 +21,10 @@ namespace SFDScript
 			{
 
             }
-			//TODO make it shoot twice
-			//TODO: add impact particle effects
-			//TODO: add impact sounds
-			//TODO: make explosion only trigger on miss
-			//TODO: delayed shrapnel explosion with cool effect and sounds
+			//TODO: make it shoot twice
+			//TODO: make it attract material
+			//TODO: fix blob falling apart
+			//TODO: deflect with melee
 			private bool hitPlayer = false;
             public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
@@ -48,39 +49,59 @@ namespace SFDScript
 				particleExplosion("S_P", sender.position, 3, 8f);
             }
 			public const float PISTOL_DAMAGE = 3.33f;
-			private const float chunkCloseness = 2.4f;
+			private const float MAGNET_DISTANCE = 30f;
+			private const float CHUNK_CLOSENESS = 2.4f;
             public override void explode(Cast sender, IObject alreadyHit, Vector2 position) {
 				if (hitPlayer) return;
 				bool fat = spellPower > 6 || splash > 12;
-				IObject[] chunks;
-				if (sawblade != null) {
+				List<IObject> chunks = new List<IObject>();
+
+                if (sawblade != null) {
 					sawblade.Destroy();
 				}
+
+
 
                 Game.PlaySound("MeleeBlockMetal", position, 1f);
                 if (fat)
 				{
-					chunks = new IObject[3];
 					float rotation = (float)(rnd.NextDouble() * Math.PI * 2);
 					for(int i = 0; i < 3; i++)
 					{
 						float localRotation = (float)(rotation + (i * Math.PI * 2 / 3));
 						float facingRotation = (float)(Math.PI / 2 + localRotation);
-						Vector2 relativePos = new Vector2((float)Math.Cos(localRotation) * chunkCloseness, (float)Math.Sin(localRotation) * chunkCloseness);
-						chunks[i] = Game.CreateObject("MetalDebris00" + (char)(rnd.Next(3) + 65), relativePos + position, facingRotation);
+						Vector2 relativePos = new Vector2((float)Math.Cos(localRotation) * CHUNK_CLOSENESS, (float)Math.Sin(localRotation) * CHUNK_CLOSENESS);
+						chunks.Add(Game.CreateObject("MetalDebris00" + (char)(rnd.Next(3) + 65), relativePos + position, facingRotation));
 						chunks[i].SetBodyType(BodyType.Static);
-					}
+                        chunks[i].CustomID = "magnetized";
+                    }
 				} else
 				{
-                    chunks = new IObject[1];
                     chunks[0] = Game.CreateObject("MetalDebris00A", position, (float)(rnd.NextDouble() * Math.PI * 2));
                     chunks[0].SetBodyType(BodyType.Static);
+                    chunks[0].CustomID = "magnetized";
+                }
+
+
+				foreach (IObject metal in Game.GetObjects<IObject>(new Area(-1 * MAGNET_DISTANCE * Vector2.One + position, MAGNET_DISTANCE * Vector2.One + position))){
+					messageRoss(metal.Name);
+					if (!metal.Name.Contains("MetalDebris") || metal.CustomID == "magnetized") continue;
+                    float rotation = (float)(rnd.NextDouble() * Math.PI * 2);
+
+                    chunks.Add(metal);
+                    Vector2 relativePos = new Vector2((float)Math.Cos(rotation) * (CHUNK_CLOSENESS + 4f), (float)Math.Sin(rotation) * (CHUNK_CLOSENESS + 4f));
+                    float facingRotation = (float)(Math.PI / 2 + rotation);
+                    metal.SetWorldPosition(relativePos + position);
+                    metal.SetBodyType(BodyType.Static);
+					metal.SetAngle(facingRotation);
+					metal.ClearFire();
                 }
 
 
 					Events.UpdateCallback delay = null;
                 delay = Events.UpdateCallback.Start(e => {
 					bool spellBroke = false;
+					if (chunks.Count > 3) splash += (chunks.Count - 3) * 16;
 					foreach(IObject chunk in chunks)
 					{
 						if(chunk == null || chunk.DestructionInitiated || chunk.IsRemoved){
