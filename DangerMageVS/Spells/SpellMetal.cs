@@ -22,9 +22,10 @@ namespace SFDScript
 
             }
 			//TODO: make it shoot twice
-			//TODO: make it attract material
 			//TODO: fix blob falling apart
 			//TODO: deflect with melee
+			//TODO: magnetism
+			//TODO: add more compatible metal
 			private bool hitPlayer = false;
             public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
@@ -157,13 +158,15 @@ namespace SFDScript
 				sawblade = Game.CreateObject("Pulley00", position);
                 ((CastProjectile)cast).attach(sawblade);
                 Game.PlaySound("Sawblade", position, 1f);
+
+
             }
             protected override void setUpStats()
 			{
 				spellPower = 12f;
 				cooldown = 3000;
 				speed = 7.5f;
-				range = 0.9f;
+				range = 0.75f;
 				splash = 24;
 			}
 

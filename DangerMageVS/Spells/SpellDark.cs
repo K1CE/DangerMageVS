@@ -116,7 +116,7 @@ namespace SFDScript
 			{
 				spellPower = 11.5f; //starts at 10 and rises to 200% depending on playerhealth
 				cooldown = 3700;
-				speed = 5.3f;
+				speed = 6f;
 				range = 1.2f;
 				splash = 18;
 				particleEffect = "TR_S";
