@@ -86,7 +86,7 @@ namespace SFDScript
 
 				foreach (IObject metal in Game.GetObjects<IObject>(new Area(-1 * MAGNET_DISTANCE * Vector2.One + position, MAGNET_DISTANCE * Vector2.One + position))){
 					messageRoss(metal.Name);
-					if (!metal.Name.Contains("MetalDebris") || metal.CustomID == "magnetized") continue;
+					if (!isScrap(metal)) continue;
                     float rotation = (float)(rnd.NextDouble() * Math.PI * 2);
 
                     chunks.Add(metal);
@@ -102,7 +102,10 @@ namespace SFDScript
 					Events.UpdateCallback delay = null;
                 delay = Events.UpdateCallback.Start(e => {
 					bool spellBroke = false;
-					if (chunks.Count > 3) splash += (chunks.Count - 3) * 16;
+					if (chunks.Count > 3){
+						splash *= (chunks.Count - 3);
+						spellPower *= 2f;
+					}
 					foreach(IObject chunk in chunks)
 					{
 						if(chunk == null || chunk.DestructionInitiated || chunk.IsRemoved){
@@ -128,6 +131,8 @@ namespace SFDScript
                         IProjectile shrapnel = Game.SpawnProjectile(ProjectileItem.PISTOL, position + vector * 10f, vector);
                         shrapnel.DamageDealtModifier = (spellPower / 10f) / PISTOL_DAMAGE;
                         shrapnel.CritChanceDealtModifier = 0f;
+						shrapnel.Velocity = shrapnel.Velocity * ((float)rnd.NextDouble() * 0.5f + 0.5f);
+						if(i > 30 && rnd.NextDouble() < 0.1f) shrapnel.PowerupBounceActive = true;
                         //shrapnel.Velocity = vector;
                     }
 
@@ -148,19 +153,48 @@ namespace SFDScript
 				if (target.GetCollisionFilter().AbsorbProjectile && Math.Abs(target.GetWorldPosition().Y - (sender.position.Y - 1f)) < 5f)
 					cast.hit(target);
 				//}
+
+				if (isScrap(target)){
+
+                    IObjectPullJoint pullJoint = (IObjectPullJoint)Game.CreateObject("pullJoint", target.GetWorldPosition());
+                    ((CastProjectile)cast).attach(pullJoint);
+                    pullJoint.SetLineVisual(LineVisual.DJSteelWire);
+                    pullJoint.SetTargetObject(target);
+					pullJoint.SetTargetObjectJoint(targetJoint);
+					pullJoint.SetForce(1f);
+                    cast.addForCleanup(pullJoint);
+
+					target.SetMass(0.02f);
+					target.CustomID = "magnetized";
+
+					cast.addForCleanup(target);
+				}
 			}
 
 
 			private IObject sawblade;
+			private IObjectTargetObjectJoint targetJoint;
 			protected override void projectile(Vector2 position, Vector2 direction)
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
+
 				sawblade = Game.CreateObject("Pulley00", position);
                 ((CastProjectile)cast).attach(sawblade);
                 Game.PlaySound("Sawblade", position, 1f);
+				cast.addForCleanup(sawblade);
+
+                targetJoint = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", position);
+                targetJoint.SetTargetObject(sawblade);
+                cast.addForCleanup(targetJoint);
 
 
             }
+
+			private bool isScrap(IObject obj)
+			{
+				return obj.CustomID != "magnetized" &&
+					(obj.Name.Contains("MetalDebris"));
+			}
             protected override void setUpStats()
 			{
 				spellPower = 12f;

@@ -131,10 +131,15 @@ namespace SFDScript
 				railAttachment.Remove();
 				projectiles.Remove(this);
 				casts.Remove(this);
-
-				foreach(IObject obj in cleanUp)
+				for(int i = 0; i < cleanUp.Count; i++)
 				{
-					obj.Remove();
+					if (cleanUp[i].CustomID == "magnetized"){
+                        cleanUp[i].CustomID = "";
+						cleanUp.RemoveAt(i);
+						i--;
+						continue;
+					}
+					else cleanUp[i].Remove();
 				}
 				foreach(IObjectRailAttachmentJoint attachment in railAttachments)
 				{
