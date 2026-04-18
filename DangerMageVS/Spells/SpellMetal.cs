@@ -90,7 +90,7 @@ namespace SFDScript
                     float rotation = (float)(rnd.NextDouble() * Math.PI * 2);
 
                     chunks.Add(metal);
-                    Vector2 relativePos = new Vector2((float)Math.Cos(rotation) * (CHUNK_CLOSENESS + 4f), (float)Math.Sin(rotation) * (CHUNK_CLOSENESS + 4f));
+                    Vector2 relativePos = new Vector2((float)Math.Cos(rotation + (float)Math.PI / 2f) * (CHUNK_CLOSENESS + 4f) , (float)Math.Sin(rotation + (float)Math.PI / 2f) * (CHUNK_CLOSENESS + 4f));
                     float facingRotation = (float)(Math.PI / 2 + rotation);
                     metal.SetWorldPosition(relativePos + position);
                     metal.SetBodyType(BodyType.Static);
