@@ -26,6 +26,8 @@ namespace SFDScript
 			//TODO: deflect with melee
 			//TODO: magnetism
 			//TODO: add more compatible metal
+			//TODO: fix magnet hitbox
+			//TODO: 
 			private bool hitPlayer = false;
             public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
@@ -50,7 +52,7 @@ namespace SFDScript
 				particleExplosion("S_P", sender.position, 3, 8f);
             }
 			public const float PISTOL_DAMAGE = 3.33f;
-			private const float MAGNET_DISTANCE = 30f;
+			private const float MAGNET_DISTANCE = 60f;
 			private const float CHUNK_CLOSENESS = 2.4f;
             public override void explode(Cast sender, IObject alreadyHit, Vector2 position) {
 				if (hitPlayer) return;
@@ -161,10 +163,10 @@ namespace SFDScript
                     pullJoint.SetLineVisual(LineVisual.DJSteelWire);
                     pullJoint.SetTargetObject(target);
 					pullJoint.SetTargetObjectJoint(targetJoint);
-					pullJoint.SetForce(1f);
+					pullJoint.SetForce(0.3f);
                     cast.addForCleanup(pullJoint);
 
-					target.SetMass(0.02f);
+					target.SetMass(0.05f);
 					target.CustomID = "magnetized";
 
 					cast.addForCleanup(target);
@@ -183,7 +185,7 @@ namespace SFDScript
                 Game.PlaySound("Sawblade", position, 1f);
 				cast.addForCleanup(sawblade);
 
-                targetJoint = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", position);
+                targetJoint = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", position + new Vector2(0, 16));
                 targetJoint.SetTargetObject(sawblade);
                 cast.addForCleanup(targetJoint);
 
