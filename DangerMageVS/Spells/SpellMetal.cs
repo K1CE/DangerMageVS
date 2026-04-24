@@ -27,7 +27,7 @@ namespace SFDScript
 			//TODO: magnetism
 			//TODO: add more compatible metal
 			//TODO: fix magnet hitbox
-			//TODO: 
+			//TODO: fix metal rotation
 			private bool hitPlayer = false;
             public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
@@ -52,7 +52,7 @@ namespace SFDScript
 				particleExplosion("S_P", sender.position, 3, 8f);
             }
 			public const float PISTOL_DAMAGE = 3.33f;
-			private const float MAGNET_DISTANCE = 60f;
+			private const float MAGNET_DISTANCE = 20f;
 			private const float CHUNK_CLOSENESS = 2.4f;
             public override void explode(Cast sender, IObject alreadyHit, Vector2 position) {
 				if (hitPlayer) return;
@@ -85,8 +85,10 @@ namespace SFDScript
                     chunks[0].CustomID = "magnetized";
                 }
 
+				Game.PlayEffect("ACS", -1 * MAGNET_DISTANCE * Vector2.One + position);
+                Game.PlayEffect("ACS", MAGNET_DISTANCE * Vector2.One + position);
 
-				foreach (IObject metal in Game.GetObjects<IObject>(new Area(-1 * MAGNET_DISTANCE * Vector2.One + position, MAGNET_DISTANCE * Vector2.One + position))){
+                foreach (IObject metal in Game.GetObjects<IObject>(new Area(-1 * MAGNET_DISTANCE * Vector2.One + position, MAGNET_DISTANCE * Vector2.One + position))){
 					messageRoss(metal.Name);
 					if (!isScrap(metal)) continue;
                     float rotation = (float)(rnd.NextDouble() * Math.PI * 2);
@@ -156,20 +158,19 @@ namespace SFDScript
 					cast.hit(target);
 				//}
 
-				if (isScrap(target)){
-
+				if (isScrap(target) && target.CustomID != "magnetized2"){
                     IObjectPullJoint pullJoint = (IObjectPullJoint)Game.CreateObject("pullJoint", target.GetWorldPosition());
                     ((CastProjectile)cast).attach(pullJoint);
-                    pullJoint.SetLineVisual(LineVisual.DJSteelWire);
+                    //pullJoint.SetLineVisual(LineVisual.DJSteelWire);
                     pullJoint.SetTargetObject(target);
 					pullJoint.SetTargetObjectJoint(targetJoint);
 					pullJoint.SetForce(0.3f);
                     cast.addForCleanup(pullJoint);
 
 					target.SetMass(0.05f);
-					target.CustomID = "magnetized";
+					target.CustomID = "magnetized2";
 
-					cast.addForCleanup(target);
+					//cast.addForCleanup(target);
 				}
 			}
 
@@ -194,7 +195,8 @@ namespace SFDScript
 
 			private bool isScrap(IObject obj)
 			{
-				return obj.CustomID != "magnetized" &&
+				//if (obj.CustomID == "magnetized") messageRoss("magnetized");
+                    return obj.CustomID != "magnetized" &&
 					(obj.Name.Contains("MetalDebris"));
 			}
             protected override void setUpStats()
