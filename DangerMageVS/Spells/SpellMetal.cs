@@ -24,10 +24,7 @@ namespace SFDScript
 			//TODO: make it shoot twice
 			//TODO: fix blob falling apart
 			//TODO: deflect with melee
-			//TODO: magnetism
 			//TODO: add more compatible metal
-			//TODO: fix magnet hitbox
-			//TODO: fix metal rotation
 			private bool hitPlayer = false;
             public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
@@ -52,7 +49,7 @@ namespace SFDScript
 				particleExplosion("S_P", sender.position, 3, 8f);
             }
 			public const float PISTOL_DAMAGE = 3.33f;
-			private const float MAGNET_DISTANCE = 20f;
+			private const float MAGNET_DISTANCE = 23f;
 			private const float CHUNK_CLOSENESS = 2.4f;
             public override void explode(Cast sender, IObject alreadyHit, Vector2 position) {
 				if (hitPlayer) return;
@@ -94,7 +91,7 @@ namespace SFDScript
                     float rotation = (float)(rnd.NextDouble() * Math.PI * 2);
 
                     chunks.Add(metal);
-                    Vector2 relativePos = new Vector2((float)Math.Cos(rotation + (float)Math.PI / 2f) * (CHUNK_CLOSENESS + 4f) , (float)Math.Sin(rotation + (float)Math.PI / 2f) * (CHUNK_CLOSENESS + 4f));
+                    Vector2 relativePos = new Vector2((float)Math.Cos(rotation) * (CHUNK_CLOSENESS + 4f) , (float)Math.Sin(rotation) * (CHUNK_CLOSENESS + 4f));
                     float facingRotation = (float)(Math.PI / 2 + rotation);
                     metal.SetWorldPosition(relativePos + position);
                     metal.SetBodyType(BodyType.Static);
