@@ -193,8 +193,14 @@ namespace SFDScript
 			private bool isScrap(IObject obj)
 			{
 				//if (obj.CustomID == "magnetized") messageRoss("magnetized");
+				string name = obj.Name;
                     return obj.CustomID != "magnetized" &&
-					(obj.Name.Contains("MetalDebris"));
+					(name.Contains("MetalDebris")) 
+					|| name == "WoodBarrelDebris00A"
+					|| name.Contains("ItemDebris")
+					|| name == "StreetsweeperCratePart"
+					|| name == "CrabCan00_D"
+					|| name == "Cage00_D";
 			}
             protected override void setUpStats()
 			{
