@@ -39,6 +39,7 @@ namespace SFDScript
          * random num seed that makes spells have random ideal vowel combinations. not ideal vowels in a spell results in a debuff and/or unexpected results
          * prefix should determine cast type somehow
          * syllables all determine aftercast
+         * make space wand go through walls
          * 
          * */
 
@@ -134,7 +135,7 @@ namespace SFDScript
         public static List<CastProjectile> projectiles = new List<CastProjectile>();
         public IObjectDistanceJoint antiGravity;
         
-
+        //EXPERIMENTAL HITBOX FIX
         public static void hitBoxImpact(TriggerArgs args)
         {
             if (args.Sender is IObject && !((IObject)args.Caller).RemovalInitiated)
@@ -163,10 +164,11 @@ namespace SFDScript
 
                     Vector2 pos = prj.hitBox.GetWorldPosition();
                     RayCastInput input = new RayCastInput(true);
+                    input.IncludeOverlap = true;
                     //input.FilterOnMaskBits = true;
                     input.BlockExplosions = RayCastFilterMode.True;
 
-                    input.ClosestHitOnly = true;
+                    input.ClosestHitOnly = false;
                     if (prj.spell.element == Element.EARTH)
                     {
                         input.ClosestHitOnly = false;
@@ -175,9 +177,12 @@ namespace SFDScript
                     
                     RayCastResult[] outputs = Game.RayCast(pos, prj.targetJoint.GetWorldPosition(), input);
                     foreach (RayCastResult outPut in outputs)
-                    if (outPut.Hit && !isOddObject(outPut.HitObject) && Vector2.Distance(outPut.Position, pos) < 2f && outPut.HitObject.CustomID != "mNoCollide")
+                    if (outPut.Hit && !isOddObject(outPut.HitObject) &&
+                            Vector2.Distance(outPut.Position, pos) < 30f &&
+                            outPut.HitObject.CustomID != "mNoCollide")
                     {
                         prj.hit(outPut.HitObject);
+                        break;
                         //if (outPut.HitObject.GetMaxHealth() != 1) 
                         // else prj.hit(null);
 
