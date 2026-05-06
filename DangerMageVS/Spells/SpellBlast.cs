@@ -40,7 +40,7 @@ namespace SFDScript
 
                 for (int i = 0; i < effectivePower / EXPLOSION_DAMAGE; i++)
                 {
-                    messageRoss("expl " + i);
+                    //messageRoss("expl " + i);
                     Game.TriggerExplosion(sender.position + new Vector2((float)(rnd.NextDouble() - 0.5f) * radius, (float)(rnd.NextDouble() - 0.5f) * radius));
                     i += 1;
                 }
@@ -68,7 +68,7 @@ namespace SFDScript
 
                        )))
                 {
-                    messageRoss("player found");
+                    //messageRoss("player found");
                     if (found.UniqueId != caster.UniqueID && !found.IsDead)
                     {
                         sender.hit(found);

@@ -82,11 +82,11 @@ namespace SFDScript
                     chunks[0].CustomID = "magnetized";
                 }
 
-				Game.PlayEffect("ACS", -1 * MAGNET_DISTANCE * Vector2.One + position);
-                Game.PlayEffect("ACS", MAGNET_DISTANCE * Vector2.One + position);
+				//Game.PlayEffect("ACS", -1 * MAGNET_DISTANCE * Vector2.One + position);
+                //Game.PlayEffect("ACS", MAGNET_DISTANCE * Vector2.One + position);
 
                 foreach (IObject metal in Game.GetObjects<IObject>(new Area(-1 * MAGNET_DISTANCE * Vector2.One + position, MAGNET_DISTANCE * Vector2.One + position))){
-					messageRoss(metal.Name);
+					//messageRoss(metal.Name);
 					if (!isScrap(metal)) continue;
                     float rotation = (float)(rnd.NextDouble() * Math.PI * 2);
 
@@ -114,10 +114,10 @@ namespace SFDScript
 						}
 						if (spellBroke) chunk.SetBodyType(BodyType.Dynamic);
 						else chunk.Destroy();
-						messageRoss(spellBroke? "spellBroke" : "not spellBroke");
+						//messageRoss(spellBroke? "spellBroke" : "not spellBroke");
 					}
 					if (spellBroke){
-						messageRoss("stopping blast");
+						//messageRoss("stopping blast");
 						delay.Stop();
 						return;
 					}
