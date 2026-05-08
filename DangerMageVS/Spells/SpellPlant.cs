@@ -19,16 +19,25 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
+			//TODO: use impact position for tethering
+			//TODO: allow dynamic objects for tethering
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
 				float effectivePower = spellPower * powerMod;
 
+				if (target == null) return;
+
 				for (int i = 0; i < splash / 2f; i++)
 				{
-					for(int j = 0; j < 5; j++)
+					for(int j = 0; j < 5; j++) //do 5 attempts to find a tie vector
 					{
-						Vector2 throwVec = new Vector2((float)Math.Cos(rnd.NextDouble() * Math.PI*2) * splash, 
-							(float)Math.Sin(rnd.NextDouble() * Math.PI * 2) * splash);
+						float range = splash * 3;
+						Vector2 throwVec = target.GetWorldPosition() + new Vector2((float)Math.Cos(rnd.NextDouble() * Math.PI*2) * range, 
+							(float)Math.Sin(rnd.NextDouble() * Math.PI * 2) * range);
+
+						Game.DrawLine(target.GetWorldPosition(), throwVec);
+						Game.PlayEffect("GLM", throwVec);
+
 						if( tieObject(target, throwVec, effectivePower)) break;
 						
 					}
@@ -39,7 +48,7 @@ namespace SFDScript
 
 			public override void explode(Cast sender, IObject alreadyHit, Vector2 position) 
             {
-				base.explode(sender, alreadyHit, position);
+				//base.explode(sender, alreadyHit, position);
 
 
             }
@@ -78,8 +87,10 @@ namespace SFDScript
 				tether.SetTargetObjectJoint(targetJoint);
 
 				tether.SetLineVisual(LineVisual.DJVine);
-				tether.SetForcePerDistance(1f + power/17f);
+				tether.SetForcePerDistance(0.0002f + power/500f);
+				tether.SetForce(0.0002f);
 
+                messageRoss("tied to " + anchor.Name);
 
                 Events.UpdateCallback despawn = null;
                 despawn = Events.UpdateCallback.Start(e => {
@@ -90,17 +101,18 @@ namespace SFDScript
 					targetJoint.Remove();
 
                     despawn.Stop();
-                }, (uint)(100 * power));
+                }, (uint)(200 * power));
             }
 			private bool tieObject(IObject target, Vector2 shootAt, float power)
-			{
-				RayCastInput input = new RayCastInput();
+            {
+                messageRoss("tying " + target.Name);
+                RayCastInput input = new RayCastInput();
 				input.AbsorbProjectile = RayCastFilterMode.True;
 				input.ClosestHitOnly = true;
 				input.IncludeOverlap = false;
-				RayCastResult[] results = Game.RayCast(target.GetWorldPosition(), shootAt, input);
-				//messageRoss("made it here!!!");
-				if (results.Length > 0 && results[0].Hit)
+				input.ProjectileHit = RayCastFilterMode.True;
+                RayCastResult[] results = Game.RayCast(target.GetWorldPosition(), shootAt, input);
+                if (results.Length > 0 && results[0].Hit && results[0].HitObject != target)
                 {
                     createTimedTether(target, results[0].Position, results[0].HitObject, power);
 					return true;
