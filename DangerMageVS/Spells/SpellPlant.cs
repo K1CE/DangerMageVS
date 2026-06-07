@@ -21,7 +21,6 @@ namespace SFDScript
 			//TODO: add impact particle effects
 			//TODO: add tether particle effects
 			//TODO: make consistent strong tethers be half
-			//TODO: use impact position for tethering
 			//TODO: allow dynamic objects for tethering
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
@@ -29,18 +28,22 @@ namespace SFDScript
 
 				if (target == null) return;
 
+				Vector2 impactPos = sender.position;
+				if (target is IPlayer || target.GetSizeFactor().X + target.GetSizeFactor().Y < 4) impactPos = target.GetWorldPosition();
+
 				for (int i = 0; i < splash / 2f; i++)
 				{
 					for(int j = 0; j < 5; j++) //do 5 attempts to find a tie vector
 					{
 						float range = splash * 3;
-						Vector2 throwVec = target.GetWorldPosition() + new Vector2((float)Math.Cos(rnd.NextDouble() * Math.PI*2) * range, 
+
+						Vector2 throwVec = impactPos + new Vector2((float)Math.Cos(rnd.NextDouble() * Math.PI*2) * range, 
 							(float)Math.Sin(rnd.NextDouble() * Math.PI * 2) * range);
 
-						Game.DrawLine(target.GetWorldPosition(), throwVec);
-						Game.PlayEffect("GLM", throwVec);
+						Game.DrawLine(impactPos, throwVec);
+						//Game.PlayEffect("GLM", throwVec);
 
-						if( tieObject(target, throwVec, effectivePower)) break;
+						if( tieObject(target, impactPos, throwVec, effectivePower)) break;
 						
 					}
 				}
@@ -57,7 +60,7 @@ namespace SFDScript
 
 			protected override void setUpStats()
 			{
-				spellPower = 13f;
+				spellPower = 11f;
 				cooldown = 3000;
 				speed = 6.7f;
 				range = 0.6f;
@@ -78,11 +81,11 @@ namespace SFDScript
 				((CastProjectile)cast).attach(leaf);
 			}
 
-			private void createTimedTether(IObject target, Vector2 tieTo, IObject anchor, float power)
+			private void createTimedTether(IObject target, Vector2 tieFrom, Vector2 tieTo, IObject anchor, float power)
 			{
 				bool weakTether = rnd.NextDouble() < 0.5;
 
-				IObjectPullJoint tether = (IObjectPullJoint)Game.CreateObject("PullJoint", target.GetWorldPosition());
+				IObjectPullJoint tether = (IObjectPullJoint)Game.CreateObject("PullJoint", tieFrom);
 				IObjectTargetObjectJoint targetJoint = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", tieTo);
 
 				targetJoint.SetTargetObject(anchor);
@@ -107,7 +110,7 @@ namespace SFDScript
                     despawn.Stop();
                 }, (uint)(200 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1)));
             }
-			private bool tieObject(IObject target, Vector2 shootAt, float power)
+			private bool tieObject(IObject target, Vector2 impactVec, Vector2 shootAt, float power)
             {
                 messageRoss("tying " + target.Name);
                 RayCastInput input = new RayCastInput();
@@ -118,7 +121,7 @@ namespace SFDScript
                 RayCastResult[] results = Game.RayCast(target.GetWorldPosition(), shootAt, input);
                 if (results.Length > 0 && results[0].Hit && results[0].HitObject != target)
                 {
-                    createTimedTether(target, results[0].Position, results[0].HitObject, power);
+                    createTimedTether(target, impactVec, results[0].Position, results[0].HitObject, power);
 					return true;
 				}
 
