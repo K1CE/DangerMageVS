@@ -40,6 +40,7 @@ namespace SFDScript
          * prefix should determine cast type somehow
          * syllables all determine aftercast
          * make space wand go through walls
+         * make projectile items face where cast
          * 
          * */
 
@@ -160,7 +161,7 @@ namespace SFDScript
                 }
                 else if (sent.GetCollisionFilter().BlockFire && !isOddObject(sent) && sent.CustomID != "mNoCollide")
                 {
-                    messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire ? " does" : " doesn't") + " block fire2");
+                    //messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire ? " does" : " doesn't") + " block fire2");
 
                     Vector2 pos = prj.hitBox.GetWorldPosition();
                     RayCastInput input = new RayCastInput(true);
@@ -169,9 +170,9 @@ namespace SFDScript
                     input.BlockExplosions = RayCastFilterMode.True;
 
                     input.ClosestHitOnly = false;
-                    if (prj.spell.element == Element.EARTH)
+                    if (prj.spell.element == Element.SPACE)
                     {
-                        input.ClosestHitOnly = false;
+                        input.ClosestHitOnly = true;
                     }
 
                     

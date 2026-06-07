@@ -19,6 +19,8 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
+			//TODO: add tether particle effects
+			//TODO: make consistent strong tethers be half
 			//TODO: use impact position for tethering
 			//TODO: allow dynamic objects for tethering
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
@@ -78,6 +80,8 @@ namespace SFDScript
 
 			private void createTimedTether(IObject target, Vector2 tieTo, IObject anchor, float power)
 			{
+				bool weakTether = rnd.NextDouble() < 0.5;
+
 				IObjectPullJoint tether = (IObjectPullJoint)Game.CreateObject("PullJoint", target.GetWorldPosition());
 				IObjectTargetObjectJoint targetJoint = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", tieTo);
 
@@ -87,7 +91,7 @@ namespace SFDScript
 				tether.SetTargetObjectJoint(targetJoint);
 
 				tether.SetLineVisual(LineVisual.DJVine);
-				tether.SetForcePerDistance(0.0002f + power/500f);
+				tether.SetForcePerDistance(0.0001f + power/500f * (weakTether? 0.5f : 1));
 				tether.SetForce(0.0002f);
 
                 messageRoss("tied to " + anchor.Name);
@@ -101,7 +105,7 @@ namespace SFDScript
 					targetJoint.Remove();
 
                     despawn.Stop();
-                }, (uint)(200 * power));
+                }, (uint)(200 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1)));
             }
 			private bool tieObject(IObject target, Vector2 shootAt, float power)
             {
