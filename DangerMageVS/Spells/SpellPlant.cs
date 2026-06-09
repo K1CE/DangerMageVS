@@ -48,6 +48,9 @@ namespace SFDScript
 					}
 				}
 
+                if (!cantMeleeDamage(target))
+                    target.DealDamage(effectivePower, caster.UniqueID);
+
 
             }
 
@@ -122,7 +125,9 @@ namespace SFDScript
                 if (results.Length > 0 && results[0].Hit && results[0].HitObject != target)
                 {
                     createTimedTether(target, impactVec, results[0].Position, results[0].HitObject, power);
-					return true;
+                    if (!cantMeleeDamage(target))
+                        target.DealDamage(power/2f, caster.UniqueID); //TODO: Use explosion damage per-distance scaling
+                    return true;
 				}
 
 				return false;
