@@ -135,11 +135,18 @@ namespace SFDScript
                 foreach (IObject obj in Game.GetObjectsByArea(area)) {
                     float distance = Vector2.Distance(position, obj.GetWorldPosition());
                     if (obj.GetBodyType() == BodyType.Dynamic && obj.UniqueID != blacklistID && distance <= splash) {
-                        float powerMod = (float)Math.Sin(distance * Math.PI / 2 + Math.PI / 2);
+						float powerMod = damageDropOff(distance, splash);
 
                         affect(sender, obj, Vector2.Normalize(obj.GetWorldPosition() - position), powerMod);
                     }
                 }
+            }
+
+			public static float damageDropOff(float distance, float maximumDistance)
+			{
+				if (distance > maximumDistance) return 0;
+				//return (float)Math.Sin((distance / maximumDistance) * Math.PI / 2 + Math.PI / 2); OLD FUNCTION
+				return (float)Math.Sqrt(1 - Math.Pow((distance/maximumDistance),2));
             }
 
             public virtual void particles(Cast sender, Vector2 position, int count, float radius)
