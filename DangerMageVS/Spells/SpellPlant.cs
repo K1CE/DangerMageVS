@@ -22,6 +22,8 @@ namespace SFDScript
 			//TODO: add tether particle effects
 			//TODO: make consistent strong tethers be half
 			//TODO: allow dynamic objects for tethering
+			//TODO: Fire removes vines
+			//TODO: vines can be removed by sharp melee swings
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
 				float effectivePower = spellPower * powerMod;
@@ -63,8 +65,8 @@ namespace SFDScript
 
 			protected override void setUpStats()
 			{
-				spellPower = 11f;
-				cooldown = 3000;
+				spellPower = 9f;
+				cooldown = 2900;
 				speed = 6.7f;
 				range = 0.6f;
 				splash = 25;
@@ -111,10 +113,9 @@ namespace SFDScript
 					targetJoint.Remove();
 
                     despawn.Stop();
-                }, (uint)(200 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1)));
+                }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1)));
             }
-			private bool tieObject(IObject target, Vector2 impactVec, Vector2 shootAt, float power)
-            {
+			private bool tieObject(IObject target, Vector2 impactVec, Vector2 shootAt, float power){
                 messageRoss("tying " + target.Name);
                 RayCastInput input = new RayCastInput();
 				input.AbsorbProjectile = RayCastFilterMode.True;
@@ -122,11 +123,12 @@ namespace SFDScript
 				input.IncludeOverlap = false;
 				input.ProjectileHit = RayCastFilterMode.True;
                 RayCastResult[] results = Game.RayCast(target.GetWorldPosition(), shootAt, input);
-                if (results.Length > 0 && results[0].Hit && results[0].HitObject != target)
-                {
+                if (results.Length > 0 && results[0].Hit && results[0].HitObject != target){
                     createTimedTether(target, impactVec, results[0].Position, results[0].HitObject, power);
-                    if (!cantMeleeDamage(target))
-                        target.DealDamage(power/2f, caster.UniqueID); //TODO: Use explosion damage per-distance scaling
+					if (!cantMeleeDamage(results[0].HitObject)){
+
+                        results[0].HitObject.DealDamage(Spell.damageDropOff(Vector2.Distance(target.GetWorldPosition(), results[0].Position), this.splash) * power/2f, caster.UniqueID); //divided by 2 for reduced vine damage
+					}
                     return true;
 				}
 
