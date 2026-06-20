@@ -21,7 +21,8 @@ namespace SFDScript
 			public float savedMeleeDamage = 1f;
 			public float savedRunSpeed = 1f;
 			public float savedEnergyRecharge = 1f;
-			public bool ready = true;
+			public float savedClimbingSpeed = 1f;
+            public bool ready = true;
 			public bool recovering = false;
 			public bool cold = false;
 			public float lastHealth = 100;
@@ -143,6 +144,7 @@ namespace SFDScript
 						pmod.EnergyRechargeModifier = savedEnergyRecharge;
 						pmod.RunSpeedModifier = savedRunSpeed;
 						pmod.MeleeDamageDealtModifier = savedMeleeDamage;
+						pmod.ClimbingSpeed = savedClimbingSpeed;
 						player.SetModifiers(pmod);
 						cold = false;
 					}

@@ -50,9 +50,9 @@ namespace SFDScript
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 						if(data == null) data = new PlayerData(ply);
+
+
 						float damage = effectivePower;
-
-
 						damage *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f)); //cold damage does more damage if target is cold
 						ply.DealDamage(damage, caster.UniqueID);
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
@@ -68,12 +68,15 @@ namespace SFDScript
 							data.savedEnergyRecharge = pmod.EnergyRechargeModifier;
 							data.savedRunSpeed = pmod.RunSpeedModifier;
 							data.savedMeleeDamage = pmod.MeleeDamageDealtModifier;
+							data.savedClimbingSpeed = pmod.ClimbingSpeed;
 						}
 						pmod.EnergyRechargeModifier = pmod.EnergyRechargeModifier - (damage * 0.04f);
 						pmod.RunSpeedModifier = pmod.RunSpeedModifier - (damage * 0.02f);
 						pmod.MeleeDamageDealtModifier = (float)(9f / effectivePower);
+						pmod.ClimbingSpeed = pmod.ClimbingSpeed - (damage * 0.02f);
 
-						ply.SetModifiers(pmod);
+
+                        ply.SetModifiers(pmod);
 
 						data.cold = true;
 
