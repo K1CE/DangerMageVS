@@ -58,7 +58,7 @@ namespace SFDScript
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage);
 
-						//note: cant give speed buff because it gives infinite stamina
+						//note: cant give speed buff for recolor because it gives infinite stamina
 						PlayerModifiers pmod = ply.GetModifiers();
 						if (pmod.CurrentEnergy > damage * 4)
 							pmod.CurrentEnergy = pmod.CurrentEnergy - (damage * 4f);

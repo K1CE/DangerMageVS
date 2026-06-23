@@ -106,8 +106,8 @@ namespace SFDScript
 
                 Events.UpdateCallback despawn = null;
                 despawn = Events.UpdateCallback.Start(e => {
-
-					//Game.PlayEffect(elementEffects[(int)element], tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())/2f);
+					for(int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition())/15) + 1; i++)
+						Game.PlayEffect(elementEffects[(int)element], tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())*((float)rnd.NextDouble()));
 
 					tether.Remove();
 					targetJoint.Remove();
