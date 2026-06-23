@@ -19,7 +19,7 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			//TODO: add tether particle effects
+			//TODO: fix plant sound
 			//TODO: make consistent strong tethers be half
 			//TODO: allow dynamic objects for tethering
 			//TODO: Fire removes vines

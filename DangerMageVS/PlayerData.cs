@@ -90,8 +90,6 @@ namespace SFDScript
 						ready = false;
 						//spellQueue.Add(this);
 
-						Game.PlaySound(elementSounds[(int)wand.element], player.GetWorldPosition(), 10f);
-						Game.PlaySound(elementSounds[(int)wand.element], player.GetWorldPosition(), 10f);
 					}
 					castingOrder++;
 					castingOrder %= cooldowns.Length;

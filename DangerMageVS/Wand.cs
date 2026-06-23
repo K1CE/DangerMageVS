@@ -64,6 +64,9 @@ namespace SFDScript
                 if (isTheFriendRossHere && ply.UserIdentifier == riss.UserIdentifier) messageRoss("jumped at " + ply.GetLinearVelocity().Y + " rotation :  " + rotation);
 				vector = new Vector2((float)Math.Cos(rotation) * defaultVecX, (float)Math.Sin(rotation) * defaultVecX);
 
+                Game.PlaySound(elementSounds[(int)element], position, 10f);
+                Game.PlaySound(elementSounds[(int)element], position, 10f);
+
                 switch (element)
 				{
 					case Element.ARCANE:
