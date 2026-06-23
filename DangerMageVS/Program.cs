@@ -461,7 +461,7 @@ namespace SFDScript
                                 }
                                 else
                                 {
-                                    data.castSpell();
+                                    data.useWand();
                                     player.SetCurrentMeleeMakeshiftDurability(1.0f);
                                 }
                             }

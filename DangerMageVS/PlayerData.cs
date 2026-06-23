@@ -71,7 +71,7 @@ namespace SFDScript
 				}
 			}
 
-			public void castSpell()
+			public void useWand()
 			{
 				float cooldown = cooldowns[castingOrder];
 
