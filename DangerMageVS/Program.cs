@@ -58,7 +58,7 @@ namespace SFDScript
         public static char[] elementLetters = new char[] { ' ', 'p', 'k', 'f', 'z', 'r', 'g', 's', 'l', 't', 'w', 'c', 'm', '&' };
         public static string[] elementSounds = new string[]{
         "BowNoAmmo", "BulletHitStone", "ElectricSparks", "Throw", "Madness", "Flamethrower", "PlayerGib", "DestroyGlass", "ChainSwing", "BulletHitMetal", "StrengthBoostStart",
-        "Bazooka", "StrengthBoostStart", "Bazooka"
+        "Bazooka", "Wings", "Bazooka"
         };
         public static string[] elementEffects = new string[]{
         "GLM",//simple

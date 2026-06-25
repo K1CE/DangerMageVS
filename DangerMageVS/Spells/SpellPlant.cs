@@ -19,7 +19,6 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			//TODO: fix plant sound
 			//TODO: make consistent strong tethers be half
 			//TODO: allow dynamic objects for tethering
 			//TODO: Fire removes vines
@@ -109,6 +108,8 @@ namespace SFDScript
 					for(int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition())/15) + 1; i++)
 						Game.PlayEffect(elementEffects[(int)element], tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())*((float)rnd.NextDouble()));
 
+
+					Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
 					tether.Remove();
 					targetJoint.Remove();
 
