@@ -41,6 +41,8 @@ namespace SFDScript
          * syllables all determine aftercast
          * make space wand go through walls
          * make projectile items face where cast
+         * make a function to handle delegates from plant wand
+         * remove playerdata on death
          * 
          * */
 
@@ -591,7 +593,7 @@ namespace SFDScript
             {
                 if (data.id == idIn) return data;
             }
-            return null;
+            return new PlayerData(ply);
         }
 
         //taken from Odex. Used in Commands+
@@ -628,9 +630,6 @@ namespace SFDScript
                 if (ply.GetUser().IsBot) continue;
 
                 PlayerData data = dataFromPlayer(ply);
-                if (data == null) {
-                    data = new PlayerData(ply);
-                }
                 new Wand(data, (Element)rnd.Next(AVAILABLE_ELEMENTS) + 1);
             }
         }
@@ -696,11 +695,7 @@ namespace SFDScript
                                     }
                                 }
                                 PlayerData picker = dataFromPlayer(ply);
-                                if (picker == null)
-                                {
-                                    picker = new PlayerData(ply);
-                                }
-                                else if (picker.wand != null) picker.wand.drop();
+                                if (picker.wand != null) picker.wand.drop();
                                 new Wand(picker, element);
                             }
                             break;
