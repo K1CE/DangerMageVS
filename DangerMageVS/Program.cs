@@ -477,10 +477,12 @@ namespace SFDScript
                         }
                     }
                 }
-                Game.WriteToConsole(string.Format("Player {0} keyevent: {1}", player.UniqueID, keyEvents[i].ToString()));
+
+
+
+                //Game.WriteToConsole(string.Format("Player {0} keyevent: {1}", player.UniqueID, keyEvents[i].ToString()));
             }
         }
-
 
         public static List<Wand> buttonQueue = new List<Wand>();
         public void delayedUnfold(TriggerArgs args)
