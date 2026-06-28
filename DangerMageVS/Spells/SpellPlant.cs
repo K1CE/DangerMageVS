@@ -23,8 +23,11 @@ namespace SFDScript
 			//TODO: allow dynamic objects for tethering
 			//TODO: Fire removes vines
 			//TODO: make vines spread even without a target
-			//TODO: vines deal damage on break
 			//TODO: metal wand cuts vines
+			//TODO: nature resistance
+			//TODO: make wand heal if vines are on self
+			float bufferedDamage = 0;
+			int split = 0;
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
 				float effectivePower = spellPower * powerMod;
@@ -52,7 +55,9 @@ namespace SFDScript
 				}
 
                 if (!cantMeleeDamage(target))
-                    target.DealDamage(effectivePower, caster.UniqueID);
+                    target.DealDamage(effectivePower * (2f/3f), caster.UniqueID);//1/3 of the damage is done by vines
+
+				bufferedDamage = effectivePower * (1f / 3f);
 
 
             }
@@ -69,7 +74,7 @@ namespace SFDScript
 				spellPower = 9f;
 				cooldown = 2900;
 				speed = 6.7f;
-				range = 0.6f;
+				range = 0.5f;
 				splash = 25;
 				particleEffect = elementEffects[(int)element];
 			}
@@ -90,6 +95,7 @@ namespace SFDScript
 			private void createTimedTether(IObject target, Vector2 tieFrom, Vector2 tieTo, IObject anchor, float power)
 			{
 				bool weakTether = rnd.NextDouble() < 0.5;
+				bool cut = false;
 
 				IObjectPullJoint tether = (IObjectPullJoint)Game.CreateObject("PullJoint", tieFrom);
 				IObjectTargetObjectJoint targetJoint = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", tieTo);
@@ -103,7 +109,7 @@ namespace SFDScript
 				tether.SetForcePerDistance(0.0001f + power/500f * (weakTether? 0.5f : 1));
 				tether.SetForce(0.0002f);
 
-				
+				split++;
 
                 messageRoss("tied to " + anchor.Name);
 
@@ -117,6 +123,19 @@ namespace SFDScript
 					Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
 					tether.Remove();
 					targetJoint.Remove();
+
+					//deal damage
+					if (!cut)
+					{
+						if (!cantMeleeDamage(target))
+						{
+							target.DealDamage(bufferedDamage / split);
+						}
+						if (!cantMeleeDamage(anchor))
+						{
+							anchor.DealDamage(bufferedDamage / split);
+						}
+					}
 
 					vineCut.Stop();
                     despawn.Stop();
@@ -141,6 +160,7 @@ namespace SFDScript
 							Vector2.Distance(comparePos, vineCenter) < 13f)
                             {
                                 Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 2f);
+								cut = true;
                                 despawn.Invoke(100);
 								return;
                             }
