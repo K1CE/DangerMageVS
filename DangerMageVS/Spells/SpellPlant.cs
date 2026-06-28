@@ -22,7 +22,6 @@ namespace SFDScript
 			//TODO: make consistent strong tethers be half
 			//TODO: allow dynamic objects for tethering
 			//TODO: Fire removes vines
-			//TODO: vines can be removed by sharp melee swings
 			//TODO: make vines spread even without a target
 			//TODO: vines deal damage on break
 			//TODO: metal wand cuts vines
@@ -129,21 +128,22 @@ namespace SFDScript
 					{
 						if(ply.CurrentWeaponDrawn == WeaponItemType.Melee && checkSharpWeapon(ply.CurrentMeleeWeapon.WeaponItem))
                         {
-							//TODO: make vines easier to remove if its stuck to you
+							
 
-                            messageRoss("SHARP MELEE OWCH");
+
                             Vector2 comparePos = ply.GetWorldPosition() + new Vector2(ply.FacingDirection * 15f, ply.IsCrouching? 0f : 8f);
 							Vector2 vineCenter = (targetJoint.GetWorldPosition() - tether.GetWorldPosition())/2f + tether.GetWorldPosition();
 							messageRoss(vineCenter.ToString());
 							Game.DrawCircle(vineCenter, 13f);
 							Game.DrawLine(comparePos, vineCenter);
 							Game.DrawLine(targetJoint.GetWorldPosition(), tether.GetWorldPosition(), Color.Red);
-							if(Vector2.Distance(comparePos, vineCenter) < 13f)
+							if((ply.UniqueId == target.UniqueID && ply.FacingDirection * vineCenter.X > 0) ||
+							Vector2.Distance(comparePos, vineCenter) < 13f)
                             {
                                 Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 2f);
                                 despawn.Invoke(100);
 								return;
-                            } 
+                            }
 						}
 					}
 
