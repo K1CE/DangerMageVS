@@ -156,7 +156,7 @@ namespace SFDScript
 							Game.DrawCircle(vineCenter, 13f);
 							Game.DrawLine(comparePos, vineCenter);
 							Game.DrawLine(targetJoint.GetWorldPosition(), tether.GetWorldPosition(), Color.Red);
-							if((ply.UniqueId == target.UniqueID && ply.FacingDirection * vineCenter.X > 0) ||
+							if((ply.UniqueId == target.UniqueID && ply.FacingDirection * (vineCenter.X - ply.GetWorldPosition().X)> 0) ||
 							Vector2.Distance(comparePos, vineCenter) < 13f)
                             {
                                 Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 2f);
