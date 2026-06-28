@@ -55,7 +55,7 @@ namespace SFDScript
 				}
 
                 if (!cantMeleeDamage(target))
-                    target.DealDamage(effectivePower * (2f/3f), caster.UniqueID);//1/3 of the damage is done by vines
+                    target.DealDamage(effectivePower * (2f/3f) * ((target is IPlayer) ? 1 : 4f), caster.UniqueID);//1/3 of the damage is done by vines
 
 				bufferedDamage = effectivePower * (1f / 3f);
 
@@ -106,7 +106,7 @@ namespace SFDScript
 				tether.SetTargetObjectJoint(targetJoint);
 
 				tether.SetLineVisual(LineVisual.DJVine);
-				tether.SetForcePerDistance(0.0001f + power/500f * (weakTether? 0.5f : 1));
+				tether.SetForcePerDistance(0.0001f + power/500f * (weakTether? 0.5f : 1) * ((target is IPlayer) ? 1 : 5f));
 				tether.SetForce(0.0002f);
 
 				split++;
@@ -129,17 +129,17 @@ namespace SFDScript
 					{
 						if (!cantMeleeDamage(target))
 						{
-							target.DealDamage(bufferedDamage / split);
+							target.DealDamage(bufferedDamage / split * ((target is IPlayer)? 1 : 4f));
 						}
 						if (!cantMeleeDamage(anchor))
 						{
-							anchor.DealDamage(bufferedDamage / split);
+							anchor.DealDamage(bufferedDamage / split * ((target is IPlayer) ? 1 : 4f));
 						}
 					}
 
 					vineCut.Stop();
                     despawn.Stop();
-                }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1)));
+                }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1) * ((target is IPlayer || anchor is IPlayer) ? 1 : 5f)));
 
 				vineCut = Events.PlayerMeleeActionCallback.Start((IPlayer ply, PlayerMeleeHitArg[] args) => 
 				{
