@@ -15,7 +15,7 @@ namespace SFDScript
 	{
 
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
-
+		//TODO: acid damage modifier
 		public class SpellAcid : Spell
         {
             public override Element element { get { return Element.ACID; } }

@@ -26,6 +26,7 @@ namespace SFDScript
 			//TODO: metal wand cuts vines
 			//TODO: nature resistance
 			//TODO: make wand heal if vines are on self
+			//TODO: fix sometimes vines break at 0,0
 			float bufferedDamage = 0;
 			int split = 0;
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
@@ -36,6 +37,15 @@ namespace SFDScript
 
 				Vector2 impactPos = sender.position;
 				if (target is IPlayer || target.GetSizeFactor().X + target.GetSizeFactor().Y < 4) impactPos = target.GetWorldPosition();
+
+				if (target is IPlayer)
+                {
+                    PlayerData data = dataFromPlayer((IPlayer)target);
+					if (data != null)
+					{
+						effectivePower = effectivePower * data.acidDamageTaken;
+					}
+				}
 
 				for (int i = 0; i < splash / 2f; i++)
 				{
