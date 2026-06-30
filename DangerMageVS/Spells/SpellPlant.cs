@@ -18,15 +18,11 @@ namespace SFDScript
 			{
 
 			}
-			//TODO: add impact particle effects
-			//TODO: make consistent strong tethers be half
-			//TODO: allow dynamic objects for tethering
-			//TODO: Fire removes vines
+			//TODO: check if vined target catches fire during effect?
 			//TODO: make vines spread even without a target
 			//TODO: metal wand cuts vines
-			//TODO: nature resistance
 			//TODO: make wand heal if vines are on self
-			//TODO: fix sometimes vines break at 0,0
+			//TODO: fix sometimes vines break at 0,0 when object breaks during
 			float bufferedDamage = 0;
 			int split = 0;
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
@@ -34,6 +30,8 @@ namespace SFDScript
 				float effectivePower = spellPower * powerMod;
 
 				if (target == null) return;
+
+				if (target.IsBurning) effectivePower /= 2f;
 
 				Vector2 impactPos = sender.position;
 				if (target is IPlayer || target.GetSizeFactor().X + target.GetSizeFactor().Y < 4) impactPos = target.GetWorldPosition();
@@ -106,8 +104,23 @@ namespace SFDScript
 			{
 				bool weakTether = rnd.NextDouble() < 0.5;
 				bool cut = false;
+				bool burning = false;
+				string effect = elementEffects[(int)element];
 
-				IObjectPullJoint tether = (IObjectPullJoint)Game.CreateObject("PullJoint", tieFrom);
+				if(anchor.IsBurning)
+				{
+					power /= 1.5f;
+					burning = true;
+					effect = "FIRE";
+				}
+				else if (target.IsBurning)
+				{
+					burning = true;
+					effect = "FIRE";
+				}
+
+
+                IObjectPullJoint tether = (IObjectPullJoint)Game.CreateObject("PullJoint", tieFrom);
 				IObjectTargetObjectJoint targetJoint = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", tieTo);
 
 				targetJoint.SetTargetObject(anchor);
@@ -127,7 +140,7 @@ namespace SFDScript
 				Events.PlayerMeleeActionCallback vineCut = null;
                 despawn = Events.UpdateCallback.Start(e => {
 					for(int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition())/15) + 1; i++)
-						Game.PlayEffect(elementEffects[(int)element], tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())*((float)rnd.NextDouble()));
+						Game.PlayEffect(effect, tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())*((float)rnd.NextDouble()));
 
 
 					Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
@@ -135,7 +148,7 @@ namespace SFDScript
 					targetJoint.Remove();
 
 					//deal damage
-					if (!cut)
+					if (!cut && !burning)
 					{
 						if (!cantMeleeDamage(target))
 						{
