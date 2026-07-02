@@ -171,6 +171,7 @@ namespace SFDScript
 					if(newFireDamage > initialFireDamage)
 					{
 						burning = true; //this means the player burned at some point during the tether
+						Game.PlaySound("Flamethrower", target.GetWorldPosition());
 					}
 
                     if (burning) effect = "FIRE";
