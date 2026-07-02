@@ -82,7 +82,7 @@ namespace SFDScript
 				spellPower = 9f;
 				cooldown = 2900;
 				speed = 6.7f;
-				range = 0.5f;
+				range = 0.6f;
 				splash = 25;
 				particleEffect = elementEffects[(int)element];
 			}
@@ -106,20 +106,23 @@ namespace SFDScript
 				bool cut = false;
 				bool burning = false;
 				string effect = elementEffects[(int)element];
+				float initialFireDamage = 0;
 
+
+				//Check for fire
 				if(anchor.IsBurning)
 				{
 					power /= 1.5f;
 					burning = true;
-					effect = "FIRE";
-				}
+                }
 				else if (target.IsBurning)
 				{
 					burning = true;
-					effect = "FIRE";
 				}
 
 
+
+				//create vines
                 IObjectPullJoint tether = (IObjectPullJoint)Game.CreateObject("PullJoint", tieFrom);
 				IObjectTargetObjectJoint targetJoint = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint", tieTo);
 
@@ -136,19 +139,55 @@ namespace SFDScript
 
                 messageRoss("tied to " + anchor.Name);
 
+
+
+				//keep track of fire damage overall to see if they caught fire during the trap
+				if(target is IPlayer)
+				{
+					initialFireDamage += ((IPlayer)target).Statistics.TotalFireDamageTaken;
+				}
+				if(anchor is IPlayer)
+				{
+					initialFireDamage += ((IPlayer)anchor).Statistics.TotalFireDamageTaken;
+				}
+
+
+
+
+				//detach vines after some time
                 Events.UpdateCallback despawn = null;
 				Events.PlayerMeleeActionCallback vineCut = null;
                 despawn = Events.UpdateCallback.Start(e => {
-					for(int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition())/15) + 1; i++)
+					float newFireDamage = 0;
+                    if (target is IPlayer)
+                    {
+                        newFireDamage += ((IPlayer)target).Statistics.TotalFireDamageTaken;
+                    }
+                    if (anchor is IPlayer)
+                    {
+                        newFireDamage += ((IPlayer)anchor).Statistics.TotalFireDamageTaken;
+                    }
+
+					if(newFireDamage > initialFireDamage)
+					{
+						burning = true; //this means the player burned at some point during the tether
+					}
+
+                    if (burning) effect = "FIRE";
+                    
+
+                    Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
+                    tether.Remove();
+                    targetJoint.Remove();
+
+
+                    for (int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition())/15) + 1; i++)
 						Game.PlayEffect(effect, tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())*((float)rnd.NextDouble()));
 
 
-					Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
-					tether.Remove();
-					targetJoint.Remove();
 
-					//deal damage
-					if (!cut && !burning)
+                    //deal damage
+                    if (!cut && !burning)
 					{
 						if (!cantMeleeDamage(target))
 						{
@@ -164,6 +203,7 @@ namespace SFDScript
                     despawn.Stop();
                 }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1) * ((target is IPlayer || anchor is IPlayer) ? 1 : 5f)));
 
+				//check if the vines are being cut
 				vineCut = Events.PlayerMeleeActionCallback.Start((IPlayer ply, PlayerMeleeHitArg[] args) => 
 				{
 					if(ply.IsMeleeAttacking || ply.IsJumpAttacking)
