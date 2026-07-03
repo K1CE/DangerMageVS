@@ -43,6 +43,7 @@ namespace SFDScript
          * make projectile items face where cast
          * make a function to handle delegates from plant wand
          * remove playerdata on death
+         * acid wand is kinda boring
          * 
          * */
 
@@ -54,7 +55,7 @@ namespace SFDScript
         Events.PlayerKeyInputCallback m_playerKeyInputEvent = null;
         public static IObjectTimerTrigger unfreezer;
         public const string STARTWANDS_KEY = "START WANDS";
-        public const int AVAILABLE_ELEMENTS = 11;
+        public const int AVAILABLE_ELEMENTS = 12;
 
         public static string[] elementNames = new String[] { "", "earth", "shock", "air", "dark", "fire", "blood", "ice", "acid", "metal", "space", "blast", "plant", "chaos" };
         public static char[] elementLetters = new char[] { ' ', 'p', 'k', 'f', 'z', 'r', 'g', 's', 'l', 't', 'w', 'c', 'm', '&' };
