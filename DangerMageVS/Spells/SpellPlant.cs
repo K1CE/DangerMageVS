@@ -137,7 +137,7 @@ namespace SFDScript
 
 				split++;
 
-                messageRoss("tied to " + anchor.Name);
+               // messageRoss("tied to " + anchor.Name);
 
 
 
@@ -177,30 +177,30 @@ namespace SFDScript
                     if (burning) effect = "FIRE";
                     
 
-                    Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
-                    tether.Remove();
-                    targetJoint.Remove();
-
-
-                    for (int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition())/15) + 1; i++)
-						Game.PlayEffect(effect, tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())*((float)rnd.NextDouble()));
+					if(tether != null && !tether.RemovalInitiated && targetJoint != null && !targetJoint.RemovalInitiated)
+						for (int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition())/17) + 1; i++)
+							Game.PlayEffect(effect, tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())*((float)rnd.NextDouble()));
 
 
 
                     //deal damage
                     if (!cut && !burning)
 					{
-						if (!cantMeleeDamage(target))
+						if (target != null && !cantMeleeDamage(target))
 						{
 							target.DealDamage(bufferedDamage / split * ((target is IPlayer)? 1 : 4f));
 						}
-						if (!cantMeleeDamage(anchor))
+						if (anchor != null && !cantMeleeDamage(anchor))
 						{
 							anchor.DealDamage(bufferedDamage / split * ((target is IPlayer) ? 1 : 4f));
 						}
 					}
 
-					vineCut.Stop();
+
+                    if(tether!=null) Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
+                    if(tether != null)tether.Remove();
+                    if(targetJoint != null)targetJoint.Remove();
+                    vineCut.Stop();
                     despawn.Stop();
                 }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1) * ((target is IPlayer || anchor is IPlayer) ? 1 : 5f)));
 
@@ -216,7 +216,7 @@ namespace SFDScript
 
                             Vector2 comparePos = ply.GetWorldPosition() + new Vector2(ply.FacingDirection * 15f, ply.IsCrouching? 0f : 8f);
 							Vector2 vineCenter = (targetJoint.GetWorldPosition() - tether.GetWorldPosition())/2f + tether.GetWorldPosition();
-							messageRoss(vineCenter.ToString());
+							//messageRoss(vineCenter.ToString());
 							Game.DrawCircle(vineCenter, 13f);
 							Game.DrawLine(comparePos, vineCenter);
 							Game.DrawLine(targetJoint.GetWorldPosition(), tether.GetWorldPosition(), Color.Red);
@@ -239,7 +239,7 @@ namespace SFDScript
 
             }
 			private bool tieObject(IObject target, Vector2 impactVec, Vector2 shootAt, float power){
-                messageRoss("tying " + target.Name);
+                //messageRoss("tying " + target.Name);
                 RayCastInput input = new RayCastInput();
 				input.AbsorbProjectile = RayCastFilterMode.True;
 				input.ClosestHitOnly = true;

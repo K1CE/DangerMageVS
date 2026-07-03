@@ -8,6 +8,8 @@ namespace SFDScript
     public partial class GameScript : GameScriptInterface
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
+
+		//TODO: maybe make it stick into walls
 		public class SpellEarth : Spell
         {
             public override Element element { get { return Element.EARTH; } }
