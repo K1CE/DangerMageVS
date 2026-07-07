@@ -22,7 +22,6 @@ namespace SFDScript
 			//TODO: make vines spread even without a target
 			//TODO: metal wand cuts vines
 			//TODO: make wand heal if vines are on self
-			//TODO: fix sometimes vines break at 0,0 when object breaks during
 			float bufferedDamage = 0;
 			int split = 0;
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
@@ -81,7 +80,7 @@ namespace SFDScript
 			{
 				spellPower = 9f;
 				cooldown = 2900;
-				speed = 6.7f;
+				speed = 5f;
 				range = 0.6f;
 				splash = 25;
 				particleEffect = elementEffects[(int)element];
@@ -152,6 +151,12 @@ namespace SFDScript
 				}
 
 
+				Action deleteVine = () =>
+				{
+                    if (tether != null) Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
+                    if (tether != null) tether.Remove();
+                    if (targetJoint != null) targetJoint.Remove();
+                };
 
 
 				//detach vines after some time
@@ -159,49 +164,52 @@ namespace SFDScript
 				Events.PlayerMeleeActionCallback vineCut = null;
                 despawn = Events.UpdateCallback.Start(e => {
 					float newFireDamage = 0;
-                    if (target is IPlayer)
-                    {
-                        newFireDamage += ((IPlayer)target).Statistics.TotalFireDamageTaken;
+					vineCut.Stop();
+					despawn.Stop();
+					if (target == null ||target.IsRemoved || anchor == null || anchor.IsRemoved || tether == null || tether.IsRemoved || targetJoint == null || targetJoint.IsRemoved)
+					{
+						deleteVine();
+						return;
+					}
+					if (anchor is IPlayer)
+					{
+						newFireDamage += ((IPlayer)target).Statistics.TotalFireDamageTaken;
                     }
-                    if (anchor is IPlayer)
-                    {
-                        newFireDamage += ((IPlayer)anchor).Statistics.TotalFireDamageTaken;
+					if (anchor is IPlayer)
+					{
+						newFireDamage += ((IPlayer)anchor).Statistics.TotalFireDamageTaken;
                     }
 
-					if(newFireDamage > initialFireDamage)
+					if (newFireDamage > initialFireDamage)
 					{
 						burning = true; //this means the player burned at some point during the tether
 						Game.PlaySound("Flamethrower", target.GetWorldPosition());
 					}
 
-                    if (burning) effect = "FIRE";
-                    
-
-					if(tether != null && !tether.RemovalInitiated && targetJoint != null && !targetJoint.RemovalInitiated)
-						for (int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition())/17) + 1; i++)
-							Game.PlayEffect(effect, tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition())*((float)rnd.NextDouble()));
+					if (burning) effect = "FIRE";
 
 
 
-                    //deal damage
-                    if (!cut && !burning)
+					for (int i = 0; i < (int)(Vector2.Distance(tether.GetWorldPosition(), targetJoint.GetWorldPosition()) / 17) + 1; i++)
+						Game.PlayEffect(effect, tether.GetWorldPosition() + (targetJoint.GetWorldPosition() - tether.GetWorldPosition()) * ((float)rnd.NextDouble()));
+
+
+
+					//deal damage
+					if (!cut && !burning)
 					{
-						if (target != null && !cantMeleeDamage(target))
+						if (!cantMeleeDamage(target))
 						{
-							target.DealDamage(bufferedDamage / split * ((target is IPlayer)? 1 : 4f));
+							target.DealDamage(bufferedDamage / split * ((target is IPlayer) ? 1 : 4f));
 						}
-						if (anchor != null && !cantMeleeDamage(anchor))
+						if (!cantMeleeDamage(anchor))
 						{
 							anchor.DealDamage(bufferedDamage / split * ((target is IPlayer) ? 1 : 4f));
 						}
 					}
 
+					deleteVine();
 
-                    if(tether!=null) Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 0.25f);
-                    if(tether != null)tether.Remove();
-                    if(targetJoint != null)targetJoint.Remove();
-                    vineCut.Stop();
-                    despawn.Stop();
                 }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1) * ((target is IPlayer || anchor is IPlayer) ? 1 : 5f)));
 
 				//check if the vines are being cut

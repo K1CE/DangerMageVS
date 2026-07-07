@@ -109,7 +109,7 @@ namespace SFDScript
 					}
 					foreach(IObject chunk in chunks)
 					{
-						if(chunk == null || chunk.DestructionInitiated || chunk.IsRemoved){
+						if(chunk == null || chunk.RemovalInitiated || chunk.IsRemoved){
 							spellBroke = true;
 						}
 						if (spellBroke) chunk.SetBodyType(BodyType.Dynamic);

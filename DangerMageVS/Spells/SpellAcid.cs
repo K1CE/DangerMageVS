@@ -76,7 +76,7 @@ namespace SFDScript
 				{
 					IObject obj = acidTagged[i];
 					float damage = acidTag[i];
-					if (obj == null || obj.DestructionInitiated || obj.IsRemoved) continue;
+					if (obj == null || obj.RemovalInitiated || obj.IsRemoved) continue;
 					if (obj is IPlayer) obj.DealDamage(damage);
 					else {
 						damage = damage * 1.8f;
