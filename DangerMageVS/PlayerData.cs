@@ -1,4 +1,5 @@
 ﻿using SFDGameScriptInterface;
+using System;
 
 
 namespace SFDScript
@@ -203,7 +204,17 @@ namespace SFDScript
 
 				}
 			}
-		}
+
+            public static bool checkData(PlayerData data)
+            {
+				if (!(data.player == null || data.player.RemovalInitiated)) return true;
+				else
+				{
+					players.Remove(data);
+					return false;
+				}
+            }
+        }
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */
 
 

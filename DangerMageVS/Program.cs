@@ -375,9 +375,10 @@ namespace SFDScript
                     wand.particles();
                 }
             }
-            foreach (PlayerData data in players)
+            for (int i = players.Count - 1; i > 0; i--)
             {
-                if (data.player != null)
+                PlayerData data = players[i];
+                if (PlayerData.checkData(data))
                 {
                     if (data.cold) data.coldCheck();
                     if (data.recovering && data.lastHealth > data.player.GetHealth()) data.recover(); //for shock
