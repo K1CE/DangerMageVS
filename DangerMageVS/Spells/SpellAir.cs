@@ -31,6 +31,7 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
+			//TODO: change perfect hit scaling, investigate vector selection, change perfect hit vector on player
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
 				float effectivePower = spellPower * powerMod;
@@ -64,7 +65,14 @@ namespace SFDScript
 						vector.Normalize();
 						//vector += direction;
 						//vector /= 2f;
-						ply.SetLinearVelocity((vector * (effectivePower / 1.3f)) + ply.GetLinearVelocity() / 1.4f);// + new Vector2(0,8));
+
+						
+
+						float forcePower = effectivePower + (effectivePower * (sender.direction.Y * vector.Y + sender.direction.X * vector.X)) / 2; //multiply by dot product
+
+						messageRoss("forcePower: " + forcePower);
+
+						ply.SetLinearVelocity((vector * (forcePower / 1.3f)) + ply.GetLinearVelocity() / 1.4f);// + new Vector2(0,8));
 						ply.SetWorldPosition(ply.GetWorldPosition() + new Vector2(0, 2.5f));
 
 					}
