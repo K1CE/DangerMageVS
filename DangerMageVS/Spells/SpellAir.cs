@@ -66,11 +66,20 @@ namespace SFDScript
 						//vector += direction;
 						//vector /= 2f;
 
-						
 
-						float forcePower = effectivePower + (effectivePower * (sender.direction.Y * vector.Y + sender.direction.X * vector.X)) / 2; //multiply by dot product
+						float dotProduct = (sender.direction.Y * vector.Y + sender.direction.X * vector.X);
+						dotProduct = Math.Abs(dotProduct);
+						dotProduct = (float)Math.Pow(dotProduct, 3); //changing the curve
+
+						Game.DrawLine(target.GetWorldPosition(), target.GetWorldPosition() + vector * 100f, Color.Red);
+                        Game.DrawLine(target.GetWorldPosition() + new Vector2(0, 1), target.GetWorldPosition() + vector * 10f, Color.Red);
+                        Game.DrawLine(target.GetWorldPosition(), target.GetWorldPosition() + sender.direction * 100f, Color.Green);
+                        Game.DrawLine(target.GetWorldPosition() + new Vector2(0, 1), target.GetWorldPosition() + sender.direction * 10f, Color.Green);
+
+                        float forcePower = effectivePower + (effectivePower * dotProduct) / 4; //multiply by dot product
 
 						messageRoss("forcePower: " + forcePower);
+						messageRoss("dot product: " + dotProduct);
 
 						ply.SetLinearVelocity((vector * (forcePower / 1.3f)) + ply.GetLinearVelocity() / 1.4f);// + new Vector2(0,8));
 						ply.SetWorldPosition(ply.GetWorldPosition() + new Vector2(0, 2.5f));
