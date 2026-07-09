@@ -56,8 +56,12 @@ namespace SFDScript
 				Vector2 vector = Vector2.Zero;
 				if (affected != null)
 				{
-					vector = -(position - affected.GetWorldPosition());
-					messageRoss(affected.Name + " was blasted for " + spell.spellPower);
+					vector = affected.GetWorldPosition() - position;
+					if(affected is IPlayer) {
+						vector += new Vector2(0, 7f);
+                    }
+                    vector.Normalize();
+                    messageRoss(affected.Name + " was blasted for " + spell.spellPower);
 				}
 				else vector = direction;
 				onImpactEvent(this, affected, vector, 1);

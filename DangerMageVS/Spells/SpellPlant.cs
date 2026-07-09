@@ -18,7 +18,6 @@ namespace SFDScript
 			{
 
 			}
-			//TODO: check if vined target catches fire during effect?
 			//TODO: make vines spread even without a target
 			//TODO: metal wand cuts vines
 			//TODO: make wand heal if vines are on self
@@ -66,7 +65,7 @@ namespace SFDScript
 
 				bufferedDamage = effectivePower * (1f / 3f);
 
-
+				
             }
 
 			public override void explode(Cast sender, IObject alreadyHit, Vector2 position) 

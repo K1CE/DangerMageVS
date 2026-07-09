@@ -59,10 +59,10 @@ namespace SFDScript
 						ply.AddCommand(new PlayerCommand(PlayerCommandType.Fall));
 
 
-						vector += new Vector2(0, 4);
+						//vector += new Vector2(0, 4);
 						//Vector2 direction = sender.targetVector;
 						//direction.Normalize();
-						vector.Normalize();
+						//vector.Normalize();
 						//vector += direction;
 						//vector /= 2f;
 
