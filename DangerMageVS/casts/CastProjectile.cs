@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SFDGameScriptInterface;
 
 
@@ -75,6 +76,7 @@ namespace SFDScript
 				obj.SetCollisionFilter(filt);
 				obj.SetBodyType(BodyType.Dynamic);
 				obj.SetMass(0.005f);
+				if(direction != Vector2.Zero) obj.SetAngle((float)Math.Tan(direction.Y/direction.X));
 
 				bits.Add(obj);
 

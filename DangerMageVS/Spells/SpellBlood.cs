@@ -14,6 +14,8 @@ namespace SFDScript
             public override Element element { get { return Element.BLOOD; } }
 
             //TODO: add flying giblets that need to be picked up to heal like in excesses script
+			//TODO: maybe make blood paint blood on the walls?
+			//TODO: maybe undo the angled attachments for every spell
             public SpellBlood(Vector2 position, Vector2 direction, CastType castType, IPlayer caster) : this(position, direction, castType, caster, null) { }
 
 			public SpellBlood(Vector2 position, Vector2 direction, CastType castType, IPlayer ply, SpellArguments args) : base(position, direction, castType, ply, args)
@@ -113,7 +115,7 @@ namespace SFDScript
 				cooldown = 4000;
 				speed = 5.6f;
 				range = 1.0f;
-				splash = 6;
+				splash = 14;
 				particleEffect = "BLD";
 				
 			}
