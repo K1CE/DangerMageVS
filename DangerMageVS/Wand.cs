@@ -147,8 +147,7 @@ namespace SFDScript
 				held = false;
 				toQueue = false;
 				folder = null;
-				if (!sheathed && holder.player.CurrentMeleeMakeshiftWeapon.WeaponItem == WeaponItem.
-					TICK_SHAFT)
+				if (!sheathed && holder.player.CurrentMeleeMakeshiftWeapon.WeaponItem == WeaponItem.CUESTICK_SHAFT)
 				{
 					sheathed = true;
 					holder.player.RemoveWeaponItemType(WeaponItemType.Melee);

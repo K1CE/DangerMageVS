@@ -124,7 +124,8 @@ namespace SFDScript
 			{
 				cast = new CastProjectile(position, direction + position, speed, this);
 
-                bldBall = Game.CreateObject("Giblet01", position);
+                bldBall = Game.CreateObject("Giblet00", position);
+				bldBall.SetAngle((float)Math.PI);
                 bloodWeld = (IObjectWeldJoint)Game.CreateObject("WeldJoint");
                 bloodWeld.AddTargetObject(bldBall);
                 ((CastProjectile)cast).attach(bldBall);
