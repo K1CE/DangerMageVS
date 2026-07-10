@@ -201,6 +201,93 @@ namespace SFDScript
                 }
             }
 
+			protected float dealElementalDamage(IObject target, float damage){
+                float damageMult = 1;
+				bool isPlayer = target is IPlayer;
+				PlayerData data = null;
+				IPlayer ply = null;
+				PlayerModifiers mod = null;
+
+				if (isPlayer){
+                    data = dataFromPlayer((IPlayer)target);
+                    ply = data.player;
+                    mod = ply.GetModifiers();
+                }
+
+				
+
+                switch (element){
+					case Element.ARCANE:
+						damageMult = 1;
+						break;
+                    case Element.AIR:
+                        if (isPlayer) damageMult *= mod.ImpactDamageTakenModifier;
+						if (cantMeleeDamage(target)) damageMult = 0f;
+                        break;
+                    case Element.ACID:
+						if (isPlayer) damageMult *= data.toxinDamageTaken;
+                        break;
+                    case Element.PLANT:
+                        if (isPlayer) damageMult *= data.toxinDamageTaken;
+                        if (cantMeleeDamage(target)) damageMult = 0f;
+                        break;
+                    case Element.BLAST:
+                        if (isPlayer) damageMult *= mod.ExplosionDamageTakenModifier;
+                        break;
+                    case Element.BLOOD:
+                        if (isPlayer) damageMult *= data.deathDamageTaken;
+                        break;
+                    case Element.DARK:
+						if (isPlayer)
+						{
+							damageMult *= data.deathDamageTaken;
+							if (mod.CurrentHealth < mod.MaxHealth - 5f) damageMult += 0.1f;
+							damageMult *= 1 + (mod.MaxHealth - mod.CurrentHealth) / (100 * 3); //more damage mult with lower hp
+						}
+                        if (cantMeleeDamage(target)) damageMult = 0f;
+                        break;
+                    case Element.EARTH:
+                        if (isPlayer) damageMult *= mod.MeleeDamageTakenModifier;
+                        if (cantMeleeDamage(target)) damageMult = 0f;
+                        break;
+                    case Element.FIRE:
+						if (isPlayer){
+                            damageMult *= mod.FireDamageTakenModifier;
+                            damageMult *= ply.IsBurningInferno ? 1.5f : 1f;
+                        } else{
+							if (target.IsBurning) damageMult *= 2f;
+						}
+							break;
+                    case Element.ICE:
+						if (isPlayer){
+							damageMult *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f));
+
+                        }
+                        if (cantMeleeDamage(target)) damageMult = 0f;
+                        break;
+                    case Element.METAL:
+                        if (isPlayer) damageMult *= mod.ProjectileDamageTakenModifier;
+                        break;
+                    case Element.SHOCK:
+                        if (isPlayer) damageMult *= data.shockDamageTaken;
+                        break;
+                    case Element.SPACE:
+                        if (isPlayer) damageMult *= data.distortionDamageTaken;
+                        if (cantMeleeDamage(target)) damageMult = 0f;
+                        break;
+                }
+
+				if(!(target is IPlayer) && (element == Element.PLANT || element == Element.ACID || element == Element.BLAST)){
+                    damageMult *= 4;
+				}
+				
+
+				damage *= damageMult;
+				if(damage > 0f) target.DealDamage(damage, this.caster.UniqueID);
+				return damage;
+
+			}
+
         }
 
 		/* CLASS ENDS HERE - COPY ABOVE INTO THE SCRIPT WINDOW */

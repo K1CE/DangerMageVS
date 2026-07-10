@@ -33,8 +33,8 @@ namespace SFDScript
 
                 if (target != null)
 				{
-					target.DealDamage(effectivePower);
-					if (target.GetBodyType() == BodyType.Dynamic)
+                    dealElementalDamage(target, effectivePower);
+                    if (target.GetBodyType() == BodyType.Dynamic)
 					{
 
 						if(target is IPlayer)

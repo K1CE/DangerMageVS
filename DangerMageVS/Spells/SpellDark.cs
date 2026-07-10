@@ -45,7 +45,7 @@ namespace SFDScript
 
 						float damage = spellPowerPlusMissingHealth;
 
-						if (data != null) damage *= data.darkDamageTaken;
+						if (data != null) damage *= data.deathDamageTaken;
 
 						double roll;
 						double maxChange = 0.8f * (effectivePower / 12.5f);

@@ -34,7 +34,7 @@ namespace SFDScript
 
 						float damage = effectivePower;
 
-						if (victimData != null) damage *= victimData.darkDamageTaken;
+						if (victimData != null) damage *= victimData.deathDamageTaken;
 
 						ply.DealDamage(damage, caster.UniqueID);
 

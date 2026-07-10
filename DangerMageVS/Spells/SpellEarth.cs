@@ -38,8 +38,7 @@ namespace SFDScript
 						IPlayer ply = (IPlayer)target;
 						if (!(ply.IsBlocking || ply.IsMeleeAttacking))
 						{ //|| (ply.FacingDirection > 0) == (vector.X > 0)){
-							float damage = effectivePower * ply.GetModifiers().MeleeDamageTakenModifier;
-							ply.DealDamage(damage, caster.UniqueID);
+							dealElementalDamage(ply, effectivePower);
 							//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 							//else ply.SetHealth(ply.GetHealth() - damage);
 						} /*else {
@@ -50,11 +49,10 @@ namespace SFDScript
 					}
 					else
 					{
-						if (!cantMeleeDamage(target))
-						target.DealDamage(effectivePower, caster.UniqueID);
-						//	if (target.GetHealth() <= effectivePower) target.Destroy();
-						//	else target.SetHealth(target.GetHealth() - effectivePower);
-					}
+                        dealElementalDamage(target, effectivePower);
+                        //	if (target.GetHealth() <= effectivePower) target.Destroy();
+                        //	else target.SetHealth(target.GetHealth() - effectivePower);
+                    }
 
 				particleExplosion("DestroyDefault", pos, 3, 5f);
 				//if(target is IPlayer){

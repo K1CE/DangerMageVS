@@ -53,8 +53,8 @@ namespace SFDScript
 
 
 						float damage = effectivePower;
-						damage *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f)); //cold damage does more damage if target is cold
-						ply.DealDamage(damage, caster.UniqueID);
+						//damage *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f)); //cold damage does more damage if target is cold
+						damage = dealElementalDamage(target, effectivePower);
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage);
 
@@ -82,12 +82,13 @@ namespace SFDScript
 
 					}
 					else {
-						if (cantMeleeDamage(target) && !target.Name.Contains("Bg")) {
+						if (cantMeleeDamage(target) && !target.Name.Contains("Bg"))
+						{
 							Game.CreateObject("ReinforcedGlass00A", target.GetWorldPosition(), target.GetAngle()).SetBodyType(BodyType.Dynamic);
 							target.Remove();
 
 						}
-						else target.DealDamage(effectivePower, caster.UniqueID);
+						else dealElementalDamage(target, effectivePower);
 
 
 						//if (target.GetHealth() <= effectivePower) target.Destroy();

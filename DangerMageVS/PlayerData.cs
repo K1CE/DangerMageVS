@@ -33,9 +33,9 @@ namespace SFDScript
 
 			//player modifiers
 			public float shockDamageTaken = 1f;
-			public float darkDamageTaken = 1f;
+			public float deathDamageTaken = 1f;
 			public float coldDamageTaken = 1f;
-			public float acidDamageTaken = 1f;
+			public float toxinDamageTaken = 1f;
 			public float distortionDamageTaken = 1f;
 
 			//player timers

@@ -31,7 +31,6 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
-			//TODO: change perfect hit scaling, investigate vector selection, change perfect hit vector on player
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
 				float effectivePower = spellPower * powerMod;
@@ -48,10 +47,6 @@ namespace SFDScript
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 
-						float damage = effectivePower;
-
-						if (data != null) damage *= data.player.GetModifiers().ImpactDamageTakenModifier;
-						ply.DealDamage(damage, caster.UniqueID);
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage);
 
@@ -86,8 +81,6 @@ namespace SFDScript
 
 					}
 					else {
-						if (!cantMeleeDamage(target))
-							target.DealDamage(effectivePower, caster.UniqueID);
 						//if (target.GetHealth() <= effectivePower) target.Destroy();
 						//else target.SetHealth(target.GetHealth() - effectivePower);
 
@@ -97,6 +90,9 @@ namespace SFDScript
 						target.SetLinearVelocity((vector * (effectivePower / 1.2f)) + target.GetLinearVelocity());// + new Vector2(0,8));
 						if (target.GetBodyType() == BodyType.Dynamic) target.SetWorldPosition(target.GetWorldPosition() + new Vector2(0, 2.5f));
 					}
+
+                    
+                    dealElementalDamage(target, effectivePower);
 
                     target.ClearFire();
                 }

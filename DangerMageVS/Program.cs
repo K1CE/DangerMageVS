@@ -835,7 +835,7 @@ namespace SFDScript
         public static bool isOddObject(IObject obj)
         {
             string name = obj.Name;
-            return name == "SwivelChair02" || name == "Suitcase00";
+            return name == "SwivelChair02" || name == "Suitcase00" || name == "CueStick00" || name == "CashRegister00";
         }
 
         static bool isTheFriendRossHere = false;

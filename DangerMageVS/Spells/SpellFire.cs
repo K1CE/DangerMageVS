@@ -32,12 +32,13 @@ namespace SFDScript
 
 						float damage = effectivePower;
 
-						messageRoss("fire damage current: " + ply.Statistics.TotalFireDamageTaken);
+						//messageRoss("fire damage current: " + ply.Statistics.TotalFireDamageTaken);
 						if (data != null) damage *= (data.player.GetModifiers().FireDamageTakenModifier) * ((ply.IsBurningInferno) ? 1.5f : 1f);
-						messageRoss("fire immunity: " + ply.GetModifiers().FireDamageTakenModifier);
-						float hdamage = damage * 2 / 3f;
+						//messageRoss("fire immunity: " + ply.GetModifiers().FireDamageTakenModifier);
+						//float hdamage = damage * 2 / 3f;
 
-                        target.DealDamage(damage * 1 / 3f, caster.UniqueID);
+                        //target.DealDamage(damage * 1 / 3f, caster.UniqueID);
+                        float hdamage = dealElementalDamage(target, damage * 1 / 3f) * 2f;
 
 
                         //add fire extinguisher
@@ -55,7 +56,7 @@ namespace SFDScript
 					{
 						//if (target.GetHealth() <= effectivePower) target.Destroy();
 						//else target.SetHealth(target.GetHealth() - effectivePower);
-						target.DealDamage(effectivePower, caster.UniqueID);
+						dealElementalDamage(target, effectivePower);
 						target.SetMaxFire();
 					}
 

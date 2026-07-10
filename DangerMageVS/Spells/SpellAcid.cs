@@ -77,12 +77,8 @@ namespace SFDScript
 					IObject obj = acidTagged[i];
 					float damage = acidTag[i];
 					if (obj == null || obj.RemovalInitiated || obj.IsRemoved) continue;
-					if (obj is IPlayer) obj.DealDamage(damage);
-					else {
-						damage = damage * 1.8f;
-						obj.DealDamage(damage);
-						if (damage > 30f && obj.GetHealth() == 1f && obj.GetBodyType() == BodyType.Dynamic) obj.Destroy(); //unique acid effect
-					}
+					dealElementalDamage(obj, damage);
+					if (!(obj is IPlayer) && damage > 30f && obj.GetHealth() == 1f && obj.GetBodyType() == BodyType.Dynamic) obj.Destroy(); //unique acid ability
 					particleExplosion("ACS", obj.GetWorldPosition(), 3, 10f);
 					Game.PlaySound("BreakGlass", obj.GetWorldPosition(), 0.2f);
 				}

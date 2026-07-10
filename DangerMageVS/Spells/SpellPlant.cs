@@ -20,7 +20,7 @@ namespace SFDScript
 			}
 			//TODO: make vines spread even without a target
 			//TODO: metal wand cuts vines
-			//TODO: make wand heal if vines are on self
+			//TODO: gib if damage kills, and vine all debris
 			float bufferedDamage = 0;
 			int split = 0;
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
@@ -39,7 +39,7 @@ namespace SFDScript
                     PlayerData data = dataFromPlayer((IPlayer)target);
 					if (data != null)
 					{
-						effectivePower = effectivePower * data.acidDamageTaken;
+						effectivePower = effectivePower * data.toxinDamageTaken;
 					}
 				}
 
@@ -60,10 +60,10 @@ namespace SFDScript
 					}
 				}
 
-                if (!cantMeleeDamage(target))
-                    target.DealDamage(effectivePower * (2f/3f) * ((target is IPlayer) ? 1 : 4f), caster.UniqueID);//1/3 of the damage is done by vines
+                
+                dealElementalDamage(target, effectivePower * 0.5f);
 
-				bufferedDamage = effectivePower * (1f / 3f);
+                bufferedDamage = effectivePower * 0.5f;
 
 				
             }
@@ -197,14 +197,8 @@ namespace SFDScript
 					//deal damage
 					if (!cut && !burning)
 					{
-						if (!cantMeleeDamage(target))
-						{
-							target.DealDamage(bufferedDamage / split * ((target is IPlayer) ? 1 : 4f));
-						}
-						if (!cantMeleeDamage(anchor))
-						{
-							anchor.DealDamage(bufferedDamage / split * ((target is IPlayer) ? 1 : 4f));
-						}
+                        dealElementalDamage(anchor, bufferedDamage / split);
+                        dealElementalDamage(target, bufferedDamage / split);
 					}
 
 					deleteVine();
@@ -255,10 +249,8 @@ namespace SFDScript
                 RayCastResult[] results = Game.RayCast(target.GetWorldPosition(), shootAt, input);
                 if (results.Length > 0 && results[0].Hit && results[0].HitObject != target){
                     createTimedTether(target, impactVec, results[0].Position, results[0].HitObject, power);
-					if (!cantMeleeDamage(results[0].HitObject)){
-
-                        results[0].HitObject.DealDamage(Spell.damageDropOff(Vector2.Distance(target.GetWorldPosition(), results[0].Position), this.splash) * power/2f, caster.UniqueID); //divided by 2 for reduced vine damage
-					}
+					dealElementalDamage(results[0].HitObject, Spell.damageDropOff(Vector2.Distance(target.GetWorldPosition(), results[0].Position), this.splash) * power / 2f);//divided by 2 for reduced vine damage
+					
                     return true;
 				}
 

@@ -8,6 +8,7 @@ namespace SFDScript
     public partial class GameScript : GameScriptInterface
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
+		//TODO: maybe add streetsweeper stun
 		public class SpellShock : Spell
         {
             public override Element element { get { return Element.SHOCK; } }
@@ -34,13 +35,10 @@ namespace SFDScript
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
 
-						float damage = effectivePower;
 
-						if (data != null) damage *= data.shockDamageTaken;
 
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage); //add stun effect
-						ply.DealDamage(damage, caster.UniqueID);
 
 						data.electrocute((int)(6.4f * effectivePower * effectivePower));
 						ply.AddCommand(new PlayerCommand(PlayerCommandType.DeathKneelInfinite));
@@ -50,16 +48,9 @@ namespace SFDScript
 					}
 					else if (target.Name == "Streetsweeper")
 					{
-						//if (target.GetHealth() <= effectivePower + 9f) target.Destroy();
-						//else target.SetHealth(target.GetHealth() - (effectivePower + 14f));
-						target.DealDamage(effectivePower + 14, caster.UniqueID);
+						dealElementalDamage(target, effectivePower);
 					}
-					else
-					{
-						//if (target.GetHealth() <= effectivePower) target.Destroy();
-						//else target.SetHealth(target.GetHealth() - effectivePower);
-						target.DealDamage(effectivePower, caster.UniqueID);
-					}
+                    dealElementalDamage(target, effectivePower);
 
 				for (int i = 0; i < 6; i++)
 				{
