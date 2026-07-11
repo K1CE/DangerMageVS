@@ -173,7 +173,7 @@ namespace SFDScript
 						deleteVine();
 						return;
 					}
-					if (anchor is IPlayer)
+					if (target is IPlayer)
 					{
 						newFireDamage += ((IPlayer)target).Statistics.TotalFireDamageTaken;
                     }
@@ -213,8 +213,8 @@ namespace SFDScript
 				vineBroke = Events.ObjectCreatedCallback.Start((IObject[] objs) =>
 				{
 					
-					if (target == null || target.IsRemoved) { 
-						foreach (IObject obj in objs)
+					if ((target == null || target.IsRemoved) && anchor != null && !anchor.RemovalInitiated) { 
+						if(!(anchor is IPlayer)) foreach (IObject obj in objs)
 						{
                             if (obj.GetBodyType() == BodyType.Dynamic && obj.GetMaxHealth() > 1f && obj.CustomID != "vined" && !(obj is IPlayer) && Vector2.Distance(obj.GetWorldPosition(), tether.GetWorldPosition()) < RETETHER_REACH)
                             {//try to get the target debris

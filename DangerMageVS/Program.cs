@@ -44,6 +44,17 @@ namespace SFDScript
          * make a function to handle delegates from plant wand
          * remove playerdata on death
          * acid wand is kinda boring
+         * make ice wand freeze you into a cube if it kills
+         * 
+         * fix earth wand hitting while riding
+         * fix shock wand not casting
+         * fix ice wand not unfreezing
+         * fix vine wand grabbing too long
+         * fix vine wand not always pulling you apart
+         * fix wrong hits on explosives
+         * fix earth wand hitting itself
+         * fix explosive wand hitting on cast
+         * fix error on gib
          * 
          * */
 
@@ -470,6 +481,14 @@ namespace SFDScript
                                 }
                             }
                         }
+                    } else if (keyEvents[i].Key == VirtualKey.GRAB && !data.wand.sheathed && player.CurrentMeleeMakeshiftWeapon.WeaponItem == WeaponItem.CUESTICK_SHAFT)
+                    {
+                        player.SetWorldPosition(player.GetWorldPosition() + new Vector2(0, 5));
+                        for (int j = 0; j < 4; j++){
+                            data.wand.playEffect("GLM");
+                            Game.PlaySound("GlassShard", player.GetWorldPosition(), 5f);
+                        }
+                        data.castManaShield(elementColors1[(int) data.wand.element]);
                     }
                     if (!data.wand.sheathed)
                     {
@@ -485,6 +504,7 @@ namespace SFDScript
                 //Game.WriteToConsole(string.Format("Player {0} keyevent: {1}", player.UniqueID, keyEvents[i].ToString()));
             }
         }
+
 
         public static List<Wand> buttonQueue = new List<Wand>();
         public void delayedUnfold(TriggerArgs args)

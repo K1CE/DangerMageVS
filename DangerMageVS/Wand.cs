@@ -73,7 +73,7 @@ namespace SFDScript
 						break;
 					case Element.EARTH:
 						return new SpellEarth(position, vector, CastType.PROJECTILE, ply);
-					case Element.SHOCK:
+					case Element.SHOCK: 
 						return new SpellShock(position, vector, CastType.PROJECTILE, ply);
 					case Element.AIR:
 						return new SpellAir(position, vector, CastType.PROJECTILE, ply);
@@ -105,7 +105,9 @@ namespace SFDScript
 				//make spell cast
 			}
 
-			public void particles()
+
+
+            public void particles()
 			{
 				string effect = elementEffects[(int)element];
 				if (held)
@@ -261,8 +263,20 @@ namespace SFDScript
 					lastPos = folder.GetWorldPosition();
 				}
 			}
+            public void playEffect(string effect){
+				if (held){
+					IPlayer ply = holder.player;
+					Vector2 basePos = ply.GetWorldPosition();
+					if (ply.IsIdle) {
+						Game.PlayEffect(effect, basePos + new Vector2(-5 * ply.FacingDirection, 10));
 
-			public void checkWand()
+					}
+                }
+			}
+			public void playEffect(){
+				playEffect(elementSounds[(int)element]);
+			}
+            public void checkWand()
 			{
 				if (!sheathed)
 				{
