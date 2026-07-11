@@ -638,6 +638,22 @@ namespace SFDScript
             }
         }
 
+        public static float lastIDCheck = 0;
+        public static int lastHighestID = 0;
+        public static int getHighestID()
+        {
+            if (Game.TotalElapsedRealTime > lastIDCheck)
+            {
+                lastIDCheck = Game.TotalElapsedRealTime;
+
+                IObject test = Game.CreateObject("InvisibleBlockNoCollision");
+                lastHighestID = test.UniqueID - 1;
+                test.Remove();
+                messageRoss("increasing unique IDs, returning " + lastHighestID);
+                return lastHighestID;
+            }
+            return lastHighestID;
+        }
         public void OnUserMessage(UserMessageCallbackArgs args)
         {
             // user just said something in the chat.

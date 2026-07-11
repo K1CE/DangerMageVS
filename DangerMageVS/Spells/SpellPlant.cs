@@ -159,13 +159,16 @@ namespace SFDScript
 
 
 				//detach vines after some time
-                Events.UpdateCallback despawn = null;
+                Events.UpdateCallback vineDespawn = null;
 				Events.PlayerMeleeActionCallback vineCut = null;
-                despawn = Events.UpdateCallback.Start(e => {
+				Events.ObjectCreatedCallback vineBroke = null;
+                vineDespawn = Events.UpdateCallback.Start(e => {
 					float newFireDamage = 0;
 					vineCut.Stop();
-					despawn.Stop();
-					if (target == null ||target.IsRemoved || anchor == null || anchor.IsRemoved || tether == null || tether.IsRemoved || targetJoint == null || targetJoint.IsRemoved)
+					vineDespawn.Stop();
+					vineBroke.Stop();
+
+                    if (target == null ||target.IsRemoved || anchor == null || anchor.IsRemoved || tether == null || tether.IsRemoved || targetJoint == null || targetJoint.IsRemoved)
 					{
 						deleteVine();
 						return;
@@ -199,14 +202,40 @@ namespace SFDScript
 					{
                         dealElementalDamage(anchor, bufferedDamage / split);
                         dealElementalDamage(target, bufferedDamage / split);
+						if (target.GetHealth() <= 0) target.Destroy();
 					}
 
 					deleteVine();
 
                 }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1) * ((target is IPlayer || anchor is IPlayer) ? 1 : 5f)));
 
-				//check if the vines are being cut
-				vineCut = Events.PlayerMeleeActionCallback.Start((IPlayer ply, PlayerMeleeHitArg[] args) => 
+				//check if object was destroyed and needs to be revined
+				vineBroke = Events.ObjectCreatedCallback.Start((IObject[] objs) =>
+				{
+					
+					if (target == null || target.IsRemoved) { 
+						foreach (IObject obj in objs)
+						{
+                            if (obj.GetBodyType() == BodyType.Dynamic && obj.GetMaxHealth() > 1f && obj.CustomID != "vined" && !(obj is IPlayer) && Vector2.Distance(obj.GetWorldPosition(), tether.GetWorldPosition()) < RETETHER_REACH)
+                            {//try to get the target debris
+                                messageRoss("found vining, " + obj.UniqueID + ", " + obj.Name);
+
+                                tether.SetForcePerDistance(tether.GetForcePerDistance() * 8f);
+                                tether.SetWorldPosition(obj.GetWorldPosition());
+                                tether.SetTargetObject(obj);
+                                obj.CustomID = "vined";
+								break;
+                            }
+						}
+
+                        vineCut.Stop();
+                        vineDespawn.Stop();
+                        vineBroke.Stop();
+                    }
+				});
+
+                //check if the vines are being cut
+                vineCut = Events.PlayerMeleeActionCallback.Start((IPlayer ply, PlayerMeleeHitArg[] args) => 
 				{
 					if(ply.IsMeleeAttacking || ply.IsJumpAttacking)
 					{
@@ -226,7 +255,7 @@ namespace SFDScript
                             {
                                 Game.PlaySound("MeleeHitSharp", tether.GetWorldPosition(), 2f);
 								cut = true;
-                                despawn.Invoke(100);
+                                vineDespawn.Invoke(100);
 								return;
                             }
 						}
@@ -239,6 +268,28 @@ namespace SFDScript
 				return weapon == WeaponItem.KATANA || weapon == WeaponItem.MACHETE || weapon == WeaponItem.AXE || weapon == WeaponItem.BROKEN_BOTTLE || weapon == WeaponItem.KNIFE || weapon == WeaponItem.CHAINSAW;
 
             }
+
+			private const float RETETHER_REACH = 20f;
+			private static bool reattachVine(IObjectPullJoint vine)
+			{
+				Vector2 pos = vine.GetWorldPosition();
+				int highestID = getHighestID() - 5;
+				messageRoss("highest ID: " + highestID);
+
+                foreach (IObject obj in Game.GetObjectsByArea(new Area(pos - Vector2.One * RETETHER_REACH, pos + Vector2.One * RETETHER_REACH)))
+				{
+					if(obj.GetBodyType() == BodyType.Dynamic && obj.GetMaxHealth() > 1f && obj.CustomID != "vined" && !(obj is IPlayer) && obj.UniqueID > highestID) {//try to get the target debris
+						messageRoss("found vining, " + obj.UniqueID + ", " + obj.Name);
+						
+						vine.SetForcePerDistance(vine.GetForcePerDistance() * 2f);
+						vine.SetWorldPosition(obj.GetWorldPosition());
+                        vine.SetTargetObject(obj);
+                        obj.CustomID = "vined";
+						return true;
+					}
+				}
+				return false;
+			}
 			private bool tieObject(IObject target, Vector2 impactVec, Vector2 shootAt, float power){
                 //messageRoss("tying " + target.Name);
                 RayCastInput input = new RayCastInput();
