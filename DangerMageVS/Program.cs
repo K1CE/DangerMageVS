@@ -46,13 +46,14 @@ namespace SFDScript
          * acid wand is kinda boring
          * make ice wand freeze you into a cube if it kills
          * 
+         * sometimes shield bounces own bullets
          * fix earth wand hitting while riding
          * fix shock wand not casting
          * fix ice wand not unfreezing
          * fix vine wand grabbing too long
          * fix vine wand not always pulling you apart
          * fix wrong hits on explosives
-         * fix earth wand hitting itself
+         * fix earth wand hitting itself, note: happens in specific areas
          * fix explosive wand hitting on cast
          * fix error on gib
          * 

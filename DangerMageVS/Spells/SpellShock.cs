@@ -30,6 +30,7 @@ namespace SFDScript
 				Game.PlaySound("DestroyMetal", pos, 10f);
 
 				if (target != null)
+				{
 					if (target is IPlayer)
 					{
 						IPlayer ply = (IPlayer)target;
@@ -50,7 +51,8 @@ namespace SFDScript
 					{
 						dealElementalDamage(target, effectivePower);
 					}
-                    dealElementalDamage(target, effectivePower);
+					dealElementalDamage(target, effectivePower);
+				}
 
 				for (int i = 0; i < 6; i++)
 				{
