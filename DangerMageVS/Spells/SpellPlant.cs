@@ -43,24 +43,13 @@ namespace SFDScript
 					}
 				}
 
+
+
 				for (int i = 0; i < splash / 2f; i++)
 				{
-					for(int j = 0; j < 5; j++) //do 5 attempts to find a tie vector
-					{
-						float range = splash * 3;
-
-						Vector2 throwVec = impactPos + new Vector2((float)Math.Cos(rnd.NextDouble() * Math.PI*2) * range, 
-							(float)Math.Sin(rnd.NextDouble() * Math.PI * 2) * range);
-
-						Game.DrawLine(impactPos, throwVec);
-						//Game.PlayEffect("GLM", throwVec);
-
-						if( tieObject(target, impactPos, throwVec, effectivePower)) break;
-						
-					}
+					randomVine(target, impactPos, effectivePower);
 				}
 
-                
                 dealElementalDamage(target, effectivePower * 0.5f);
 
                 bufferedDamage = effectivePower * 0.5f;
@@ -70,8 +59,17 @@ namespace SFDScript
 
 			public override void explode(Cast sender, IObject alreadyHit, Vector2 position) 
             {
+				if (alreadyHit != null) return;
 				//base.explode(sender, alreadyHit, position);
-
+				IObject core = Game.CreateObject("InvisibleBlockNoCollision", position);
+				core.CustomID = "weakJoint";
+				core.SetMass(0.00001f);
+				core.SetBodyType(BodyType.Dynamic);
+				Game.PlaySound("ItemSpawn", position);
+				for(int i = 0; i < splash / 4; i++)
+				{
+					randomVine(core, core.GetWorldPosition(), spellPower);
+				}
 
             }
 
@@ -97,6 +95,23 @@ namespace SFDScript
 				IObject leaf = Game.CreateObject("ItemDebrisFlamethrower00", position);
 				((CastProjectile)cast).attach(leaf);
 			}
+
+			private void randomVine(IObject target, Vector2 fromVec, float power)
+			{
+                for (int j = 0; j < 5; j++) //do 5 attempts to find a tie vector
+                {
+                    float range = splash * 3;
+
+                    Vector2 throwVec = fromVec + new Vector2((float)Math.Cos(rnd.NextDouble() * Math.PI * 2) * range,
+                        (float)Math.Sin(rnd.NextDouble() * Math.PI * 2) * range);
+
+                    Game.DrawLine(fromVec, throwVec);
+                    //Game.PlayEffect("GLM", throwVec);
+
+                    if (tieObject(target, fromVec, throwVec, power)) break;
+
+                }
+            }
 
 			private void createTimedTether(IObject target, Vector2 tieFrom, Vector2 tieTo, IObject anchor, float power)
 			{
@@ -207,8 +222,8 @@ namespace SFDScript
 
 					deleteVine();
 
-                }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1) * ((target is IPlayer || anchor is IPlayer) ? 1 : 5f)));
-
+                }, (uint)(400 * power * (weakTether? (rnd.NextDouble()*2 + 2) : 1) * ((target is IPlayer || anchor is IPlayer) ? 1 : 5f) * ((target.CustomID == "weakJoint") ? 0.15f : 1f)));
+				if (target.CustomID == "weakJoint") messageRoss("is weak joint");
 				//check if object was destroyed and needs to be revined
 				vineBroke = Events.ObjectCreatedCallback.Start((IObject[] objs) =>
 				{

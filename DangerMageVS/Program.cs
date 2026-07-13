@@ -48,7 +48,6 @@ namespace SFDScript
          * 
          * sometimes shield bounces own bullets
          * fix earth wand hitting while riding
-         * fix shock wand not casting
          * fix ice wand not unfreezing
          * fix vine wand grabbing too long
          * fix vine wand not always pulling you apart
