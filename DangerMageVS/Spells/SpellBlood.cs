@@ -55,11 +55,11 @@ namespace SFDScript
                             casterMod.MaxHealth += 5;
                             casterMod.CurrentHealth += 50;
                             caster.SetStrengthBoostTime(10000f);
-
-                            for (int i = 0; i < casterData.lastSpellCasts.Length; i++)
-							{
-								casterData.cooldowns[i] = 0;
-							}
+							if(casterData.wand != null)
+								for (int i = 0; i < casterData.wand.lastSpellCasts.Length; i++)
+								{
+									casterData.wand.cooldowns[i] = 0;
+								}
 						}
 						else
 						//bloodthirst
@@ -72,19 +72,20 @@ namespace SFDScript
 
 								int longestCooldownIndex = 0;
 								float longestCooldown = 100000000f;
-								for (int i = 0; i < casterData.lastSpellCasts.Length; i++)
-								{
-									float currentCooldown = casterData.cooldowns[i] - casterData.lastSpellCasts[i];
-
-									if (currentCooldown < longestCooldown)
+								if(casterData.wand != null)
+									for (int i = 0; i < casterData.wand.lastSpellCasts.Length; i++)
 									{
-										longestCooldown = currentCooldown;
-										longestCooldownIndex = i;
-									}
-								}
+										float currentCooldown = casterData.wand.cooldowns[i] - casterData.wand.lastSpellCasts[i];
 
-								casterData.cooldowns[longestCooldownIndex] = 0;
-								casterData.castingOrder = longestCooldownIndex;
+										if (currentCooldown < longestCooldown)
+										{
+											longestCooldown = currentCooldown;
+											longestCooldownIndex = i;
+										}
+									}
+
+								casterData.wand.cooldowns[longestCooldownIndex] = 0;
+								casterData.wand.castingOrder = longestCooldownIndex;
 							}
 
 							if (fullHp)

@@ -32,6 +32,8 @@ namespace SFDScript
 			public Element element = Element.ARCANE;
 			public bool unfolding = false;
 
+
+
 			public Wand(PlayerData data, Element element)
 			{
 				IPlayer ply = data.player;
@@ -293,6 +295,8 @@ namespace SFDScript
 						item.Remove();
 						break;
 					}
+
+				if (shield != null) shield.Enabled = false;
 			}
 
 			public static void removeWand(int i1)
