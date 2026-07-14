@@ -22,6 +22,7 @@ namespace SFDScript
             public bool ready = true;
             public float[] cooldowns = { 0, 0 };
             public float[] lastSpellCasts = { 0, 0 };
+			private float droppedTime = -1;
             public float GCD = 0;
             public int castingOrder = 0;
             public bool held = false;
@@ -204,7 +205,8 @@ namespace SFDScript
 				}
 
 			}
-
+			//TODO: make cooldowns accessible from class constants (and all other stats)
+			private const float CHARGE_DRAIN_FACTOR = 1.3f;
 			public void pickUp(PlayerData data)
 			{
 				held = true;
@@ -215,6 +217,20 @@ namespace SFDScript
 				Color color1 = elementColors1[(int)element];
 				Color color2 = elementColors2[(int)element];
 
+				//modify cooldowns based on drop time
+
+				if (droppedTime != -1)
+				{
+					float elapsedTime = Game.TotalElapsedGameTime - droppedTime;
+					for (int i = 0; i < cooldowns.Length; i++)
+					{
+						lastSpellCasts[i] += elapsedTime * CHARGE_DRAIN_FACTOR;
+						if (cooldowns[i] == 0) cooldowns[i] = 5000;
+						if (Game.TotalElapsedGameTime - lastSpellCasts[i] < 0) lastSpellCasts[i] = Game.TotalElapsedGameTime;
+
+                    }
+					droppedTime = -1;
+				}
 				Game.ShowChatMessage("You picked up a " + elementNames[(int)element] + " wand", color1, data.player.UserIdentifier);
 				Game.ShowChatMessage("This wand is only able to use " + elementNames[(int)element] + " magic. The use of any other element is impossible, but spell power is increased by 50%.", color2, data.player.UserIdentifier);
 			}
@@ -272,6 +288,9 @@ namespace SFDScript
 
 				folder = (IObjectWeaponItem)Game.CreateObject("WpnC4Detonator", pos, angle, linVelocity, angVelocity);
 				folder.CustomID = "wand-" + elementLetters[(int)element];
+
+				//store charge times
+				droppedTime = Game.TotalElapsedGameTime;
 
 				return folder;
 			}
