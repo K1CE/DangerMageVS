@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SFDGameScriptInterface;
+using static SFDScript.GameScript;
 
 
 namespace SFDScript
@@ -14,13 +15,20 @@ namespace SFDScript
 			public static List<Wand> wands = new List<Wand>();
 			public static List<int> unsheathed = new List<int>();
 
-			public PlayerData holder;
+            private const float COOLDOWN_MULTIPLIER = 0.6f;
+            public PlayerData holder;
 			public IObjectWeaponItem folder;
-			public bool held = false;
+            public ManaShield shield;
+            public bool ready = true;
+            public float[] cooldowns = { 0, 0 };
+            public float[] lastSpellCasts = { 0, 0 };
+            public float GCD = 0;
+            public int castingOrder = 0;
+            public bool held = false;
 			public bool toQueue = false;
 			public bool removed = false;
 			private Vector2 lastPos;
-			public bool sheathed = true;
+            public bool sheathed = true;
 			public Element element = Element.ARCANE;
 			public bool unfolding = false;
 
@@ -47,8 +55,73 @@ namespace SFDScript
 			{
 
 			}
+            private void findCastingOrder()
+            {
+                int bestCooldownIndex = -1;
+                float bestTime = 10000000;
+                for (int i = 0; i < cooldowns.Length; i++)
+                {
+                    if (lastSpellCasts[i] + cooldowns[i] < bestTime)
+                    {
+                        bestTime = lastSpellCasts[i] + cooldowns[i];
+                        bestCooldownIndex = i;
+                    }
+                }
+                if (bestCooldownIndex > -1) castingOrder = bestCooldownIndex;
+            }
+            private void expendCharge(float cooldown)
+            {
+                GCD = Game.TotalElapsedGameTime + 350;
+                cooldowns[castingOrder] = cooldown + cooldown * (cooldowns.Length - 1) / 1.1f;
+                //cooldowns[castingOrder] /= 2.5f;
 
-			public Spell castSpell()
+                lastSpellCasts[castingOrder] = Game.TotalElapsedGameTime;
+                ready = false;
+
+            }
+
+            public void useWand()
+            {
+                float cooldown = cooldowns[castingOrder];
+
+                if (Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldown && Game.TotalElapsedGameTime > GCD)
+                {
+
+                    Spell spell = castSpell();
+                    if (spell != null)
+                    {
+
+                        expendCharge(spell.cooldown * COOLDOWN_MULTIPLIER);
+
+                    }
+                    //add spell list shuffle if it didnt work
+                }
+                else
+                {
+                    Game.PlayEffect(
+                    "CFTXT",
+                            holder.player.GetWorldPosition() + new Vector2(0f, 30f),
+                            (int)((lastSpellCasts[castingOrder] + cooldowns[castingOrder] - Game.TotalElapsedGameTime) / 1000) + "s"
+                        );
+                }
+                findCastingOrder();
+            }
+            //if moved to wand color parameter can be removed
+            public void castManaShield(Color color)
+            {
+                float cooldown = cooldowns[castingOrder];
+
+                if (shield != null && shield.Enabled) return;
+
+                if (Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldown && Game.TotalElapsedGameTime > GCD)
+                {
+                    shield = new ManaShield(holder.player);
+                    shield.setColor(color);
+                    expendCharge(10000);
+                }
+                findCastingOrder();
+            }
+            public Spell castSpell()
 			{
 				IPlayer ply = holder.player;
 				float defaultVecX = 200 * ply.FacingDirection;
@@ -234,9 +307,9 @@ namespace SFDScript
 			{
 				if (held)
 				{
-					if (!holder.ready && Game.TotalElapsedGameTime > holder.lastSpellCasts[holder.castingOrder] + holder.cooldowns[holder.castingOrder])
+					if (!ready && Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldowns[castingOrder])
 					{
-						holder.ready = true;
+						ready = true;
 						Game.PlayEffect(
 								"CFTXT",
 								holder.player.GetWorldPosition() + new Vector2(0f, 30f),

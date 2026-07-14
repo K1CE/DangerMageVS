@@ -18,30 +18,24 @@ namespace SFDScript
 
 			//player data
 
-			private const float COOLDOWN_MULTIPLIER = 0.6f;
+			
             public int id;
 			public IPlayer player;
 			public IUser user;
 			public Wand wand;
-			public ManaShield shield;
-			public float[] cooldowns = {0, 0};
-            public float[] lastSpellCasts = {0, 0};
-			public float GCD = 0;
-            public int castingOrder = 0;
 			public float savedMeleeDamage = 1f;
 			public float savedRunSpeed = 1f;
 			public float savedEnergyRecharge = 1f;
 			public float savedClimbingSpeed = 1f;
-            public bool ready = true;
 			public bool recovering = false;
 			public bool cold = false;
 			public float lastHealth = 100;
 			public float cursedDamage = 0f;
 			public double corruption = 1.0;
-			//add spell list
+            //add spell list
 
-			//player modifiers
-			public float shockDamageTaken = 1f;
+            //player modifiers
+            public float shockDamageTaken = 1f;
 			public float deathDamageTaken = 1f;
 			public float coldDamageTaken = 1f;
 			public float toxinDamageTaken = 1f;
@@ -79,71 +73,10 @@ namespace SFDScript
 					unfoldPause.Trigger();
 				}
 			}
-			private void findCastingOrder()
-			{
-				int bestCooldownIndex = -1;
-				float bestTime = 10000000;
-				for (int i = 0; i < cooldowns.Length; i++)
-				{
-					if (lastSpellCasts[i] + cooldowns[i] < bestTime)
-					{
-						bestTime = lastSpellCasts[i] + cooldowns[i];
-						bestCooldownIndex = i;
-					}
-				}
-				if (bestCooldownIndex > -1) castingOrder = bestCooldownIndex;
-			}
-			private void expendCharge(float cooldown)
-			{
-                GCD = Game.TotalElapsedGameTime + 350;
-                cooldowns[castingOrder] = cooldown + cooldown * (cooldowns.Length - 1) / 1.1f;
-                //cooldowns[castingOrder] /= 2.5f;
 
-                lastSpellCasts[castingOrder] = Game.TotalElapsedGameTime;
-                ready = false;
 
-            }
-			public void useWand()
-			{
-				float cooldown = cooldowns[castingOrder];
 
-				if (Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldown && Game.TotalElapsedGameTime > GCD)
-				{
 
-					Spell spell = wand.castSpell();
-					if (spell != null)
-					{
-
-						expendCharge(spell.cooldown * COOLDOWN_MULTIPLIER);
-
-					}
-					//add spell list shuffle if it didnt work
-				}
-				else
-				{
-					Game.PlayEffect(
-							"CFTXT",
-							player.GetWorldPosition() + new Vector2(0f, 30f),
-							(int)((lastSpellCasts[castingOrder] + cooldowns[castingOrder] - Game.TotalElapsedGameTime) / 1000) + "s"
-						);
-				}
-				findCastingOrder();
-			}
-
-			//if moved to wand color parameter can be removed
-			public void castManaShield(Color color)
-			{
-                float cooldown = cooldowns[castingOrder];
-
-				if (shield != null && shield.Enabled) return;
-
-                if (Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldown && Game.TotalElapsedGameTime > GCD){
-					shield = new ManaShield(player);
-					shield.setColor(color);
-					expendCharge(10000);
-				}
-				findCastingOrder();
-			}
 
             public bool electrocuted = false;
 			public void electrocute(int interval)

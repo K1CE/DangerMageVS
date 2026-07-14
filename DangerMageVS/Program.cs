@@ -476,7 +476,7 @@ namespace SFDScript
                                 }
                                 else
                                 {
-                                    data.useWand();
+                                    data.wand.useWand();
                                     player.SetCurrentMeleeMakeshiftDurability(1.0f);
                                 }
                             }
@@ -488,7 +488,7 @@ namespace SFDScript
                             data.wand.playEffect("GLM");
                             Game.PlaySound("GlassShard", player.GetWorldPosition(), 5f);
                         }
-                        data.castManaShield(elementColors1[(int) data.wand.element]);
+                        data.wand.castManaShield(elementColors1[(int) data.wand.element]);
                     }
                     if (!data.wand.sheathed)
                     {
