@@ -49,7 +49,6 @@ namespace SFDScript
 					if (target is IPlayer) {
 						IPlayer ply = (IPlayer)target;
 						PlayerData data = dataFromPlayer(ply);
-						if(data == null) data = new PlayerData(ply);
 
 
 						float damage = effectivePower;
@@ -80,7 +79,7 @@ namespace SFDScript
 
 						data.cold = true;
 
-					}
+                    }
 					else {
 						if (cantMeleeDamage(target) && !target.Name.Contains("Bg"))
 						{

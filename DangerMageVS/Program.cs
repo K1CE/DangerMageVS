@@ -287,6 +287,7 @@ namespace SFDScript
             CreateTimer(600, 0, "quickTick", "2");
             CreateTimer(300, 0, "fastTick", "1");
             CreateTimer(50, 0, "effectTick", "3");
+            CreateTimer(3,0, "pixelTick", "4");
 
 
 
@@ -386,7 +387,7 @@ namespace SFDScript
                     wand.particles();
                 }
             }
-            for (int i = players.Count - 1; i > 0; i--)
+            for (int i = players.Count - 1; i >= 0; i--)
             {
                 PlayerData data = players[i];
                 if (PlayerData.checkData(data))
@@ -408,6 +409,24 @@ namespace SFDScript
             {
                 cast.particleTick();
             }
+        }
+
+        //Effect "CFTXT" updated with parameters for color(Color), duration(float), scale(float), shadow(bool).
+        public void pixelTick(TriggerArgs args)
+        {
+            foreach(Orb orb in orbs)
+            {
+                Game.PlayEffect("cftxt", orb.orbiting.GetWorldPosition() + new Vector2(-10, 10), "•", orb.color, 1f, 1f);
+            }
+        }
+
+        public static List<Orb> orbs = new List<Orb>();
+
+        public struct Orb
+        {
+            public IObject orbiting;
+            public int timeOffset;
+            public Color color;
         }
 
 
