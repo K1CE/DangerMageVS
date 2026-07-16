@@ -335,7 +335,8 @@ namespace SFDScript
                 {
                     if (data.wand != null) data.wand.removed = true;
                     players.RemoveAt(i);
-                    i--;
+                    
+                    ;
                 }
                 else
                 {
@@ -412,11 +413,20 @@ namespace SFDScript
         }
 
         //Effect "CFTXT" updated with parameters for color(Color), duration(float), scale(float), shadow(bool).
+        public const int ORB_ANIM_TIME = 10000;
         public void pixelTick(TriggerArgs args)
         {
             foreach(Orb orb in orbs)
             {
-                Game.PlayEffect("cftxt", orb.orbiting.GetWorldPosition() + new Vector2(-10, 10), "•", orb.color, 1f, 1f);
+                float timeStep = Game.TotalElapsedGameTime % ORB_ANIM_TIME + orb.timeOffset;
+                Vector2 animPos = Vector2.Zero;
+                animPos.X = (float)(18 * Math.Sin(timeStep * Math.PI/ (ORB_ANIM_TIME/2)));
+                animPos.Y = (float)(18 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 4)));
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + new Vector2(0, 5) + animPos, ".", Color.White, 0f, 3f, false);
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + new Vector2(1, 5) + animPos, ".", Color.White, 0f, 3f, false);
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + new Vector2(-1, 5) + animPos, ".", Color.White, 0f, 3f, false);
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + new Vector2(-2, 5) + animPos, ".", Color.White, 0f, 3f, false);
+                //Game.PlayEffect("Electric", orb.orbiting.GetWorldPosition() + new Vector2(0, 5) + animPos);
             }
         }
 
@@ -424,11 +434,22 @@ namespace SFDScript
 
         public struct Orb
         {
+            public int chargeNum;
             public IObject orbiting;
-            public int timeOffset;
+            public float timeOffset;
             public Color color;
         }
 
+        public static void removeOrb(IObject toRemove, int variant)
+        {
+            for (int i = orbs.Count - 1; i >= 0; i--) { 
+                if (orbs[i].orbiting.UniqueID == toRemove.UniqueID)
+                {
+                    orbs.RemoveAt(i);
+                    messageRoss("orb removed");
+                }
+            }
+        }
 
         //TODO: theres a chance for wands to duplicate
 

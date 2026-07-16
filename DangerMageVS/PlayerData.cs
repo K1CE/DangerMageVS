@@ -116,6 +116,7 @@ namespace SFDScript
 						pmod.ClimbingSpeed = savedClimbingSpeed;
 						player.SetModifiers(pmod);
 						cold = false;
+						messageRoss("cold cured");
 					}
 					else
 					{

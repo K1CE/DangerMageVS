@@ -19,7 +19,8 @@ namespace SFDScript
             public PlayerData holder;
 			public IObjectWeaponItem folder;
             public ManaShield shield;
-            public bool ready = true;
+			//public bool ready = true;
+			public bool[] ready = { false, false };
             public float[] cooldowns = { 0, 0 };
             public float[] lastSpellCasts = { 0, 0 };
 			private float droppedTime = -1;
@@ -79,8 +80,10 @@ namespace SFDScript
                 //cooldowns[castingOrder] /= 2.5f;
 
                 lastSpellCasts[castingOrder] = Game.TotalElapsedGameTime;
-                ready = false;
+                ready[castingOrder] = false;
 
+				//remove an orb
+				removeOrb(holder.player, castingOrder);
             }
 
             public void useWand()
@@ -206,7 +209,7 @@ namespace SFDScript
 
 			}
 			//TODO: make cooldowns accessible from class constants (and all other stats)
-			private const float CHARGE_DRAIN_FACTOR = 1.3f;
+			private const float CHARGE_DRAIN_FACTOR = 1.2f;
 			public void pickUp(PlayerData data)
 			{
 				held = true;
@@ -264,7 +267,17 @@ namespace SFDScript
 					}	
 				}
 
-				Vector2 pos;
+
+                //remove orbs
+                for (int i = cooldowns.Length; i > 0; i--)
+                {
+                    //orbs.Remove(wandOrbs[i]);
+                    //wandOrbs.RemoveAt(i);
+                    removeOrb(holder.player, i);
+                }
+
+
+                Vector2 pos;
 				float angle;
 				Vector2 linVelocity;
 				float angVelocity = 0f;
@@ -291,6 +304,7 @@ namespace SFDScript
 
 				//store charge times
 				droppedTime = Game.TotalElapsedGameTime;
+
 
 				return folder;
 			}
@@ -330,15 +344,6 @@ namespace SFDScript
 			{
 				if (held)
 				{
-					if (!ready && Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldowns[castingOrder])
-					{
-						ready = true;
-						Game.PlayEffect(
-								"CFTXT",
-								holder.player.GetWorldPosition() + new Vector2(0f, 30f),
-								"Ready!"
-							);
-					}
 					if (holder.player == null || holder.player.RemovalInitiated)
 					{
 						removed = true;
@@ -348,8 +353,43 @@ namespace SFDScript
 						drop();
 
 					}
-				}
-				else if (folder == null || folder.IsRemoved)
+                    /*
+					if (!ready && Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldowns[castingOrder])
+					{
+							ready = true;
+							Game.PlayEffect(
+									"CFTXT",
+									holder.player.GetWorldPosition() + new Vector2(0f, 30f),
+									"Ready!"
+								);
+
+
+					}
+					*/
+
+                    //orb check
+                    for (int i = 0; i < ready.Length; i++)
+                    {
+                        if (!ready[i])
+                        {
+                            if (Game.TotalElapsedGameTime > lastSpellCasts[i] + cooldowns[i])
+                            {
+								Orb newOrb;
+								newOrb.orbiting = holder.player;
+								newOrb.timeOffset = rnd.Next(100) * 10;
+								newOrb.chargeNum = i;
+								newOrb.color = elementColors1[(int)element];
+								orbs.Add(newOrb);
+                                ready[i] = true;
+								messageRoss("new Orb created");
+                            }
+                        }
+                    }
+                }
+
+				
+
+                else if (folder == null || folder.IsRemoved)
 				{
 					removed = true;
 				}
