@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using SFDGameScriptInterface;
+using static SFDScript.GameScript;
 
 
 namespace SFDScript
@@ -282,6 +283,14 @@ namespace SFDScript
                     new Wand(wand, (Element)i);
                 }
 
+            orbAnimVectors = new OrbAnimStruct();
+            orbAnimVectors.up = new Vector2(0, 0.5f);
+            orbAnimVectors.left = new Vector2(-0.5f, 0);
+            orbAnimVectors.down = new Vector2(0, -0.5f);
+            orbAnimVectors.right = new Vector2(0.5f, 0);
+            orbAnimVectors.center = new Vector2(0,8);
+            orbAnimVectors.smallCenter = new Vector2(0,7f);
+
 
             CreateTimer(1000, 0, "slowTick", "0");
             CreateTimer(600, 0, "quickTick", "2");
@@ -296,7 +305,7 @@ namespace SFDScript
 
         }
 
-        public void quickTick(TriggerArgs args)
+        public void quickTick(TriggerArgs args)  
         {
             foreach (Cast cast in casts)
             {
@@ -412,20 +421,79 @@ namespace SFDScript
             }
         }
 
+        public struct OrbAnimStruct
+        {
+            public Vector2 up;
+            public Vector2 left;
+            public Vector2 down;
+            public Vector2 right;
+            public Vector2 center;
+            public Vector2 smallCenter;
+        }
+
+        public OrbAnimStruct orbAnimVectors;
+
         //Effect "CFTXT" updated with parameters for color(Color), duration(float), scale(float), shadow(bool).
-        public const int ORB_ANIM_TIME = 10000;
+        public const int ORB_ANIM_TIME = 30000;
         public void pixelTick(TriggerArgs args)
         {
             foreach(Orb orb in orbs)
             {
+                //math
                 float timeStep = Game.TotalElapsedGameTime % ORB_ANIM_TIME + orb.timeOffset;
                 Vector2 animPos = Vector2.Zero;
-                animPos.X = (float)(18 * Math.Sin(timeStep * Math.PI/ (ORB_ANIM_TIME/2)));
-                animPos.Y = (float)(18 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 4)));
+                animPos.X = (float)(14 * Math.Sin(timeStep * Math.PI/ (ORB_ANIM_TIME/2)));
+                animPos.Y = (float)(12 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME)));
+                animPos.Y += (float)(4 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 15)));
+
+                double animRotation = Math.PI * timeStep/400;
+
+
+                //color math
+                Color modColor = new Color(0,0,0);
+                modColor.R = (byte)(orb.color.R + (255 - orb.color.R) * (float)(Math.Cos(Math.PI * timeStep / 300)/2 + 0.5));
+                modColor.G = (byte)(orb.color.G + (255 - orb.color.G) * (float)(Math.Cos(Math.PI * timeStep / 300) / 2 + 0.5));
+                modColor.B = (byte)(orb.color.B + (255 - orb.color.B) * (float)(Math.Cos(Math.PI * timeStep / 300) / 2 + 0.5));
+
+                //drawing
+                /*
                 Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + new Vector2(0, 5) + animPos, ".", Color.White, 0f, 3f, false);
                 Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + new Vector2(1, 5) + animPos, ".", Color.White, 0f, 3f, false);
                 Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + new Vector2(-1, 5) + animPos, ".", Color.White, 0f, 3f, false);
                 Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + new Vector2(-2, 5) + animPos, ".", Color.White, 0f, 3f, false);
+                */
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center
+                    + new Vector2((float)Math.Cos(animRotation) * orbAnimVectors.up.X - (float)Math.Sin(animRotation) * orbAnimVectors.up.Y,
+                    (float)Math.Sin(animRotation) * orbAnimVectors.up.X + (float)Math.Cos(animRotation) * orbAnimVectors.up.Y) + animPos,
+
+                    ".", modColor, 0f, 3f, false);
+
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center
+                    + new Vector2((float)Math.Cos(animRotation) * orbAnimVectors.left.X - (float)Math.Sin(animRotation) * orbAnimVectors.left.Y,
+                    (float)Math.Sin(animRotation) * orbAnimVectors.left.X + (float)Math.Cos(animRotation) * orbAnimVectors.left.Y) + animPos,
+
+                    ".", modColor, 0f, 3f, false);
+
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center
+                    + new Vector2((float)Math.Cos(animRotation) * orbAnimVectors.down.X - (float)Math.Sin(animRotation) * orbAnimVectors.down.Y,
+                    (float)Math.Sin(animRotation) * orbAnimVectors.down.X + (float)Math.Cos(animRotation) * orbAnimVectors.down.Y) + animPos,
+
+                    ".", modColor, 0f, 3f, false);
+
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center
+                    + new Vector2((float)Math.Cos(animRotation) * orbAnimVectors.right.X - (float)Math.Sin(animRotation) * orbAnimVectors.right.Y,
+                    (float)Math.Sin(animRotation) * orbAnimVectors.right.X + (float)Math.Cos(animRotation) * orbAnimVectors.right.Y) + animPos,
+
+                    ".", modColor, 0f, 3f, false);
+
+                /*
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center + orbAnimVectors.up + animPos, ".", modColor, 0f, 2.8f, false);
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center + orbAnimVectors.left + animPos, ".", modColor, 0f, 2.8f, false);
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center + orbAnimVectors.down + animPos, ".", modColor, 0f, 2.8f, false);
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center + orbAnimVectors.right + animPos, ".", modColor, 0f, 2.8f, false);
+                */
+
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.smallCenter + animPos, ".", Color.White, 0f, 2.8f, false);
                 //Game.PlayEffect("Electric", orb.orbiting.GetWorldPosition() + new Vector2(0, 5) + animPos);
             }
         }

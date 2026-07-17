@@ -376,7 +376,7 @@ namespace SFDScript
                             {
 								Orb newOrb;
 								newOrb.orbiting = holder.player;
-								newOrb.timeOffset = rnd.Next(100) * 10;
+								newOrb.timeOffset = rnd.Next(1000) * (ORB_ANIM_TIME / 1000);
 								newOrb.chargeNum = i;
 								newOrb.color = elementColors1[(int)element];
 								orbs.Add(newOrb);
