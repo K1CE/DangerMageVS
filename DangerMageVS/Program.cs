@@ -441,10 +441,7 @@ namespace SFDScript
             {
                 //math
                 float timeStep = Game.TotalElapsedGameTime % ORB_ANIM_TIME + orb.timeOffset;
-                Vector2 animPos = Vector2.Zero;
-                animPos.X = (float)(14 * Math.Sin(timeStep * Math.PI/ (ORB_ANIM_TIME/2)));
-                animPos.Y = (float)(12 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME)));
-                animPos.Y += (float)(4 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 15)));
+                Vector2 animPos = getOrbPosFromTime(timeStep);
 
                 double animRotation = Math.PI * timeStep/400;
 
@@ -498,6 +495,16 @@ namespace SFDScript
             }
         }
 
+        public static Vector2 getOrbPosFromTime(float timeStep)
+        {
+
+            Vector2 animPos = Vector2.Zero;
+            animPos.X = (float)(14 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 2)));
+            animPos.Y = (float)(12 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME)));
+            animPos.Y += (float)(4 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 20)));
+            return animPos;
+        }
+
         public static List<Orb> orbs = new List<Orb>();
 
         public struct Orb
@@ -511,8 +518,10 @@ namespace SFDScript
         public static void removeOrb(IObject toRemove, int variant)
         {
             for (int i = orbs.Count - 1; i >= 0; i--) { 
-                if (orbs[i].orbiting.UniqueID == toRemove.UniqueID)
+                if (orbs[i].orbiting.UniqueID == toRemove.UniqueID && orbs[i].chargeNum == variant)
                 {
+                    float timeStep = Game.TotalElapsedGameTime % ORB_ANIM_TIME + orbs[i].timeOffset;
+                    if (orbs[i].orbiting != null)Game.PlayEffect("GLM", getOrbPosFromTime(timeStep) + orbs[i].orbiting.GetWorldPosition() + new Vector2(0,3));
                     orbs.RemoveAt(i);
                     messageRoss("orb removed");
                 }

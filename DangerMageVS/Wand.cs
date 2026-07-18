@@ -370,6 +370,7 @@ namespace SFDScript
                     //orb check
                     for (int i = 0; i < ready.Length; i++)
                     {
+						messageRoss("checking ready " + i + ready[i].ToString());
                         if (!ready[i])
                         {
                             if (Game.TotalElapsedGameTime > lastSpellCasts[i] + cooldowns[i])
