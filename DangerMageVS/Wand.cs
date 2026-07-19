@@ -269,7 +269,7 @@ namespace SFDScript
 
 
                 //remove orbs
-                for (int i = cooldowns.Length; i > 0; i--)
+                for (int i = cooldowns.Length - 1; i >= 0; i--)
                 {
                     //orbs.Remove(wandOrbs[i]);
                     //wandOrbs.RemoveAt(i);

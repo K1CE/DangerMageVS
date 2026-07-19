@@ -490,7 +490,7 @@ namespace SFDScript
                 Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center + orbAnimVectors.right + animPos, ".", modColor, 0f, 2.8f, false);
                 */
 
-                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.smallCenter + animPos, ".", Color.White, 0f, 2.8f, false);
+                Game.PlayEffect("CFTXT", orb.orbiting.GetWorldPosition() + orbAnimVectors.center + animPos, ".", Color.White, 0f, 3f, false);
                 //Game.PlayEffect("Electric", orb.orbiting.GetWorldPosition() + new Vector2(0, 5) + animPos);
             }
         }
