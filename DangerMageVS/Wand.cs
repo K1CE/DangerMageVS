@@ -234,6 +234,9 @@ namespace SFDScript
                     }
 					droppedTime = -1;
 				}
+
+				//spawn 
+
 				Game.ShowChatMessage("You picked up a " + elementNames[(int)element] + " wand", color1, data.player.UserIdentifier);
 				Game.ShowChatMessage("This wand is only able to use " + elementNames[(int)element] + " magic. The use of any other element is impossible, but spell power is increased by 50%.", color2, data.player.UserIdentifier);
 			}
@@ -274,6 +277,7 @@ namespace SFDScript
                     //orbs.Remove(wandOrbs[i]);
                     //wandOrbs.RemoveAt(i);
                     removeOrb(holder.player, i);
+					ready[i] = false;
                 }
 
 
@@ -353,7 +357,7 @@ namespace SFDScript
 						drop();
 
 					}
-                    /*
+					/*
 					if (!ready && Game.TotalElapsedGameTime > lastSpellCasts[castingOrder] + cooldowns[castingOrder])
 					{
 							ready = true;
@@ -367,25 +371,24 @@ namespace SFDScript
 					}
 					*/
 
-                    //orb check
-                    for (int i = 0; i < ready.Length; i++)
-                    {
-						messageRoss("checking ready " + i + ready[i].ToString());
-                        if (!ready[i])
-                        {
-                            if (Game.TotalElapsedGameTime > lastSpellCasts[i] + cooldowns[i])
-                            {
-								Orb newOrb;
-								newOrb.orbiting = holder.player;
-								newOrb.timeOffset = rnd.Next(1000) * (ORB_ANIM_TIME / 1000);
-								newOrb.chargeNum = i;
-								newOrb.color = elementColors1[(int)element];
-								orbs.Add(newOrb);
-                                ready[i] = true;
-								messageRoss("new Orb created");
-                            }
-                        }
-                    }
+					//orb check
+					else for (int i = 0; i < ready.Length; i++)
+						{
+							if (!ready[i])
+							{
+								if (Game.TotalElapsedGameTime > lastSpellCasts[i] + cooldowns[i])
+								{
+									Orb newOrb;
+									newOrb.orbiting = holder.player;
+									newOrb.timeOffset = rnd.Next(1000) * (ORB_ANIM_TIME / 1000);
+									newOrb.chargeNum = i;
+									newOrb.color = elementColors1[(int)element];
+									orbs.Add(newOrb);
+									ready[i] = true;
+									messageRoss("new Orb created");
+								}
+							}
+						}
                 }
 
 				
