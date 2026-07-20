@@ -176,6 +176,7 @@ namespace SFDScript
 				}
 			}
 
+			public const int DAMAGE_TYPES_COUNT = 10;
             public enum damageType
             {
                 IMPACT,
@@ -227,7 +228,15 @@ namespace SFDScript
 						distortionDamageTaken += amount;
                         break;
                 }
-				player.SetModifiers(mod);
+
+                int displayAmount = (int)(-amount * 10);
+				Color displayColor = (displayAmount < 0)? Color.Red : Color.Cyan;
+				messageRoss("reducing by " + amount);
+
+
+                Game.PlayEffect("CFTXT", player.GetWorldPosition() + new Vector2(0, 10), displayAmount + " " + type.ToString(), Color.Red);
+
+                player.SetModifiers(mod);
 			}
 
             public static bool checkData(PlayerData data)

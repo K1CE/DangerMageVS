@@ -12,21 +12,21 @@ namespace SFDScript
 		public abstract class Spell
 		{
 
-            public delegate void SpeedChangeHandler();
-            public event SpeedChangeHandler onSpeedChangeEvent;
+			public delegate void SpeedChangeHandler();
+			public event SpeedChangeHandler onSpeedChangeEvent;
 
-            protected Cast cast;
+			protected Cast cast;
 			public string particleEffect;
 
-            public virtual Element element { get { return Element.ARCANE; } }
+			public virtual Element element { get { return Element.ARCANE; } }
 
-            public float spellPower = 0;
+			public float spellPower = 0;
 			public int cooldown = 0;
 			bool initialized = false;
 
 
 			private float realSpeed;
-			
+
 			public float speed
 			{
 				get
@@ -35,11 +35,11 @@ namespace SFDScript
 				}
 				set
 				{
-                    if(initialized) onSpeedChangeEvent();
-                    realSpeed = value;
+					if (initialized) onSpeedChangeEvent();
+					realSpeed = value;
 				}
 			}
-			
+
 			//public float speed = 0;
 			public float range = 0f;
 			public float splash = 0f;
@@ -48,12 +48,12 @@ namespace SFDScript
 
 
 			public Spell(Vector2 position, Vector2 direction, CastType castType, IPlayer caster, SpellArguments args)
-            {
-                this.caster = caster;
+			{
+				this.caster = caster;
 
-                setUpStats();
+				setUpStats();
 
-                switch (castType)
+				switch (castType)
 				{
 					case CastType.TOUCH:
 						break;
@@ -99,19 +99,19 @@ namespace SFDScript
 					case CastType.CHEAT:
 						cheat(args.argObject);
 						break;
-                }
+				}
 
 
 
-                cast.onImpactEvent += new Cast.EffectHandler(affect);
-                cast.onPassiveEvent += new Cast.PassiveHandler(passive);
+				cast.onImpactEvent += new Cast.EffectHandler(affect);
+				cast.onPassiveEvent += new Cast.PassiveHandler(passive);
 				cast.onIntervalEvent += new Cast.IntervalHandler(interval);
-                cast.onParticleEvent += new Cast.ParticleHandler(particles);
-                cast.onParticleExplosionEvent += new Cast.ParticleExplosionHandler(particleExplosion);
-                cast.onExplodeEvent += new Cast.ExplosionHandler(explode);
+				cast.onParticleEvent += new Cast.ParticleHandler(particles);
+				cast.onParticleExplosionEvent += new Cast.ParticleExplosionHandler(particleExplosion);
+				cast.onExplodeEvent += new Cast.ExplosionHandler(explode);
 
 				initialized = true;
-            }
+			}
 
 			protected abstract void setUpStats();
 
@@ -119,37 +119,37 @@ namespace SFDScript
 
 			public abstract void passive(Cast sender, IObject target, Vector2 vector);
 
-            protected virtual void interval(Cast sender, Vector2 vector)
+			protected virtual void interval(Cast sender, Vector2 vector)
 			{
 
 			}
 
 			//Raycast for intersecting walls
-            public virtual void explode(Cast sender, IObject alreadyHit, Vector2 position)
+			public virtual void explode(Cast sender, IObject alreadyHit, Vector2 position)
 			{
-                int blacklistID = 0;
-                if (alreadyHit != null) blacklistID = alreadyHit.UniqueID;
-                if (splash <= 0) return;
-                particleExplosion(sender, position, (int)(3 * (splash / 10)), splash);
-                Area area = new Area(position.Y + splash, position.X - splash, position.Y - splash, position.X + splash);
-                foreach (IObject obj in Game.GetObjectsByArea(area)) {
-                    float distance = Vector2.Distance(position, obj.GetWorldPosition());
-                    if (obj.GetBodyType() == BodyType.Dynamic && obj.UniqueID != blacklistID && distance <= splash) {
+				int blacklistID = 0;
+				if (alreadyHit != null) blacklistID = alreadyHit.UniqueID;
+				if (splash <= 0) return;
+				particleExplosion(sender, position, (int)(3 * (splash / 10)), splash);
+				Area area = new Area(position.Y + splash, position.X - splash, position.Y - splash, position.X + splash);
+				foreach (IObject obj in Game.GetObjectsByArea(area)) {
+					float distance = Vector2.Distance(position, obj.GetWorldPosition());
+					if (obj.GetBodyType() == BodyType.Dynamic && obj.UniqueID != blacklistID && distance <= splash) {
 						float powerMod = damageDropOff(distance, splash);
 
-                        affect(sender, obj, Vector2.Normalize(obj.GetWorldPosition() - position), powerMod);
-                    }
-                }
-            }
+						affect(sender, obj, Vector2.Normalize(obj.GetWorldPosition() - position), powerMod);
+					}
+				}
+			}
 
 			public static float damageDropOff(float distance, float maximumDistance)
 			{
 				if (distance > maximumDistance) return 0;
 				//return (float)Math.Sin((distance / maximumDistance) * Math.PI / 2 + Math.PI / 2); OLD FUNCTION
-				return (float)Math.Sqrt(1 - Math.Pow((distance/maximumDistance),2));
-            }
+				return (float)Math.Sqrt(1 - Math.Pow((distance / maximumDistance), 2));
+			}
 
-            public virtual void particles(Cast sender, Vector2 position, int count, float radius)
+			public virtual void particles(Cast sender, Vector2 position, int count, float radius)
 			{
 				if (particleEffect != "")
 					while (count > 0)
@@ -180,7 +180,7 @@ namespace SFDScript
 			protected virtual void synergy() { }
 			protected virtual void pillars() { }
 
-			protected virtual void cheat(IObject target) 
+			protected virtual void cheat(IObject target)
 			{
 				cast = new CastCheat(target, this);
 			}
@@ -192,14 +192,15 @@ namespace SFDScript
 					float angle = (float)(Math.PI * 2 * (rnd.Next(30) / 30f));
 					Game.PlayEffect(effect, pos + new Vector2((float)(Math.Cos(angle) * dist), (float)(Math.Sin(angle) * dist)));
 				}
-            }
-            public void particleExplosion(Cast sender, Vector2 pos, int density, float radius) {
-                for (int i = 0; i < density; i++) {
-                    float dist = (rnd.Next(30) / 30f) * radius;
-                    float angle = (float)(Math.PI * 2 * (rnd.Next(30) / 30f));
-                    Game.PlayEffect(particleEffect, pos + new Vector2((float)(Math.Cos(angle) * dist), (float)(Math.Sin(angle) * dist)));
-                }
-            }
+			}
+			public void particleExplosion(Cast sender, Vector2 pos, int density, float radius) {
+				for (int i = 0; i < density; i++) {
+					float dist = (rnd.Next(30) / 30f) * radius;
+					float angle = (float)(Math.PI * 2 * (rnd.Next(30) / 30f));
+					Game.PlayEffect(particleEffect, pos + new Vector2((float)(Math.Cos(angle) * dist), (float)(Math.Sin(angle) * dist)));
+				}
+			}
+
 
 			protected float dealElementalDamage(IObject target, float damage){
                 float damageMult = 1;

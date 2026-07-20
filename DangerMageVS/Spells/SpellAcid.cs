@@ -81,6 +81,16 @@ namespace SFDScript
 					if (!(obj is IPlayer) && damage > 30f && obj.GetHealth() == 1f && obj.GetBodyType() == BodyType.Dynamic) obj.Destroy(); //unique acid ability
 					particleExplosion("ACS", obj.GetWorldPosition(), 3, 10f);
 					Game.PlaySound("BreakGlass", obj.GetWorldPosition(), 0.2f);
+
+					if (obj is IPlayer)
+					{
+						PlayerData data = dataFromPlayer((IPlayer)obj);
+						//reduce resistance
+						PlayerData.damageType type = (PlayerData.damageType) rnd.Next(PlayerData.DAMAGE_TYPES_COUNT);
+						float mod = damage / 100f;
+						data.modResistance(type, mod);
+					}
+
 				}
 				triggerDebounce = false;
 				acidTagged.Clear();
