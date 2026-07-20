@@ -38,6 +38,7 @@ namespace SFDScript
 
 						PlayerModifiers pmod = caster.GetModifiers();
 
+						effectivePower *= data.deathDamageTaken;
 
 						float spellPowerPlusMissingHealth = effectivePower + effectivePower * ((pmod.MaxHealth - pmod.CurrentHealth)/100f);
 
