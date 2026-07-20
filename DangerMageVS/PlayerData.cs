@@ -32,6 +32,7 @@ namespace SFDScript
 			public float lastHealth = 100;
 			public float cursedDamage = 0f;
 			public double corruption = 1.0;
+			public float acidDamageLeft = 50;
             //add spell list
 
             //player modifiers
@@ -228,9 +229,10 @@ namespace SFDScript
 						distortionDamageTaken += amount;
                         break;
                 }
-
+				//TODO: store trunicated amount
                 int displayAmount = (int)(-amount * 10);
-				Color displayColor = (displayAmount < 0)? Color.Red : Color.Cyan;
+				if ((displayAmount == 0) && amount % 1 != 0) displayAmount += (amount % 1 > 0) ? -1 : 1;
+                Color displayColor = (displayAmount < 0)? Color.Red : Color.Cyan;
 				messageRoss("reducing by " + amount);
 
 

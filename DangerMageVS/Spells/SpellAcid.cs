@@ -76,20 +76,29 @@ namespace SFDScript
 				{
 					IObject obj = acidTagged[i];
 					float damage = acidTag[i];
+					float minimumDamage = damage / 3;
 					if (obj == null || obj.RemovalInitiated || obj.IsRemoved) continue;
-					dealElementalDamage(obj, damage);
+
+                    if (obj is IPlayer && !((IPlayer)obj).IsDead)
+                    {
+                        PlayerData data = dataFromPlayer((IPlayer)obj);
+                        //reduce resistance
+                        PlayerData.damageType type = (PlayerData.damageType)rnd.Next(PlayerData.DAMAGE_TYPES_COUNT);
+                        float mod = damage / 100f;
+                        data.modResistance(type, mod);
+
+						if (data.acidDamageLeft < damage) damage = data.acidDamageLeft;
+						data.acidDamageLeft -= damage;
+						if (data.acidDamageLeft < 0) data.acidDamageLeft = 0;
+						if (damage < minimumDamage) damage = minimumDamage;
+						
+                    }
+
+                    dealElementalDamage(obj, damage);
 					if (!(obj is IPlayer) && damage > 30f && obj.GetHealth() == 1f && obj.GetBodyType() == BodyType.Dynamic) obj.Destroy(); //unique acid ability
 					particleExplosion("ACS", obj.GetWorldPosition(), 3, 10f);
 					Game.PlaySound("BreakGlass", obj.GetWorldPosition(), 0.2f);
 
-					if (obj is IPlayer)
-					{
-						PlayerData data = dataFromPlayer((IPlayer)obj);
-						//reduce resistance
-						PlayerData.damageType type = (PlayerData.damageType) rnd.Next(PlayerData.DAMAGE_TYPES_COUNT);
-						float mod = damage / 100f;
-						data.modResistance(type, mod);
-					}
 
 				}
 				triggerDebounce = false;
@@ -99,7 +108,7 @@ namespace SFDScript
 
 			protected override void setUpStats()
 			{
-				spellPower = 21.5f;
+				spellPower = 22f;
 				cooldown = 5000;
 				speed = 5f;
 				range = 0.6f;
