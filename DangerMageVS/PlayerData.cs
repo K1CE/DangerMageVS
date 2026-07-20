@@ -176,6 +176,60 @@ namespace SFDScript
 				}
 			}
 
+            public enum damageType
+            {
+                IMPACT,
+                TOXIN,
+                EXPLOSION,
+                DEATH,
+                MELEE,
+                FIRE,
+                COLD,
+                PROJECTILE,
+                SHOCK,
+                DISTORTION
+            }
+
+			public void modResistance(damageType type, float amount)
+			{
+				PlayerModifiers mod = player.GetModifiers();
+				switch (type)
+				{
+					case damageType.IMPACT:
+						mod.ImpactDamageTakenModifier += amount;
+
+						break;
+                    case damageType.TOXIN:
+						toxinDamageTaken += amount;
+                        break;
+                    case damageType.EXPLOSION:
+						mod.ExplosionDamageTakenModifier += amount;
+                        break;
+                    case damageType.DEATH:
+						deathDamageTaken += amount;
+                        break;
+                    case damageType.MELEE:
+						mod.MeleeDamageTakenModifier += amount;
+                        break;
+                    case damageType.FIRE:
+						mod.FireDamageTakenModifier += amount;
+                        break;
+                    case damageType.COLD:
+						coldDamageTaken += amount;
+                        break;
+                    case damageType.PROJECTILE:
+						mod.ProjectileDamageTakenModifier += amount;
+                        break;
+                    case damageType.SHOCK:
+						shockDamageTaken += amount;
+                        break;
+                    case damageType.DISTORTION:
+						distortionDamageTaken += amount;
+                        break;
+                }
+				player.SetModifiers(mod);
+			}
+
             public static bool checkData(PlayerData data)
             {
 				if (!(data.player == null || data.player.RemovalInitiated)) return true;
