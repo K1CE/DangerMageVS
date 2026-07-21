@@ -85,7 +85,7 @@ namespace SFDScript
                         //reduce resistance
                         PlayerData.damageType type = (PlayerData.damageType)rnd.Next(PlayerData.DAMAGE_TYPES_COUNT);
                         float mod = damage / 100f;
-                        data.modResistance(type, mod);
+                        data.modResistance(type, mod * data.toxinDamageTaken);
 
 						if (data.acidDamageLeft < damage) damage = data.acidDamageLeft;
 						data.acidDamageLeft -= damage;

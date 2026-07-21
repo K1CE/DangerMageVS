@@ -46,6 +46,7 @@ namespace SFDScript
          * remove playerdata on death
          * acid wand is kinda boring
          * make ice wand freeze you into a cube if it kills
+         * make extra effects if damage dealt to weakened resistance
          * 
          * sometimes shield bounces own bullets
          * fix earth wand hitting while riding

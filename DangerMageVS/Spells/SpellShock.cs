@@ -40,19 +40,23 @@ namespace SFDScript
 
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage); //add stun effect
+						dealElementalDamage(target, effectivePower);
 
 						data.electrocute((int)(6.4f * effectivePower * effectivePower));
-						ply.AddCommand(new PlayerCommand(PlayerCommandType.DeathKneelInfinite));
 						Game.PlayEffect("Electric", target.GetWorldPosition());
 						Game.PlayEffect("Electric", target.GetWorldPosition() + new Vector2(0, 8));
 
 					}
-					else if (target.Name == "Streetsweeper")
-					{
-						dealElementalDamage(target, effectivePower);
+					else
+                    {
+                        dealElementalDamage(target, effectivePower);
+                        if (target.Name == "Streetsweeper")
+						{
+							dealElementalDamage(target, effectivePower);
+						}
 					}
-					dealElementalDamage(target, effectivePower);
-				}
+
+                }
 
 				for (int i = 0; i < 6; i++)
 				{

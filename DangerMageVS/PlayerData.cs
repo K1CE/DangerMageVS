@@ -84,7 +84,8 @@ namespace SFDScript
 			{
 				electrocuted = true;
 				stun(interval);
-			}
+                player.AddCommand(new PlayerCommand(PlayerCommandType.DeathKneelInfinite));
+            }
 			public void stun(int interval)
 			{
 				stunQueue.Add(this);
@@ -93,7 +94,7 @@ namespace SFDScript
 				recovering = true;
 				lastHealth = player.GetHealth();
 				player.SetInputEnabled(false);
-			}
+            }
 
 			public void recover()
 			{
@@ -102,7 +103,7 @@ namespace SFDScript
 				player.SetInputEnabled(true);
 				recovering = false;
 				electrocuted = false;
-			}
+            }
 
 			public void coldCheck()
 			{
