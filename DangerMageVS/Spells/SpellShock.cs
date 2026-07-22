@@ -20,6 +20,7 @@ namespace SFDScript
 
 			}
 			//TODO: add impact particle effects
+			//TODO: maybe make shock kills cause victims to spazz out
 			public override void affect(Cast sender, IObject target, Vector2 vector, float powerMod)
 			{
                 float effectivePower = spellPower * powerMod;
@@ -93,7 +94,7 @@ namespace SFDScript
 				cooldown = 4500;
 				speed = 10f;
 				particleEffect = "Electric";
-				splash = 12;
+				splash = 16;
 				range = 0.45f;
 			}
 

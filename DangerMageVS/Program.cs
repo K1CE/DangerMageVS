@@ -649,13 +649,17 @@ namespace SFDScript
         public static List<PlayerData> stunQueue = new List<PlayerData>();
         public void recoveryTimer(TriggerArgs args)
         {
-            if (stunQueue.Count() > 0)
+            for (int i = 0; i < stunQueue.Count; i++)
             {
-                stunQueue[0].recover();
-                stunQueue.RemoveAt(0);
-
-
+                if (stunQueue[i].recovery.UniqueID == ((IObjectTimerTrigger)args.Caller).UniqueID)
+                {
+                    stunQueue[i].recover();
+                    stunQueue.RemoveAt(i);
+                    return;
+                }
             }
+
+
         }
 
         public static List<PlayerData> fireQueue = new List<PlayerData>();
