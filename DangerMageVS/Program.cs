@@ -21,22 +21,14 @@ namespace SFDScript
         /* SCRIPT STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
         //TODO:
         /*
-         * particle effects framework for space wand
          * add flying giblets for blood magic
          * thwakc spinning animation
-         * space wand banish players on hit
-         * space wand disarm players on hit
          * make space wand pull objects to deal more damage on hit
-         * space wand slo mo synergy
          * insane idea: sawblades move across surfaces
          * make earth magic penetrate and push
          * fix duping bug
-         * make ice lower other stats
-         * faster spell equip
          * fix spell collision
          * fix blood cooldown cycling
-         * change the spell cooldown cycling for cooldowns
-         * fix on death error in fast tick
          * random num seed that makes spells have random ideal vowel combinations. not ideal vowels in a spell results in a debuff and/or unexpected results
          * prefix should determine cast type somehow
          * syllables all determine aftercast
@@ -50,7 +42,6 @@ namespace SFDScript
          * 
          * sometimes shield bounces own bullets
          * fix earth wand hitting while riding
-         * fix ice wand not unfreezing
          * fix vine wand grabbing too long
          * fix vine wand not always pulling you apart
          * fix wrong hits on explosives
@@ -175,7 +166,7 @@ namespace SFDScript
                         prj.hit(sent);
                     }
                 }
-                else if (sent.GetCollisionFilter().BlockFire && !isOddObject(sent) && sent.CustomID != "mNoCollide")
+                else if (sent.GetCollisionFilter().BlockFire && !isOddObject(sent) && sent.CustomID != attachmentID)
                 {
                     //messageRoss(sent.Name + (sent.GetCollisionFilter().BlockFire ? " does" : " doesn't") + " block fire2");
 
@@ -196,9 +187,11 @@ namespace SFDScript
                     foreach (RayCastResult outPut in outputs)
                     if (outPut.Hit && !isOddObject(outPut.HitObject) &&
                             Vector2.Distance(outPut.Position, pos) < 30f &&
-                            outPut.HitObject.CustomID != "mNoCollide")
+                            outPut.HitObject.CustomID != attachmentID)
                     {
-                        prj.hit(outPut.HitObject);
+                            messageRoss("hitting " + outPut.HitObject.Name);
+                            messageRoss("hitting has " + outPut.HitObject.CustomID);
+                            prj.hit(outPut.HitObject);
                         break;
                         //if (outPut.HitObject.GetMaxHealth() != 1) 
                         // else prj.hit(null);
