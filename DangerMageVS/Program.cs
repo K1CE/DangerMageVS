@@ -44,7 +44,6 @@ namespace SFDScript
          * fix earth wand hitting while riding
          * fix vine wand grabbing too long
          * fix vine wand not always pulling you apart
-         * fix wrong hits on explosives
          * fix earth wand hitting itself, note: happens in specific areas
          * fix explosive wand hitting on cast
          * fix error on gib
@@ -287,7 +286,7 @@ namespace SFDScript
 
 
             CreateTimer(1000, 0, "slowTick", "0");
-            CreateTimer(600, 0, "quickTick", "2");
+            CreateTimer(400, 0, "quickTick", "2");
             CreateTimer(300, 0, "fastTick", "1");
             CreateTimer(50, 0, "effectTick", "3");
             CreateTimer(3,0, "pixelTick", "4");

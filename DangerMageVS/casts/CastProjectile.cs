@@ -111,7 +111,9 @@ namespace SFDScript
 
             public override void intervalTick()
             {
-				intervalTickProxy(position);
+				updatePosition();
+
+                intervalTickProxy(position);
             }
 
             protected override void updatePosition()
