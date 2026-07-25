@@ -57,21 +57,23 @@ namespace SFDScript
 
 
             //TODO: balance flak effect
-            public static int BLAST_PROXIMITY = 60;
+            public static int BLAST_PROXIMITY = 30;
             protected override void interval(Cast sender, Vector2 pos)
             {
                 Area checkArea = new Area(
                        (float)(pos.Y + (BLAST_PROXIMITY)),
-                       (float)(pos.X + (BLAST_PROXIMITY)),
-                       (float)(pos.Y + (BLAST_PROXIMITY)),
+                       (float)(pos.X + (-BLAST_PROXIMITY)),
+                       (float)(pos.Y + (-BLAST_PROXIMITY)),
                        (float)(pos.X + (BLAST_PROXIMITY))
                        );
-                checkArea.Move(sender.direction * speed * 4f);
+                Vector2 offset = sender.direction * speed * 4f;
+                checkArea.Move(offset);
+                Game.DrawArea(checkArea);
+                messageRoss(pos.ToString());
                 foreach (IPlayer found in Game.GetObjectsByArea<IPlayer>(checkArea)){
-                    Game.DrawArea(checkArea);
 
                     //messageRoss("player found");
-                    if (found.UniqueId != caster.UniqueID && !found.IsDead && Vector2.Distance(found.GetWorldPosition(), pos) < BLAST_PROXIMITY)
+                    if (found.UniqueId != caster.UniqueID && !found.IsDead && Vector2.Distance(found.GetWorldPosition(), pos + offset) < BLAST_PROXIMITY)
                     {
                         sender.hit(found);
                         messageRoss("proxy");
@@ -85,7 +87,7 @@ namespace SFDScript
 			{
 				spellPower = EXPLOSION_DAMAGE; //explosion damage
 				cooldown = 9000;
-				speed = 3.7f;
+				speed = 3.4f;
 				range = 1f;
 				splash = EXPLOSION_RADIUS;
 				particleEffect = elementEffects[(int)element];
