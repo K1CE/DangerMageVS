@@ -201,8 +201,8 @@ namespace SFDScript
 				}
 			}
 
-
-			protected float dealElementalDamage(IObject target, float damage){
+			protected float dealElementalDamage(IObject target, float damage) { return dealElementalDamage(target, damage, Vector2.Zero); }
+			protected float dealElementalDamage(IObject target, float damage, Vector2 dir){
                 float damageMult = 1;
 				bool isPlayer = target is IPlayer;
 				PlayerData data = null;
@@ -282,6 +282,13 @@ namespace SFDScript
                     damageMult *= 4;
 				}
 				
+				if(target is IPlayer && damageMult != 1)
+				{
+					if (dir == Vector2.Zero)
+						modHit(damageMult > 1, (IPlayer)target);
+                    else
+                        modHit(damageMult > 1, target.GetWorldPosition() + dir * 3f);
+                }
 
 				damage *= damageMult;
 				if(damage > 0f) target.DealDamage(damage, this.caster.UniqueID);

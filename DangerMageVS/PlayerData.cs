@@ -11,10 +11,7 @@ namespace SFDScript
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		public class PlayerData
         {
-			//TODO: maybe move spellcharges from playerdata to wand?
 			//TODO: maybe make shield have elemental resistance
-			//TODO: deactivate mana shield if wand is removed
-			//TODO: stun queue can conflict if interval time varies
 
 
 			//player data

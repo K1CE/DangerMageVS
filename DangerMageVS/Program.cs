@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using SFDGameScriptInterface;
 using static SFDScript.GameScript;
+using static SFDGameScriptInterface.Events;
 
 
 namespace SFDScript
@@ -25,7 +26,6 @@ namespace SFDScript
          * thwakc spinning animation
          * make space wand pull objects to deal more damage on hit
          * insane idea: sawblades move across surfaces
-         * make earth magic penetrate and push
          * fix duping bug
          * fix spell collision
          * fix blood cooldown cycling
@@ -33,10 +33,8 @@ namespace SFDScript
          * prefix should determine cast type somehow
          * syllables all determine aftercast
          * make space wand go through walls
-         * make projectile items face where cast
          * make a function to handle delegates from plant wand
          * remove playerdata on death
-         * acid wand is kinda boring
          * make ice wand freeze you into a cube if it kills
          * make extra effects if damage dealt to weakened resistance
          * 
@@ -44,8 +42,6 @@ namespace SFDScript
          * fix earth wand hitting while riding
          * fix vine wand grabbing too long
          * fix vine wand not always pulling you apart
-         * fix earth wand hitting itself, note: happens in specific areas
-         * fix explosive wand hitting on cast
          * fix error on gib
          * 
          * */
@@ -56,6 +52,8 @@ namespace SFDScript
 
         static Random rnd = new Random();
         Events.PlayerKeyInputCallback m_playerKeyInputEvent = null;
+        Events.PlayerDamageCallback m_playerDamageEvent = null;
+        Events.ProjectileHitCallback m_projectileHitEvent = null;
         public static IObjectTimerTrigger unfreezer;
         public const string STARTWANDS_KEY = "START WANDS";
         public const int AVAILABLE_ELEMENTS = 12;
@@ -83,6 +81,7 @@ namespace SFDScript
         "CSW" //chaos
 
         };
+
         public static Color[] elementColors1 = new Color[]{
         new Color(132,132,255), new Color(255,220,135),new Color(0,255,255),new Color(89,255,177),new Color(100,100,100),new Color(255,0,0),new Color(255,0,127),
         new Color(86,131,255),new Color(90,255,0),new Color(194,194,255),new Color(182,0,255),new Color(255,110,0),new Color(0,255,42),new Color(255,0,203)
@@ -234,6 +233,9 @@ namespace SFDScript
         public void OnStartup()
         {
             m_playerKeyInputEvent = Events.PlayerKeyInputCallback.Start(OnPlayerKeyInput);
+            m_playerDamageEvent = Events.PlayerDamageCallback.Start(OnPlayerDamage);
+            m_projectileHitEvent = Events.ProjectileHitCallback.Start(OnProjectileHit);
+            
 
             rossColor = new Color(255, 65, 49);
 
@@ -614,7 +616,84 @@ namespace SFDScript
                 //Game.WriteToConsole(string.Format("Player {0} keyevent: {1}", player.UniqueID, keyEvents[i].ToString()));
             }
         }
+        public void OnProjectileHit(IProjectile projectile, ProjectileHitArgs args)
+        {
 
+            //extra hit effect section
+            if(args.IsPlayer)
+            {
+                IPlayer ply = (IPlayer)Game.GetObject(args.HitObjectID);
+                if(ply != null)
+                {
+                    if (ply.GetModifiers().ProjectileDamageTakenModifier != 1) modHit(ply.GetModifiers().ProjectileDamageTakenModifier > 1, args.HitPosition);
+                }
+            }
+        }
+
+        public void OnPlayerDamage(IPlayer ply, PlayerDamageArgs args)
+        {
+            if (!args.OverkillDamage)
+            {
+                PlayerModifiers mod = ply.GetModifiers();
+                switch (args.DamageType)
+                {
+                    case PlayerDamageEventType.Melee:
+                        {
+                            if(mod.MeleeDamageTakenModifier != 1)
+                            {
+                                modHit(mod.MeleeDamageTakenModifier > 1, ply);
+                            }
+                            break;
+                        }
+                    case PlayerDamageEventType.Fire:
+                        {
+                            if (mod.FireDamageTakenModifier != 1)
+                            {
+                                modHit(mod.FireDamageTakenModifier > 1, ply);
+                            }
+                            break;
+                        }
+
+                    case PlayerDamageEventType.Fall:
+                    case PlayerDamageEventType.Missile:
+                        {
+                            if (mod.ImpactDamageTakenModifier != 1)
+                            {
+                                modHit(mod.ImpactDamageTakenModifier > 1, ply);
+                            }
+                            break;
+                        }
+                    case PlayerDamageEventType.Explosion:
+                        {
+                            if (mod.ExplosionDamageTakenModifier != 1)
+                            {
+                                modHit(mod.ExplosionDamageTakenModifier > 1, ply);
+                            }
+                            break;
+                        }
+
+                }
+            }
+        }
+
+        public static void modHit(bool damageUp, Vector2 pos)
+        {
+
+            if (damageUp)
+            {
+                Game.PlaySound("BulletHitFlesh", pos, 0.7f);
+                Game.PlayEffect("TR_B", pos);
+            } else
+            {
+                Game.PlayEffect("BulletHitMetal", pos);
+                Game.PlayEffect("BulletHitMetal", pos);
+                Game.PlaySound("MeleeBlockMetal", pos, 0.5f);
+            }
+        }
+        public static void modHit(bool damageUp, IPlayer ply)
+        {
+            modHit(damageUp, ply.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 16 - 8, (float)rnd.NextDouble() * 16 - 4) );
+        }
 
         public static List<Wand> buttonQueue = new List<Wand>();
         public void delayedUnfold(TriggerArgs args)
