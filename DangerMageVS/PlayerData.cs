@@ -64,6 +64,18 @@ namespace SFDScript
 				players.Add(this);
 			}
 
+			public void delete()
+			{
+				unfoldPause.Remove();
+				spellCast.Remove();
+				recovery.Remove();
+				fireRecovery.Remove();
+				wand.drop();
+				wand = null;
+				user = null;
+				player = null;
+			}
+
 			public void unfoldWand()
 			{
 				if (wand != null)

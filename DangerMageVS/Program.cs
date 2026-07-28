@@ -34,7 +34,6 @@ namespace SFDScript
          * syllables all determine aftercast
          * make space wand go through walls
          * make a function to handle delegates from plant wand
-         * remove playerdata on death
          * make ice wand freeze you into a cube if it kills
          * make extra effects if damage dealt to weakened resistance
          * 
@@ -42,7 +41,7 @@ namespace SFDScript
          * fix earth wand hitting while riding
          * fix vine wand grabbing too long
          * fix vine wand not always pulling you apart
-         * fix error on gib
+         * fix error on gib -error still happens in fast tick (when gib)
          * 
          * */
 
@@ -54,6 +53,7 @@ namespace SFDScript
         Events.PlayerKeyInputCallback m_playerKeyInputEvent = null;
         Events.PlayerDamageCallback m_playerDamageEvent = null;
         Events.ProjectileHitCallback m_projectileHitEvent = null;
+        Events.PlayerDeathCallback m_playerDeathEvent = null;
         public static IObjectTimerTrigger unfreezer;
         public const string STARTWANDS_KEY = "START WANDS";
         public const int AVAILABLE_ELEMENTS = 12;
@@ -235,6 +235,7 @@ namespace SFDScript
             m_playerKeyInputEvent = Events.PlayerKeyInputCallback.Start(OnPlayerKeyInput);
             m_playerDamageEvent = Events.PlayerDamageCallback.Start(OnPlayerDamage);
             m_projectileHitEvent = Events.ProjectileHitCallback.Start(OnProjectileHit);
+            m_playerDeathEvent = Events.PlayerDeathCallback.Start(OnDeath);
             
 
             rossColor = new Color(255, 65, 49);
@@ -628,6 +629,13 @@ namespace SFDScript
                     if (ply.GetModifiers().ProjectileDamageTakenModifier != 1) modHit(ply.GetModifiers().ProjectileDamageTakenModifier > 1, args.HitPosition);
                 }
             }
+        }
+
+        public void OnDeath(IPlayer player, PlayerDeathArgs args)
+        {
+            PlayerData data = dataFromPlayer(player);
+            data.delete();
+            players.Remove(data);
         }
 
         public void OnPlayerDamage(IPlayer ply, PlayerDamageArgs args)
