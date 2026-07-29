@@ -436,7 +436,7 @@ namespace SFDScript
             foreach(Orb orb in orbs)
             {
                 //math
-                float timeStep = Game.TotalElapsedGameTime % ORB_ANIM_TIME + orb.timeOffset;
+                float timeStep = (Game.TotalElapsedGameTime + orb.timeOffset) % ORB_ANIM_TIME;
                 Vector2 animPos = getOrbPosFromTime(timeStep);
 
                 double animRotation = Math.PI * timeStep/400;
@@ -497,7 +497,7 @@ namespace SFDScript
             Vector2 animPos = Vector2.Zero;
             animPos.X = (float)(14 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 2)));
             animPos.Y = (float)(12 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME)));
-            animPos.Y += (float)(4 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 20)));
+            animPos.Y += (float)(4 * Math.Sin(timeStep * Math.PI / (ORB_ANIM_TIME / 20)) - 2f);
             return animPos;
         }
 
