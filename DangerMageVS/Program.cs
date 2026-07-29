@@ -634,6 +634,7 @@ namespace SFDScript
         public void OnDeath(IPlayer player, PlayerDeathArgs args)
         {
             PlayerData data = dataFromPlayer(player);
+            if (data == null) return;
             data.delete();
             players.Remove(data);
         }

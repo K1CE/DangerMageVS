@@ -70,7 +70,7 @@ namespace SFDScript
 				spellCast.Remove();
 				recovery.Remove();
 				fireRecovery.Remove();
-				wand.drop();
+				if(wand != null) wand.drop();
 				wand = null;
 				user = null;
 				player = null;
