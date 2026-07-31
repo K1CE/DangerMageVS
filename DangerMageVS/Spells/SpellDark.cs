@@ -11,6 +11,8 @@ namespace SFDScript
 	{
 		/* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 		//make some sort of benefit to killing players with the dark spell
+		//TODO: fix dark breaking explosives
+		//TODO: fix dark hitting strange bg objects?
 		public class SpellDark : Spell
         {
             public override Element element { get { return Element.DARK; } }

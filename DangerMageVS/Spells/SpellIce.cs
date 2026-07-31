@@ -27,10 +27,12 @@ namespace SFDScript
 
                 Game.PlaySound("DestroyStone", sender.position, 10f);
 
-				if (target != null) {
+				if (target != null)
+                {
+                    target.ClearFire();
 
-					//weather damage bonus
-					if (Game.GetWeatherType() > 0 && target.GetHealth() > 1f)
+                    //weather damage bonus
+                    if (Game.GetWeatherType() > 0 && target.GetHealth() > 1f)
 					{
 						RayCastInput skyRay = new RayCastInput(true);
 						skyRay.AbsorbProjectile = RayCastFilterMode.True;
@@ -56,6 +58,13 @@ namespace SFDScript
 						damage = dealElementalDamage(target, effectivePower);
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage);
+
+						if(data != null && ply.IsDead)
+						{
+							messageRoss("frozen!");
+							freeze(ply, vector);
+							return;
+						}
 
 						//note: cant give speed buff for recolor because it gives infinite stamina
 						PlayerModifiers pmod = ply.GetModifiers();
@@ -94,7 +103,6 @@ namespace SFDScript
 						//else target.SetHealth(target.GetHealth() - effectivePower);
 					}
 
-					target.ClearFire();
 
 				}
 
@@ -102,6 +110,46 @@ namespace SFDScript
 
 
 			}
+
+			//add icicles
+			private void freeze(IPlayer ply, Vector2 direction)
+			{
+				Vector2 position = new Vector2(-3 * ply.FacingDirection, 8) + ply.GetWorldPosition();
+
+				IProfile playerProfile = ply.GetProfile();
+
+				IObjectWeldJoint weld = (IObjectWeldJoint)Game.CreateObject("WeldJoint");
+
+				IObject invisibleBlock = Game.CreateObject("InvisibleBlock", position + new Vector2(0, 8));
+				invisibleBlock.SetWorldPosition(position);
+				invisibleBlock.SetBodyType(BodyType.Dynamic);
+				invisibleBlock.SetSizeFactor(new Point(0,2));
+				weld.AddTargetObject(invisibleBlock);
+
+
+
+                IObjectPlayerProfileInfo profileInfo = (IObjectPlayerProfileInfo)Game.CreateObject("PlayerProfileInfo");
+				IProfile objectProfile = profileInfo.GetProfile();
+                profileInfo.GetProfile().Feet = playerProfile.Feet;
+                profileInfo.GetProfile().Accessory = playerProfile.Accessory;
+                profileInfo.GetProfile().Skin = playerProfile.Skin;
+                profileInfo.GetProfile().Gender = playerProfile.Gender;
+                profileInfo.GetProfile().ChestOver = playerProfile.ChestOver;
+                profileInfo.GetProfile().Hands = playerProfile.Hands;
+                profileInfo.GetProfile().ChestUnder = playerProfile.ChestUnder;
+                profileInfo.GetProfile().Legs = playerProfile.Legs;
+                profileInfo.GetProfile().Head = playerProfile.Head;
+                profileInfo.GetProfile().Waist = playerProfile.Waist;
+
+                IObjectPlayerPortrait skin = (IObjectPlayerPortrait)Game.CreateObject("BgPlayerPortrait00", position);
+				skin.SetFaceDirection(ply.FacingDirection);
+				skin.SetProfileInfo(profileInfo);
+				skin.SetBodyType(BodyType.Dynamic);
+                weld.AddTargetObject(skin);
+
+				ply.Remove();
+
+            }
 
 			public override void explode(Cast sender, IObject alreadyHit, Vector2 position) 
             {

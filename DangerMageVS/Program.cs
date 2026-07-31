@@ -516,7 +516,7 @@ namespace SFDScript
             for (int i = orbs.Count - 1; i >= 0; i--) { 
                 if (orbs[i].orbiting.UniqueID == toRemove.UniqueID && orbs[i].chargeNum == variant)
                 {
-                    float timeStep = Game.TotalElapsedGameTime % ORB_ANIM_TIME + orbs[i].timeOffset;
+                    float timeStep = Game.TotalElapsedGameTime % ORB_ANIM_TIME + orbs[i].timeOffset; 
                     if (orbs[i].orbiting != null)Game.PlayEffect("GLM", getOrbPosFromTime(timeStep) + orbs[i].orbiting.GetWorldPosition() + new Vector2(0,3));
                     orbs.RemoveAt(i);
                     messageRoss("orb removed");
@@ -814,6 +814,7 @@ namespace SFDScript
         }
         public static PlayerData dataFromPlayer(IPlayer ply)
         {
+            if (ply.IsDead) return null;
             int idIn = ply.UniqueID;
             foreach (PlayerData data in players)
             {
