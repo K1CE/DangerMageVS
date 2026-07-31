@@ -1,6 +1,7 @@
 ﻿using SFDGameScriptInterface;
 using System;
 using System.Runtime.InteropServices;
+using static SFDScript.GameScript;
 
 
 namespace SFDScript
@@ -85,6 +86,7 @@ namespace SFDScript
 								Game.ShowChatMessage("YOU HAD A SUDDEN HEART ATTACK", elementColors1[(int)element], ply.UserIdentifier);
 								Game.ShowChatMessage("thwakc", new Color(250, 0, 0));
 								ply.Kill();
+								hauntPlayer(ply);
 							}
 							else if (roll < chance * (3 + spellPowerPlusMissingHealth / 10))
 							{
@@ -113,6 +115,36 @@ namespace SFDScript
 
 				particleExplosion("TR_S", pos, 10, 13f);
 			}
+
+			private void hauntPlayer(IPlayer ply)
+			{
+				IObjectTargetObjectJoint target = (IObjectTargetObjectJoint)Game.CreateObject("TargetObjectJoint");
+				target.SetWorldPosition(ply.GetWorldPosition());
+				target.SetTargetObject(ply);
+
+				IObject anchor = Game.CreateObject("InvisibleBlockNoCollision");
+				anchor.SetWorldPosition(ply.GetWorldPosition() + new Vector2(0, 30));
+
+                IObjectPullJoint pull = (IObjectPullJoint)Game.CreateObject("PullJoint");
+				pull.SetWorldPosition(ply.GetWorldPosition() + new Vector2(0, 30));
+				pull.SetTargetObject(anchor);
+				pull.SetTargetObjectJoint(target);
+				pull.SetForce(1);
+				pull.SetForcePerDistance(0.005f);
+
+
+                Events.UpdateCallback hauntPause = null;
+                hauntPause = Events.UpdateCallback.Start(e => {
+
+					target.Remove();
+					anchor.Remove();
+					pull.Remove();
+
+                    hauntPause.Stop();
+                }, 2000);
+                
+
+            }
 			protected override void setUpStats()
 			{
 				spellPower = 11.5f; //starts at 10 and rises to 200% depending on playerhealth
