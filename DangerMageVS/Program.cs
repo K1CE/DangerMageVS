@@ -57,6 +57,9 @@ namespace SFDScript
         public static IObjectTimerTrigger unfreezer;
         public const string STARTWANDS_KEY = "START WANDS";
         public const int AVAILABLE_ELEMENTS = 12;
+        public const float TEXTPIXEL_OFFSET_X = -3.6f;
+        public const float TEXTPIXEL_OFFSET_Y = -2.4f;
+        public Vector2 textPixelOffset;
 
         public static string[] elementNames = new String[] { "", "earth", "shock", "air", "dark", "fire", "blood", "ice", "acid", "metal", "space", "blast", "plant", "chaos" };
         public static char[] elementLetters = new char[] { ' ', 'p', 'k', 'f', 'z', 'r', 'g', 's', 'l', 't', 'w', 'c', 'm', '&' };
@@ -247,6 +250,7 @@ namespace SFDScript
 
             Game.RunCommand("/msg " + wands + " wands");
 
+            textPixelOffset = new Vector2(TEXTPIXEL_OFFSET_X, TEXTPIXEL_OFFSET_Y);
 
             //doesn't give wands unless the setting is enabled
             giveStartWands();
