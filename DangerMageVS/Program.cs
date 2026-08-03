@@ -41,7 +41,9 @@ namespace SFDScript
          * fix earth wand hitting while riding
          * fix vine wand grabbing too long
          * fix vine wand not always pulling you apart
-         * fix error on gib -error still happens in fast tick (when gib)
+         * fix error on gib -error still happens in fast tick (when gib) (this still happens btw 8/1/26)
+         * fix ice freeze glm pos
+         * 
          * 
          * */
 
@@ -57,9 +59,9 @@ namespace SFDScript
         public static IObjectTimerTrigger unfreezer;
         public const string STARTWANDS_KEY = "START WANDS";
         public const int AVAILABLE_ELEMENTS = 12;
-        public const float TEXTPIXEL_OFFSET_X = -3.6f;
-        public const float TEXTPIXEL_OFFSET_Y = -2.4f;
-        public Vector2 textPixelOffset;
+        public const float TEXTPIXEL_OFFSET_X = -1.5f;
+        public const float TEXTPIXEL_OFFSET_Y = 2.5f; 
+        public static Vector2 textPixelOffset;
 
         public static string[] elementNames = new String[] { "", "earth", "shock", "air", "dark", "fire", "blood", "ice", "acid", "metal", "space", "blast", "plant", "chaos" };
         public static char[] elementLetters = new char[] { ' ', 'p', 'k', 'f', 'z', 'r', 'g', 's', 'l', 't', 'w', 'c', 'm', '&' };

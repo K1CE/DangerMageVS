@@ -1,5 +1,6 @@
 ﻿using SFDGameScriptInterface;
 using System;
+using System.Reflection.Metadata;
 
 
 namespace SFDScript
@@ -114,7 +115,8 @@ namespace SFDScript
 			//add icicles
 			private void freeze(IPlayer ply, Vector2 direction)
 			{
-				Vector2 position = new Vector2(-3 * ply.FacingDirection, 8) + ply.GetWorldPosition();
+				direction.Normalize(); //redundant but safe
+				Vector2 position = new Vector2(ply.FacingDirection * 1.5f, 8) + ply.GetWorldPosition();
 
 				IProfile playerProfile = ply.GetProfile();
 
@@ -124,30 +126,58 @@ namespace SFDScript
 				invisibleBlock.SetWorldPosition(position);
 				invisibleBlock.SetBodyType(BodyType.Dynamic);
 				invisibleBlock.SetSizeFactor(new Point(0,2));
+				invisibleBlock.SetMass(0.001f);
 				weld.AddTargetObject(invisibleBlock);
 
 
 
                 IObjectPlayerProfileInfo profileInfo = (IObjectPlayerProfileInfo)Game.CreateObject("PlayerProfileInfo");
 				IProfile objectProfile = profileInfo.GetProfile();
-                profileInfo.GetProfile().Feet = playerProfile.Feet;
-                profileInfo.GetProfile().Accessory = playerProfile.Accessory;
-                profileInfo.GetProfile().Skin = playerProfile.Skin;
-                profileInfo.GetProfile().Gender = playerProfile.Gender;
-                profileInfo.GetProfile().ChestOver = playerProfile.ChestOver;
-                profileInfo.GetProfile().Hands = playerProfile.Hands;
-                profileInfo.GetProfile().ChestUnder = playerProfile.ChestUnder;
-                profileInfo.GetProfile().Legs = playerProfile.Legs;
-                profileInfo.GetProfile().Head = playerProfile.Head;
-                profileInfo.GetProfile().Waist = playerProfile.Waist;
+                objectProfile.Feet = playerProfile.Feet;
+                objectProfile.Accessory = playerProfile.Accessory;
+                objectProfile.Skin = playerProfile.Skin;
+                objectProfile.Gender = playerProfile.Gender;
+                objectProfile.ChestOver = playerProfile.ChestOver;
+                objectProfile.Hands = playerProfile.Hands;
+                objectProfile.ChestUnder = playerProfile.ChestUnder;
+                objectProfile.Legs = playerProfile.Legs;
+                objectProfile.Head = playerProfile.Head;
+                objectProfile.Waist = playerProfile.Waist;
 
                 IObjectPlayerPortrait skin = (IObjectPlayerPortrait)Game.CreateObject("BgPlayerPortrait00", position);
 				skin.SetFaceDirection(ply.FacingDirection);
 				skin.SetProfileInfo(profileInfo);
 				skin.SetBodyType(BodyType.Dynamic);
+                skin.SetMass(0.001f);
                 weld.AddTargetObject(skin);
 
-				ply.Remove();
+
+				for (int icicle = rnd.Next(4) + 7; icicle > 0; icicle--)
+				{
+					Vector2 startPos = ply.GetWorldPosition() + new Vector2((float)rnd.NextDouble() * 14 - 7, (float)rnd.NextDouble() * 14 - 4);
+					float startScale = 1 + rnd.Next(9) / 5f;
+                    Game.PlayEffect("GLM", startPos);
+                    int segments = rnd.Next(1) + 4;
+
+                    for (int i = 0; i < segments; i++)
+                    {
+						float scale = startScale - (startScale / (segments + 2)) * i;
+						Vector2 segmentPos = startPos + direction * i * (startScale/1.2f);
+
+						IObjectText pixel = (IObjectText)Game.CreateObject("Text", segmentPos + textPixelOffset * scale);
+						pixel.SetTextScale(scale);
+						pixel.SetText(".");
+						pixel.SetTextColor(Color.White);
+
+						pixel.SetBodyType(BodyType.Dynamic);
+						weld.AddTargetObject(pixel);
+
+					} 
+
+				}
+
+
+					ply.Remove();
 
             }
 
