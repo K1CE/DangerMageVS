@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using SFDGameScriptInterface;
+using System.Net.WebSockets;
 
 
 namespace SFDScript
@@ -15,7 +16,7 @@ namespace SFDScript
 
         /* CLASS STARTS HERE - COPY BELOW INTO THE SCRIPT WINDOW */
 
-        class FrozenPlayer
+        public class FrozenPlayer
         {
 
             private IObjectWeldJoint weld;
@@ -91,15 +92,19 @@ namespace SFDScript
 
                 }
 
-
+                frozenPlayers.Add(this);
                 ply.Remove();
             }
 
             public void update()
             {
                 //check for fire
-
-                //check for tilt
+                float angle = invisibleBlock.GetAngle();
+                messageRoss("angle: " + angle / ((float)Math.PI) * 180f);
+                if (angle < -Math.PI * 2 / 8f || angle > Math.PI * 2 / 8)
+                {
+                    destroy();
+                }
             }
 
             public void destroy()
@@ -108,7 +113,8 @@ namespace SFDScript
                 Vector2 pos = invisibleBlock.GetWorldPosition();
                 for(int i = 0; i < 18; i++)
                 {
-                    Game.PlayEffect(rnd.Next(2) == 1 ? "WS" : "STM", pos + new Vector2((float)(10 * rnd.NextDouble() - 5)), (float)(10 * rnd.NextDouble() - 7));
+                    Game.PlayEffect(rnd.Next(2) == 1 ? "DestroyGlass " : "STM", pos + new Vector2((float)(10 * rnd.NextDouble() - 5), (float)(10 * rnd.NextDouble() - 7)));
+                    if (i > 12) Game.CreateObject("GlassShard00A" , pos + new Vector2((float)(10 * rnd.NextDouble() - 5), (float)(10 * rnd.NextDouble() - 7)), (float)(rnd.NextDouble() * Math.PI), invisibleBlock.GetLinearVelocity(), invisibleBlock.GetAngularVelocity());
                 }
 
                 remove();
@@ -118,6 +124,20 @@ namespace SFDScript
             public void thaw()
             {
                 //release player from prison
+                Vector2 pos = invisibleBlock.GetWorldPosition();
+                for (int i = 0; i < 18; i++)
+                {
+                    string effectName = "STM";
+                    switch (rnd.Next(4)) {
+                        case 2:
+                            effectName = "WS";
+                            break;
+                        case 3:
+                            effectName = "GlassShard00A";
+                            break;
+                    }
+                    Game.PlayEffect(effectName, pos + new Vector2((float)(10 * rnd.NextDouble() - 5), (float)(10 * rnd.NextDouble() - 7)));
+                }
 
                 remove();
             }
@@ -133,6 +153,8 @@ namespace SFDScript
                 {
                     pixel.Remove();
                 }
+
+                frozenPlayers.Remove(this);
             }
 
         }

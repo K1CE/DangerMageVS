@@ -144,6 +144,7 @@ namespace SFDScript
         public static List<Cast> casts = new List<Cast>();
         public const string attachmentID = "att";
         public static List<CastProjectile> projectiles = new List<CastProjectile>();
+        public static List<FrozenPlayer> frozenPlayers = new List<FrozenPlayer>();
         public IObjectDistanceJoint antiGravity;
         
         //EXPERIMENTAL HITBOX FIX
@@ -307,17 +308,24 @@ namespace SFDScript
 
         }
 
-        public void quickTick(TriggerArgs args)  
+        public void quickTick(TriggerArgs args)
         {
+
+            for (int i = frozenPlayers.Count - 1; i >= 0; i--)
+            {
+                frozenPlayers[i].update();
+            }
+
             foreach (Cast cast in casts)
             {
                 cast.intervalTick();
                 if (cast.finished)
                 {
                     quickTick(args);
-                    return;
+                    break;
                 }
             }
+
         }
 
         public void slowTick(TriggerArgs args)
