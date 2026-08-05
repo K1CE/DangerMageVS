@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using SFDGameScriptInterface;
 using System.Net.WebSockets;
+using static SFDScript.GameScript;
 
 
 namespace SFDScript
@@ -23,6 +24,14 @@ namespace SFDScript
             private IObject invisibleBlock;
             private IObjectPlayerProfileInfo profileInfo;
             private IObjectPlayerPortrait skin;
+            private IPlayer frozenPlayer;
+
+            private static Vector2 boxPos;
+            private static IObject wallU;
+            private static IObject wallL;
+            private static IObject wallD;
+            private static IObject wallR;
+
 
             private List<IObjectText> pixels = new List<IObjectText>();
             public FrozenPlayer(IPlayer ply, Vector2 blastDirection)
@@ -87,15 +96,30 @@ namespace SFDScript
                         weld.AddTargetObject(pixel);
 
                         pixels.Add(pixel);
-
                     }
 
                 }
 
+                frozenPlayer = ply;
+                hidePlayer(true);
                 frozenPlayers.Add(this);
-                ply.Remove();
             }
 
+            public static void setupBox()
+            {
+                boxPos = Game.GetCameraArea().TopLeft + Vector2.UnitX * 100;
+
+                wallU = Game.CreateObject("InvisibleBlock", boxPos + new Vector2(-12, 24));
+                wallU.SetSizeFactor(new Point(4, 1));
+                wallL = Game.CreateObject("InvisibleBlock", boxPos + new Vector2(-12, 16));
+                wallL.SetSizeFactor(new Point(1, 4));
+                wallD = Game.CreateObject("InvisibleBlock", boxPos + new Vector2(-12, -16));
+                wallD.SetSizeFactor(new Point(4, 1));
+                wallR = Game.CreateObject("InvisibleBlock", boxPos + new Vector2(12, 16));
+                wallR.SetSizeFactor(new Point(1, 4));
+
+            }
+            //TODO: check for fire
             public void update()
             {
                 //check for fire
@@ -105,6 +129,26 @@ namespace SFDScript
                 {
                     destroy();
                 }
+            }
+
+            //TODO: check round over
+
+            private void hidePlayer(bool setting)
+            {
+                frozenPlayer.ClearFire();
+                frozenPlayer.SetInputEnabled(setting);
+                frozenPlayer.SetHealth(1);
+                frozenPlayer.SetStatusBarsVisible(setting);
+
+
+                if (setting)
+                {
+                    frozenPlayer.SetWorldPosition(boxPos);
+                } else
+                {
+                    frozenPlayer.SetWorldPosition(invisibleBlock.GetWorldPosition() - Vector2.UnitY * 10);
+                }
+
             }
 
             public void destroy()
@@ -124,6 +168,7 @@ namespace SFDScript
             public void thaw()
             {
                 //release player from prison
+                hidePlayer(false);
                 Vector2 pos = invisibleBlock.GetWorldPosition();
                 for (int i = 0; i < 18; i++)
                 {

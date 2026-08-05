@@ -286,6 +286,8 @@ namespace SFDScript
                     new Wand(wand, (Element)i);
                 }
 
+            FrozenPlayer.setupBox();
+
             orbAnimVectors = new OrbAnimStruct();
             orbAnimVectors.up = new Vector2(0, 0.5f);
             orbAnimVectors.left = new Vector2(-0.5f, 0);
