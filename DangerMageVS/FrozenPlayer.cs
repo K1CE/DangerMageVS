@@ -107,7 +107,7 @@ namespace SFDScript
 
             public static void setupBox()
             {
-                boxPos = Game.GetCameraArea().TopLeft + Vector2.UnitX * 100;
+                boxPos = Game.GetCameraArea().TopLeft + Vector2.UnitX * -500;
 
                 wallU = Game.CreateObject("InvisibleBlock", boxPos + new Vector2(-12, 24));
                 wallU.SetSizeFactor(new Point(4, 1));
@@ -122,13 +122,24 @@ namespace SFDScript
             //TODO: check for fire
             public void update()
             {
-                //check for fire
+                Vector2 pos = invisibleBlock.GetWorldPosition();
+
+                //check for tilt
                 float angle = invisibleBlock.GetAngle();
                 messageRoss("angle: " + angle / ((float)Math.PI) * 180f);
                 if (angle < -Math.PI * 2 / 8f || angle > Math.PI * 2 / 8)
                 {
                     destroy();
                 }
+
+
+                //check for fire
+                if(rnd.Next(8) == 0)
+                    if (Game.GetFireNodes(new Area(pos + new Vector2(-12, -16), pos + new Vector2(12, 16))).Length > 0 )
+                    {
+                        thaw();
+                    }
+
             }
 
             //TODO: check round over
