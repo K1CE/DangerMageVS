@@ -262,6 +262,11 @@ namespace SFDScript
                     case Element.ICE:
 						if (isPlayer){
 							damageMult *= (data.coldDamageTaken * ((data.cold) ? 1.5f : 1f));
+							if (target is IPlayer && damageMult * damage >= target.GetHealth()){
+								target.DealDamage(target.GetHealth() - 1, this.caster.UniqueID);
+								return damage * damageMult;
+
+                            }
 
                         }
                         if (cantMeleeDamage(target)) damageMult = 0f;

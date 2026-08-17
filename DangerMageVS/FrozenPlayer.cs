@@ -108,6 +108,7 @@ namespace SFDScript
             public static void setupBox()
             {
                 boxPos = Game.GetCameraArea().TopLeft + Vector2.UnitX * -500;
+                //boxPos += Vector2.UnitX * 700;
 
                 wallU = Game.CreateObject("InvisibleBlock", boxPos + new Vector2(-12, 24));
                 wallU.SetSizeFactor(new Point(4, 1));
@@ -135,7 +136,7 @@ namespace SFDScript
 
                 //check for fire
                 if(rnd.Next(8) == 0)
-                    if (Game.GetFireNodes(new Area(pos + new Vector2(-12, -16), pos + new Vector2(12, 16))).Length > 0 )
+                    if (Game.GetFireNodes(new Area(pos + new Vector2(-15, -16), pos + new Vector2(15, 16))).Length > 0 )
                     {
                         thaw();
                     }
@@ -147,9 +148,10 @@ namespace SFDScript
             private void hidePlayer(bool setting)
             {
                 frozenPlayer.ClearFire();
-                frozenPlayer.SetInputEnabled(setting);
+                frozenPlayer.SetInputEnabled(!setting);
                 frozenPlayer.SetHealth(1);
-                frozenPlayer.SetStatusBarsVisible(setting);
+                frozenPlayer.SetStatusBarsVisible(!setting);
+                frozenPlayer.SetNametagVisible(!setting);
 
 
                 if (setting)
@@ -194,6 +196,7 @@ namespace SFDScript
                     }
                     Game.PlayEffect(effectName, pos + new Vector2((float)(10 * rnd.NextDouble() - 5), (float)(10 * rnd.NextDouble() - 7)));
                 }
+
 
                 remove();
             }

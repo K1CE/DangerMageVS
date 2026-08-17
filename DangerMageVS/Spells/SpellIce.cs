@@ -60,9 +60,10 @@ namespace SFDScript
 						//if (ply.GetHealth() <= damage && !ply.IsStrengthBoostActive) ply.Kill();
 						//else ply.SetHealth(ply.GetHealth() - damage);
 
-						if(data != null && ply.IsDead)
+						if(damage >= ply.GetHealth())
 						{
 							messageRoss("frozen!");
+							ply.SetHealth(1);
 							freeze(ply, vector);
 							return;
 						}
